@@ -1,12 +1,12 @@
-package de.adesso.brainysnake.Gamelogic;
+package de.adesso.brainysnake.Gamelogic.Level;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Level {
 
@@ -67,6 +67,20 @@ public class Level {
 
     public GameObject getLevel() {
         return levelObject;
+    }
+
+    public boolean checkCollision(int x, int y) {
+
+        //check if doc collides with level element
+        for (Dot tempDot : levelObject.getDots()) {
+            if (tempDot.getX() == x && tempDot.getY() == y) {
+                return true;
+            }
+        }
+
+        //TODO rukl@rukl check if dot collides with barrier element of level
+
+        return false;
     }
 
 }
