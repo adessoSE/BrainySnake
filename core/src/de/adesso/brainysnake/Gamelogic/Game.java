@@ -30,6 +30,7 @@ public class Game {
     public List<GameObject> draw(float delta) {
         List<GameObject> gameObjects = new ArrayList<GameObject>();
         gameObjects.add(level.getLevel());
+        gameObjects.add(level.getBarriers());
         for (Agent agent : agents) {
             gameObjects.add(agent);
         }

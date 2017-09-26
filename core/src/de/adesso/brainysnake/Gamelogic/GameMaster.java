@@ -28,7 +28,6 @@ public class GameMaster {
 
     List<Agent> agents = new ArrayList<Agent>();
     //TODO rukl@rukl change to dto or representation object. do not operate on real data
-    private AgentMovement agentActions;
     private Level         level;
 
 

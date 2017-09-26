@@ -14,10 +14,10 @@ import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 
 public class BrainySnake extends ApplicationAdapter {
 
-    private Texture     texture;
+    private Texture texture;
     private SpriteBatch batch;
-    private Sprite      sprite;
-    private Pixmap      pixmap;
+    private Sprite sprite;
+    private Pixmap pixmap;
 
     private static int DOT_SITZE = 10;
     private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SITZE;
@@ -26,7 +26,7 @@ public class BrainySnake extends ApplicationAdapter {
     private OrthographicCamera cam;
     private OrthographicCamera fontCam;
 
-    private static final float MIN_FRAME_LENGTH = 1f/Config.UPDATE_RATE;
+    private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
     private float timeSinceLastRender;
 
     private Game game;
