@@ -24,7 +24,7 @@ public class Game {
     }
 
     public void update(float delta) {
-        gameMaster.getNextMoveActions();
+        gameMaster.update(delta);
     }
 
     public List<GameObject> draw(float delta) {

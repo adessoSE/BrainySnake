@@ -1,6 +1,7 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
 
+import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
@@ -18,6 +19,8 @@ public class Agent extends GameObject {
     private int           currentOrientation = 0;
 
     private boolean dead = false;
+    private boolean frozen = false;
+    private boolean confused = false;
 
     private int currentBlinkLength = 0;
 
@@ -41,28 +44,35 @@ public class Agent extends GameObject {
         if (dead) {
             blink(delta);
             return;
+        } else if (confused) {
+            color = Color.YELLOW;
+        }else {
+            color = Color.RED;
         }
 
         updateInput();
     }
 
-    public GameEvent generateMove(PlayerState playerState) {
+    public void updatePlayerState(PlayerState playerState) {
+        //TODO rukl@rukl save playerstate
+    }
+
+    public AgentMovement generateMove() {
         update(0);
 
-        GameEvent gameEvent;
+        AgentMovement agentMovement;
 
         if (left) {
-            gameEvent = GameEvent.MOVE_LEFT;
+            agentMovement = AgentMovement.MOVE_LEFT;
         } else if (right) {
-            gameEvent = GameEvent.MOVE_RIGHT;
+            agentMovement = AgentMovement.MOVE_RIGHT;
         } else {
-            gameEvent = GameEvent.MOVE_FORWARD;
-
+            agentMovement = AgentMovement.MOVE_FORWARD;
         }
 
         left = right = false;
         up = true;
-        return gameEvent;
+        return agentMovement;
     }
 
     private void blink(float delta) {
@@ -73,6 +83,7 @@ public class Agent extends GameObject {
             color = Config.TWINKLE_COLOR;
         }
     }
+
 
     /**
      * TODO rukl@rukl DOC
@@ -100,42 +111,74 @@ public class Agent extends GameObject {
         return name;
     }
 
-    public Dot getHeadPosition() {
-        return dots.get(dots.size() - 1);
-    }
-
-    public void moveRight() {
+    private void spinRight() {
         if (++currentOrientation >= orientations.length) {
             currentOrientation = 0;
         }
-
-        moveForward();
     }
 
-    public void moveLeft() {
+    private void spinLeft() {
         if (--currentOrientation < 0) {
             currentOrientation = orientations.length - 1;
         }
-
-        moveForward();
     }
 
-    public void moveForward() {
-        switch (orientations[currentOrientation]) {
-            case UP:
-                dots.add(new Dot(dots.get(dots.size() - 1).x, dots.get(dots.size() - 1).y + 1));
+    /**
+     * What is the next Agent Head Position depending on the next GameEvent
+     *
+     * @param agentMovement
+     *
+     * @return
+     */
+    public Dot getNextPosition(AgentMovement agentMovement) {
+        int saveCurrentOrientation = currentOrientation;
+        Dot nextPosition           = nextPositionIs(agentMovement);
+        currentOrientation = saveCurrentOrientation;
+        return nextPosition;
+    }
+
+    public void moveToNextPosition(AgentMovement agentMovement) {
+        dots.add(nextPositionIs(agentMovement));
+    }
+
+    private void spin(AgentMovement agentMovement) {
+        switch (agentMovement) {
+            case MOVE_RIGHT:
+                spinRight();
                 break;
-            case RIGHT:
-                dots.add(new Dot(dots.get(dots.size() - 1).x + 1, dots.get(dots.size() - 1).y));
-                break;
-            case DOWN:
-                dots.add(new Dot(dots.get(dots.size() - 1).x, dots.get(dots.size() - 1).y - 1));
-                break;
-            case LEFT:
-                dots.add(new Dot(dots.get(dots.size() - 1).x - 1, dots.get(dots.size() - 1).y));
+            case MOVE_LEFT:
+                spinLeft();
                 break;
             default:
-
         }
     }
+
+    private Dot nextPositionIs(AgentMovement agentMovement) {
+        spin(agentMovement);
+        Dot nextPosition = null;
+        switch (orientations[currentOrientation]) {
+            case UP:
+                nextPosition = new Dot(dots.get(dots.size() - 1).x, dots.get(dots.size() - 1).y + 1);
+                break;
+            case RIGHT:
+                nextPosition = new Dot(dots.get(dots.size() - 1).x + 1, dots.get(dots.size() - 1).y);
+                break;
+            case DOWN:
+                nextPosition = new Dot(dots.get(dots.size() - 1).x, dots.get(dots.size() - 1).y - 1);
+                break;
+            case LEFT:
+                nextPosition = new Dot(dots.get(dots.size() - 1).x - 1, dots.get(dots.size() - 1).y);
+                break;
+            default:
+        }
+
+        return nextPosition;
+    }
+
+
+
+    public void setConfused(boolean isConfused) {
+        this.confused = isConfused;
+    }
+
 }
