@@ -6,9 +6,13 @@
     - [Technische Umsetzung](#technische-umsetzung)
         - [Object: _PlayerStatus_](#object-playerstatus)
         - [Object: _PlayerView_](#object-playerview)
+    - [Projektstrucktur (Gradle)](#projektstrucktur-gradle)
+    - [Programmablauf](#programmablauf)
+        - [Simulationsablauf](#simulationsablauf)
     - [Technische Herausforderungen](#technische-herausforderungen)
         - [Der Agent antwortet nicht](#der-agent-antwortet-nicht)
         - [Der Agent greift auf Fremden Code zu](#der-agent-greift-auf-fremden-code-zu)
+    - [Glossar](#glossar)
 
 
 ## Spiel aus Sicht des Players
@@ -53,9 +57,25 @@ Jeder Agent implementiert das Interface BrainySnake, welches folgende Methoden v
 Der Agent erhält ein zweidimensionales Sichtfeld(x Felder breit und y Felder hoch), welches Koordinaten und Bezeichnung von allen Gegenständen enthält. Das Sichtfeld beginnt auf höhe des Kopfes (Kopfposition plus einen Schritt nach vorne).
 Jedes **Field** innerhalb des **PlayerView** hat eine **Position** und kann ein **GameObject** enthalten.
 
-## Technische Herausforderungen
+## Projektstrucktur (Gradle)
+
+Jeder Player (Agent) wird in ein **seperates Modul** auisgelagert welches in den Core improtiert wird.  
+Damit sollten keine Zugriffe auf fremden Code möglich sein.  
+Jedes Player Modul importierrt **playerCommon** indem gemeinsame Interfaces und Klassen liegen. (z.B. PlayerStatus, GameEvent und das BrainySnake Interface)  
+
+Modul           | Beschreibung                                          | Includes
+---------       | ------------------                                    |--------
+desktop         | Starter für die Anwendung                             | core
+core            | Logik der Simulation                                  | SamplePlayer, PlayerOne, PlayerTwo, ...
+playerCommon    | Klassen, Interfaces, Enums die alle Agenten brauchen  | junit
+samplePlayer    | Beispielimplementierung                               | playerCommon
+playerOne       | Spieler (Agent) der zu Implementieren ist             | playerCommon
+
+
+## Programmablauf
 
 ### Simulationsablauf
+
 1. Spiel Initialisierung
 1. Start Gameloop
    1. Prüfen ob Zeit bzw. Züge abgelaufen
@@ -69,7 +89,7 @@ Jedes **Field** innerhalb des **PlayerView** hat eine **Position** und kann ein 
    1. Draw()
 1. Anzeige Endstatus
 
-
+## Technische Herausforderungen
 ### Der Agent antwortet nicht
 
 __Problem:__ Fehler, der auftreten kann, wenn der Agent verschuldet oder unverschuldet in einer Endlosschleife läuft
