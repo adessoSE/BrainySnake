@@ -139,6 +139,7 @@ public class Agent extends GameObject {
 
     public void moveToNextPosition(AgentMovement agentMovement) {
         dots.add(nextPositionIs(agentMovement));
+        dots.remove(dots.get(0));
     }
 
     private void spin(AgentMovement agentMovement) {
