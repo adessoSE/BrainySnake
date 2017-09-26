@@ -52,11 +52,33 @@ project(":core") {
 
 
     dependencies {
+        compile project(':sampleplayer')
+
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         
     }
 }
 
+project(":sampleplayer") {
+
+    apply plugin: "java"
+
+
+    dependencies {
+        compile project(':playercommon')
+
+    }
+}
+
+
 tasks.eclipse.doLast {
     delete ".project"
+}
+
+allprojects {
+    task hello {
+        doLast { task ->
+            println "I'm $task.project.name"
+        }
+    }
 }

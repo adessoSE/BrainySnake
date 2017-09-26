@@ -7,6 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
+import de.adesso.brainysnake.Gamelogic.Player.Orientation;
 
 public class Level {
 
@@ -81,6 +82,31 @@ public class Level {
         //TODO rukl@rukl check if dot collides with barrier element of level
 
         return false;
+    }
+
+    public GameObject createStartingGameObject(Orientation orientation, int initialLength, Color color) {
+        List<Dot> elements= new ArrayList<Dot>();
+
+        int centerX = (int) Math.floor(this.width / 2D);
+        int centerY = (int) Math.floor(this.height / 2D);
+
+        for(int i = 0; i <= initialLength; i++) {
+            switch (orientation) {
+                case UP:
+                    elements.add(new Dot(centerX + 1, centerY + i + 1));
+                    break;
+                case DOWN:
+                    elements.add(new Dot(centerX - 1, centerY - i - 1));
+                    break;
+                case RIGHT:
+                    elements.add(new Dot(centerX + i + 1, centerY + 1));
+                    break;
+                case LEFT:
+                    elements.add(new Dot(centerX - i - 1, centerY - 1));
+                    break;
+            }
+        }
+        return new GameObject(elements, color);
     }
 
 }

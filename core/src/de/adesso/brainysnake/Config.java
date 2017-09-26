@@ -11,5 +11,6 @@ public class Config {
     public static Color DEFAULT_PLAYER_COLOR = Color.RED;
     public static Color TWINKLE_COLOR = Color.YELLOW;
     public static int BLINKING_SPEED = 5; //Blink length in Update-Calls
+    public static final int INITIAL_PLAYER_LENGTH = 3;
 
 }
