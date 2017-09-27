@@ -15,13 +15,10 @@ public class Game {
 
     private GameMaster gameMaster;
 
-    private List<Agent> agents = new ArrayList<Agent>();
-
     public void init(int levelHeight, int levelWidth) {
         level = new Level(levelHeight, levelWidth, Color.WHITE);
         gameMaster = new GameMaster(level);
-        agents.add(new Agent());
-        gameMaster.registerAgent(agents);
+        gameMaster.registerPlayer();
     }
 
     public void update(float delta) {
@@ -33,7 +30,7 @@ public class Game {
         gameObjects.add(level.getLevel());
         gameObjects.add(level.getBarriers());
         gameObjects.add(level.getPoints());
-        for (Agent agent : agents) {
+        for (Agent agent : gameMaster.getAgents()) {
             gameObjects.add(agent);
         }
         return gameObjects;
