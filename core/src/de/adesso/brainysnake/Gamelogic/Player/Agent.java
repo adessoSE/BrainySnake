@@ -16,16 +16,14 @@ public class Agent extends GameObject {
     private boolean left, right, up, down;
 
     private Orientation[] orientations       = new Orientation[]{UP, RIGHT, DOWN, LEFT};
+
     private int           currentOrientation = 0;
 
-    private boolean dead = false;
-    private boolean frozen = false;
-    private boolean confused = false;
+    private boolean dead, frozen, confused = false;
 
     private int currentBlinkLength = 0;
 
     private int blinkingSpeed = Config.BLINKING_SPEED;
-
 
     public Agent() {
         super();
@@ -38,7 +36,6 @@ public class Agent extends GameObject {
         down = left = right = false;
     }
 
-
     private void update(float delta) {
 
         if (dead) {
@@ -46,7 +43,7 @@ public class Agent extends GameObject {
             return;
         } else if (confused) {
             color = Color.YELLOW;
-        }else {
+        } else {
             color = Color.RED;
         }
 
@@ -83,7 +80,6 @@ public class Agent extends GameObject {
             color = Config.TWINKLE_COLOR;
         }
     }
-
 
     /**
      * TODO rukl@rukl DOC
@@ -175,8 +171,6 @@ public class Agent extends GameObject {
 
         return nextPosition;
     }
-
-
 
     public void setConfused(boolean isConfused) {
         this.confused = isConfused;
