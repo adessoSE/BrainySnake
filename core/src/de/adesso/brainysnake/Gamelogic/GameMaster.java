@@ -65,6 +65,7 @@ public class GameMaster {
                     case COLLISION_WITH_LEVEL:
                         agent.setConfused(true);
                         collectedPoints--;
+                        break;
                     case HIT_HIMSELF:
                         collectedPoints--;
                         agent.setGhostMode();
@@ -88,8 +89,13 @@ public class GameMaster {
                 }
             }
 
+            //if no points where collected, just move the snake
             if (collectedPoints <= 0) {
                 agent.removeTail();
+                //if negative points where collected, remove max one point
+                if (collectedPoints <= -1) {
+                    agent.removeTail();
+                }
             }
 
             //TODO rukl@rukl wenn der agent an dieser Stelle nur noch einen Punkt hat stirbt er
