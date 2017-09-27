@@ -6,21 +6,45 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.Gamelogic.Player.Agent;
 import de.adesso.brainysnake.Gamelogic.Player.AgentMovement;
+import de.adesso.brainysnake.Gamelogic.Player.AgentPlayer;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerState;
+import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
+import de.adesso.brainysnake.sampleplayer.SamplePlayer;
+
+import static de.adesso.brainysnake.Gamelogic.Player.Orientation.*;
 
 public class GameMaster {
 
+    //Alle Spiele erzeugen
+    private BrainySnakePlayer playerOne   = new SamplePlayer();
+    private BrainySnakePlayer playerTwo   = new SamplePlayer();
+    private BrainySnakePlayer playerThree = new SamplePlayer();
+    private BrainySnakePlayer playerFour  = new SamplePlayer();
+
+    List<PlayerHandler> playerHandlerList = new ArrayList<PlayerHandler>();
+
     List<Agent> agents = new ArrayList<Agent>();
+
     //TODO rukl@rukl change to dto or representation object. do not operate on real data
-    private Level         level;
+    private Level level;
 
 
     public GameMaster(Level level) {
         this.level = level;
+
+        // TODO ftk@rukl PlayerHandler ist wie dein Agent.class wird hier nur mit der Implementierung sowie der Startposition initialisiert
+        // Darfst du aber gerne so benennen wie du willst :)
+        playerHandlerList = new ArrayList<PlayerHandler>();
+        playerHandlerList.add(new PlayerHandler(playerOne, UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH, Color.BLUE)));
+        playerHandlerList.add(new PlayerHandler(playerOne, RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH, Color.GREEN)));
+        playerHandlerList.add(new PlayerHandler(playerOne, DOWN, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH, Color.ORANGE)));
+        playerHandlerList.add(new PlayerHandler(playerOne, LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH, Color.CYAN)));
     }
 
     public void registerAgent(List<Agent> agents) {
@@ -69,6 +93,9 @@ public class GameMaster {
         agentMovements.clear();
 
         // setup Score for each agent;
+
+        // spread new points in level
+        level.spreadPoints();
 
 
     }

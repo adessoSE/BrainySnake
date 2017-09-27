@@ -1,11 +1,11 @@
 package de.adesso.brainysnake.Gamelogic.Entities;
 
 
-import com.badlogic.gdx.graphics.Color;
-import de.adesso.brainysnake.Config;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.badlogic.gdx.graphics.Color;
+import de.adesso.brainysnake.Config;
 
 public class GameObject {
 
@@ -13,13 +13,18 @@ public class GameObject {
 
     protected Color color;
 
-    public GameObject(){
+    public GameObject() {
         dots = new ArrayList<Dot>();
         color = Config.DEFAULT_PLAYER_COLOR;
     }
 
     public GameObject(List<Dot> dots, Color color) {
-        this.dots = dots;
+        if (dots == null) {
+            this.dots = new ArrayList<Dot>();
+        } else {
+            this.dots = dots;
+        }
+
         this.color = color;
     }
 
@@ -37,5 +42,9 @@ public class GameObject {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public int size() {
+        return dots.size();
     }
 }

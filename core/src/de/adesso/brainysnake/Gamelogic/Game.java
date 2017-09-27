@@ -11,10 +11,11 @@ import de.adesso.brainysnake.Gamelogic.Player.Agent;
 
 public class Game {
 
-    private Level      level;
-    private GameMaster gameMaster;
-    private List<Agent> agents = new ArrayList<Agent>();
+    private Level level;
 
+    private GameMaster gameMaster;
+
+    private List<Agent> agents = new ArrayList<Agent>();
 
     public void init(int levelHeight, int levelWidth) {
         level = new Level(levelHeight, levelWidth, Color.WHITE);
@@ -31,6 +32,7 @@ public class Game {
         List<GameObject> gameObjects = new ArrayList<GameObject>();
         gameObjects.add(level.getLevel());
         gameObjects.add(level.getBarriers());
+        gameObjects.add(level.getPoints());
         for (Agent agent : agents) {
             gameObjects.add(agent);
         }
