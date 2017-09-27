@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.sampleplayer;
+package de.adesso.brainysnake.Gamelogic.Player;
 
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.Orientation;
@@ -7,25 +7,31 @@ import de.adesso.brainysnake.playercommon.PlayerUpdate;
 
 import java.util.Random;
 
-public class SamplePlayer implements BrainySnakePlayer {
-
-    private PlayerState playerState;
+public class SlowPlayer implements BrainySnakePlayer {
 
     @Override
     public String getPlayerName() {
-        return "SamplePlayer";
+        return "SlowPlayer";
     }
 
     @Override
     public boolean handlePlayerStatusUpdate(PlayerState playerState) {
-        /* The SamplePlayer is very lazy, it just stores the last data*/
-        this.playerState = playerState;
-        System.out.println("Player: " + this.getPlayerName() + " got update");
+        try {
+            Thread.sleep(2L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
     @Override
     public PlayerUpdate tellPlayerUpdate() {
+        try {
+            Thread.sleep(2L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Orientation orientation = Orientation.values()[(new Random().nextInt(Orientation.values().length))];
         return new PlayerUpdate(orientation);
     }

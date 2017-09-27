@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic.Player;
+package de.adesso.brainysnake.playercommon;
 
 public enum Orientation {
     UP,

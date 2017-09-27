@@ -6,8 +6,9 @@ import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.playercommon.Orientation;
 
-import static de.adesso.brainysnake.Gamelogic.Player.Orientation.*;
+import static de.adesso.brainysnake.playercommon.Orientation.*;
 
 public class Agent extends GameObject {
 

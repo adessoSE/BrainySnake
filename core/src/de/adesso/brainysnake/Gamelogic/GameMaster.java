@@ -9,25 +9,48 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
+import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
+import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
-import de.adesso.brainysnake.Gamelogic.Player.Agent;
-import de.adesso.brainysnake.Gamelogic.Player.AgentMovement;
-import de.adesso.brainysnake.Gamelogic.Player.AgentPlayer;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerState;
+import de.adesso.brainysnake.Gamelogic.Player.*;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
+import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 
-import static de.adesso.brainysnake.Gamelogic.Player.Orientation.*;
+import static de.adesso.brainysnake.playercommon.Orientation.*;
 
 public class GameMaster {
 
     //Alle Spiele erzeugen
-    private BrainySnakePlayer playerOne   = new SamplePlayer();
-    private BrainySnakePlayer playerTwo   = new SamplePlayer();
-    private BrainySnakePlayer playerThree = new SamplePlayer();
-    private BrainySnakePlayer playerFour  = new SamplePlayer();
+    private BrainySnakePlayer playerOne = new SamplePlayer() {
+        @Override
+        public String getPlayerName() {
+            return "SamplePlayer One";
+        }
+    };
+    private BrainySnakePlayer playerTwo  = new SamplePlayer() {
+        @Override
+        public String getPlayerName() {
+            return "SamplePlayer Two";
+        }
+    };
+    private BrainySnakePlayer playerThree = new SamplePlayer() {
+        @Override
+        public String getPlayerName() {
+            return "SamplePlayer Three";
+        }
+    };
+    private BrainySnakePlayer playerFour  = new SamplePlayer() {
+        @Override
+        public String getPlayerName() {
+            return "SamplePlayer Four";
+        }
+    };
 
-    List<PlayerHandler> playerHandlerList = new ArrayList<PlayerHandler>();
+    // Add all Agents here
+    List<BrainySnakePlayer> brainySnakePlayers = new ArrayList<BrainySnakePlayer>();
+
+    PlayerController playerController;
 
     List<Agent> agents = new ArrayList<Agent>();
 
@@ -36,15 +59,25 @@ public class GameMaster {
 
 
     public GameMaster(Level level) {
+        // Create UI ?
         this.level = level;
 
-        // TODO ftk@rukl PlayerHandler ist wie dein Agent.class wird hier nur mit der Implementierung sowie der Startposition initialisiert
-        // Darfst du aber gerne so benennen wie du willst :)
-        playerHandlerList = new ArrayList<PlayerHandler>();
-        playerHandlerList.add(new PlayerHandler(playerOne, UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH, Color.BLUE)));
-        playerHandlerList.add(new PlayerHandler(playerOne, RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH, Color.GREEN)));
-        playerHandlerList.add(new PlayerHandler(playerOne, DOWN, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH, Color.ORANGE)));
-        playerHandlerList.add(new PlayerHandler(playerOne, LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH, Color.CYAN)));
+        //Add agents to the game
+        brainySnakePlayers.add(playerOne);
+        brainySnakePlayers.add(playerTwo);
+        brainySnakePlayers.add(playerThree);
+        brainySnakePlayers.add(playerFour);
+
+        // Build UI Models for the agents
+        Map<Orientation, GameObject> brainySnakePlayersUiModel = new HashMap<Orientation, GameObject>();
+        brainySnakePlayersUiModel.put(UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.put(RIGHT,level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.put(LEFT,level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
+
+        // The PlayerController capsules agent actions an calculations
+        // The Controller will randomly assign agents to GameObjects
+        playerController = new PlayerController(brainySnakePlayers, brainySnakePlayersUiModel);
     }
 
     public void registerAgent(List<Agent> agents) {
@@ -67,15 +100,27 @@ public class GameMaster {
     public void getNextMoveActions() {
 
         //update playerstate for each agent
-        for (Agent agent : agents) {
-            agent.updatePlayerState(generatePlayerStatus(agent));
-        }
+//        for (Agent agent : agents) {
+//            agent.updatePlayerState(generatePlayerStatus(agent));
+//        }
+
+        // TODO Wir brauchen eine logische Sicht auf das Spiel.
+        /**
+         * Calculates the PlayerState and updates the Agents via call
+         */
+        this.playerController.updatePlayerState(new GlobalGameState());
 
         //collect agent movements
         Map<Agent, AgentMovement> agentMovements = new HashMap<Agent, AgentMovement>();
         for (Agent agent : agents) {
             agentMovements.put(agent, agent.generateMove());
         }
+
+        Map<PlayerHandler, AgentChoice> playerStatus = this.playerController.getPlayerStatus();
+        for(PlayerHandler playerHandler : playerStatus.keySet()) {
+
+        }
+
 
         //check validity of agent movements and moveToNextPosition, if action is valid
         for (Agent agent : agentMovements.keySet()) {
@@ -115,5 +160,9 @@ public class GameMaster {
 
     private PlayerState generatePlayerStatus(Agent agent) {
         return null;//TODO rukl@rukl genearte status information for agent here
+    }
+
+    public void shutdown() {
+        this.playerController.shutdown();
     }
 }

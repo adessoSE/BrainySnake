@@ -15,5 +15,5 @@ public class Config {
     public static int QUANTITY_BARRIERS           = 6;
     public static final int INITIAL_PLAYER_LENGTH = 3;
     public static final int MAX_POINTS_IN_LEVEL   = 5;
-
+    public static final int MAX_AGENT_PROCESSING_TIME_MS = 100;
 }

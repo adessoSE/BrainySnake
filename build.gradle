@@ -55,7 +55,7 @@ project(":core") {
         compile project(':sampleplayer')
 
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        
+        compile group: 'junit', name: 'junit', version: '4.12'
     }
 }
 

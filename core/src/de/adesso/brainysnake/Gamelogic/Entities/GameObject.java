@@ -18,6 +18,11 @@ public class GameObject {
         color = Config.DEFAULT_PLAYER_COLOR;
     }
 
+
+    public GameObject(List<Dot> dots) {
+        this(dots, Color.MAROON);
+    }
+
     public GameObject(List<Dot> dots, Color color) {
         if (dots == null) {
             this.dots = new ArrayList<Dot>();

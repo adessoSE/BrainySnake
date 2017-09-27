@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
-import de.adesso.brainysnake.Gamelogic.Player.Orientation;
+import de.adesso.brainysnake.playercommon.Orientation;
 
 public class Level {
 
@@ -135,7 +135,7 @@ public class Level {
         return false;
     }
 
-    public GameObject createStartingGameObject(Orientation orientation, int initialLength, Color color) {
+    public GameObject createStartingGameObject(Orientation orientation, int initialLength) {
         List<Dot> elements = new ArrayList<Dot>();
 
         int centerX = (int) Math.floor(this.width / 2D);
@@ -157,7 +157,7 @@ public class Level {
                     break;
             }
         }
-        return new GameObject(elements, color);
+        return new GameObject(elements);
     }
 
     public void spreadPoints() {
