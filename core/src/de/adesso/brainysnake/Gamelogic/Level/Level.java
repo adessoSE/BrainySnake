@@ -20,22 +20,18 @@ public class Level {
 
     private GameObject points;
 
-    private Color color;
-
     private int maxPointsInLevel     = Config.MAX_POINTS_IN_LEVEL;
 
     public Level(int height, int width, Color color) {
         this.height = height;
         this.width = width;
-        this.color = color;
-        levelObject = new GameObject(buildOuterWalls(), color);
-        barriers = new GameObject(buildBarriers(), color);
+        levelObject = new GameObject(buildOuterWalls(), Config.LEVEL_COLOR);
+        barriers = new GameObject(buildBarriers(), Config.BARRIER_COLOR);
         points = new GameObject(null, Config.POINT_COLLOR);
     }
 
     private List<Dot> buildBarriers() {
         List<Dot> barriers         = new ArrayList<Dot>();
-        int       quantityBarriers = Config.QUANTITY_BARRIERS;
         int       gapBarriersX     = width / 4;
         int       gapBarriersY     = height / 3;
 
@@ -175,4 +171,16 @@ public class Level {
         int randomYPosition = 0 + (int) (Math.random() * height);
         return new Dot(randomXPosition, randomYPosition);
     }
+
+    public boolean tryConsumePoint(Dot position) {
+        for (Dot dot : points.getDots()) {
+            if (dot.x == position.x && dot.y == position.y) {
+                points.getDots().remove(dot);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

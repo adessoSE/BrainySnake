@@ -3,8 +3,9 @@ package de.adesso.brainysnake.Gamelogic;
 public enum GameEvent {
     MOVED,
     COLLISION_WITH_LEVEL,
-    COLLISION_WIHT_YOURSELF,
-    COLLISION_WITH_AGENT,
+    HIT_AGENT,
+    HIT_BY_AGENT,
+    HIT_HIMSELF,
     DIEDED,
-    FOUND_POINT,
+    CONSUMED_POINT,
 }

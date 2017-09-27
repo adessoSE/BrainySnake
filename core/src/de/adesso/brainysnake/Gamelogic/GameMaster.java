@@ -1,23 +1,22 @@
 package de.adesso.brainysnake.Gamelogic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
-import de.adesso.brainysnake.Gamelogic.Player.*;
+import de.adesso.brainysnake.Gamelogic.Player.Agent;
+import de.adesso.brainysnake.Gamelogic.Player.AgentMovement;
+import de.adesso.brainysnake.Gamelogic.Player.AgentPlayer;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerState;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 
-import static de.adesso.brainysnake.playercommon.Orientation.*;
+import static de.adesso.brainysnake.Gamelogic.Player.Orientation.*;
 
 public class GameMaster {
 
@@ -53,10 +52,10 @@ public class GameMaster {
     PlayerController playerController;
 
     List<Agent> agents = new ArrayList<Agent>();
+    List<Agent> deadAgents = new ArrayList<Agent>();
 
     //TODO rukl@rukl change to dto or representation object. do not operate on real data
     private Level level;
-
 
     public GameMaster(Level level) {
         // Create UI ?
@@ -80,29 +79,22 @@ public class GameMaster {
         playerController = new PlayerController(brainySnakePlayers, brainySnakePlayersUiModel);
     }
 
-    public void registerAgent(List<Agent> agents) {
-        for (Agent agent : agents) {
-            if (this.agents.contains(agent)) {
-                Gdx.app.log("GameMaster", "Agent " + agent.getName() + "already registered");
-                continue;
-            }
-
-            this.agents.add(agent);
-            Gdx.app.log("GameMaster", "Register Agent " + agent.getName());
-        }
+    public void registerPlayer() {
+        agents.add(new Agent(playerOne, new Color(124f, 123f, 123f, 255f), true));
     }
 
     public void update(float delta) {
-        //check timeout
-        getNextMoveActions();
+        gameLoop();
     }
 
-    public void getNextMoveActions() {
+    public void gameLoop() {
+
+        //TODO rukl@rukl check timeOut
 
         //update playerstate for each agent
-//        for (Agent agent : agents) {
-//            agent.updatePlayerState(generatePlayerStatus(agent));
-//        }
+        for (Agent agent : agents) {
+            agent.updatePlayerState();
+        }
 
         // TODO Wir brauchen eine logische Sicht auf das Spiel.
         /**
@@ -111,9 +103,8 @@ public class GameMaster {
         this.playerController.updatePlayerState(new GlobalGameState());
 
         //collect agent movements
-        Map<Agent, AgentMovement> agentMovements = new HashMap<Agent, AgentMovement>();
         for (Agent agent : agents) {
-            agentMovements.put(agent, agent.generateMove());
+            agent.generateMove();
         }
 
         Map<PlayerHandler, AgentChoice> playerStatus = this.playerController.getPlayerStatus();
@@ -123,43 +114,109 @@ public class GameMaster {
 
 
         //check validity of agent movements and moveToNextPosition, if action is valid
-        for (Agent agent : agentMovements.keySet()) {
-            AgentMovement agentMovement = agentMovements.get(agent);
-            GameEvent     movementValid = isMovementValid(agentMovement, agent);
-
-            //moveToNextPosition ist valid
-            if (movementValid.equals(GameEvent.MOVED)) {
-                agent.moveToNextPosition(agentMovement);
-                agent.setConfused(false);
-            } else {
-                agent.setConfused(true);
-            }
+        for (Agent agent : agents) {
+            validateEvents(agent);
         }
-        agentMovements.clear();
+
+        //check react to gameevents of agents
+        for (Agent agent : agents) {
+            List<GameEvent> gameEvents = agent.getGameEvents();
+            int collectedPoints = 0;
+            for (GameEvent gameEvent : gameEvents) {
+                switch (gameEvent) {
+                    case DIEDED:
+                        agent.kill();
+                        deadAgents.add(agent);
+                        break;
+                    case MOVED:
+                        //move player as he planned
+                        agent.moveToNextPosition();
+                        break;
+                    case COLLISION_WITH_LEVEL:
+                        agent.setConfused(true);
+                        collectedPoints--;
+                        break;
+                    case HIT_HIMSELF:
+                        collectedPoints--;
+                        agent.setGhostMode();
+                        break;
+                    case HIT_AGENT:
+                        agent.setConfused(true);
+                        collectedPoints++;
+                        break;
+                    case HIT_BY_AGENT:
+                        //agent was Hit by another agent
+                        if (!agent.isGhostMode()) {
+                            collectedPoints--;
+                        }
+                        agent.setGhostMode();
+                        break;
+                    case CONSUMED_POINT:
+                        collectedPoints++;
+                        break;
+                }
+            }
+
+            //if no points where collected, just move the snake
+            if (collectedPoints <= 0) {
+                agent.removeTail();
+                //if negative points where collected, remove max one point
+                if (collectedPoints <= -1) {
+                    agent.removeTail();
+                }
+            }
+
+            //TODO rukl@rukl wenn der agent an dieser Stelle nur noch einen Punkt hat stirbt er
+            agent.endround();
+        }
+
+
+        for (Agent agent : deadAgents) {
+            agents.remove(agent);
+        }
+
 
         // setup Score for each agent;
 
+
         // spread new points in level
         level.spreadPoints();
-
-
     }
 
-    private GameEvent isMovementValid(AgentMovement agentMovement, Agent agent) {
-        GameEvent gameEvent = GameEvent.MOVED;
+    private void validateEvents(Agent agent) {
 
-        Dot nextPosition = agent.getNextPosition(agentMovement);
-        if (level.checkCollision(nextPosition.x, nextPosition.y)) {
-            gameEvent = GameEvent.COLLISION_WITH_LEVEL;
-        } else {
-            //TODO rukl@rukl check collision with barrier
+        if (agent.getDots().size() <= 1) {
+            agent.getGameEvents().add(GameEvent.DIEDED);
+            return;
         }
 
-        return gameEvent;
+        Dot nextPosition = agent.getNextPosition();
+        if (level.checkCollision(nextPosition.x, nextPosition.y)) {
+            agent.getGameEvents().add(GameEvent.COLLISION_WITH_LEVEL);
+            return;
+        }
+
+        agent.getGameEvents().add(GameEvent.MOVED);
+
+        //did the agent hit any snake object
+        for (Agent tempAgent : agents) {
+            if (tempAgent.containsPosition(nextPosition)) {
+                if (tempAgent.equals(agent)) {
+                    agent.getGameEvents().add(GameEvent.HIT_HIMSELF);
+                } else {
+                    agent.getGameEvents().add(GameEvent.HIT_AGENT);
+                    tempAgent.getGameEvents().add(GameEvent.HIT_BY_AGENT);
+                }
+            }
+        }
+
+        if (level.tryConsumePoint(nextPosition)) {
+            agent.getGameEvents().add(GameEvent.CONSUMED_POINT);
+        }
     }
 
-    private PlayerState generatePlayerStatus(Agent agent) {
-        return null;//TODO rukl@rukl genearte status information for agent here
+    public List<Agent> getAgents() {
+        return agents;
     }
 
     public void shutdown() {

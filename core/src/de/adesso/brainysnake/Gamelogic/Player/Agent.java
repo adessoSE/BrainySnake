@@ -1,48 +1,80 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
+import de.adesso.brainysnake.Gamelogic.GameEvent;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
-import de.adesso.brainysnake.playercommon.Orientation;
+import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
+import de.adesso.brainysnake.playercommon.PlayerUpdate;
 
-import static de.adesso.brainysnake.playercommon.Orientation.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static de.adesso.brainysnake.Gamelogic.Player.Orientation.*;
 
 public class Agent extends GameObject {
 
-    private static String name = "AgentDummy";
+    private final Color playerColor;
+
+    private BrainySnakePlayer brainySnakePlayer;
 
     private boolean left, right, up, down;
 
-    private Orientation[] orientations       = new Orientation[]{UP, RIGHT, DOWN, LEFT};
+    private final static Orientation[] orientations = new Orientation[]{UP, RIGHT, DOWN, LEFT};
 
-    private int           currentOrientation = 0;
+    private int currentOrientation = 0;
 
-    private boolean dead, frozen, confused = false;
+    private int ghostTime = 0;
 
-    private int currentBlinkLength = 0;
+    private boolean dead, ghostMode, confused = false;
 
-    private int blinkingSpeed = Config.BLINKING_SPEED;
+    private List<GameEvent> gameEvents = new ArrayList<GameEvent>();
 
-    public Agent() {
+    private AgentMovement agentMovement;
+
+    private boolean keyboardControlled = false;
+
+    public Agent(BrainySnakePlayer brainySnakePlayer, Color playerColor, boolean keyboardControlled) {
         super();
+        this.brainySnakePlayer = brainySnakePlayer;
+        this.keyboardControlled = keyboardControlled;
+        this.playerColor = playerColor;
+
         dots.add(new Dot(50, 50));
         dots.add(new Dot(50, 51));
         dots.add(new Dot(50, 52));
         dots.add(new Dot(50, 53));
         dots.add(new Dot(50, 54));
-        up = true;
-        down = left = right = false;
+        dots.add(new Dot(50, 55));
+        dots.add(new Dot(50, 56));
+        dots.add(new Dot(50, 57));
+        dots.add(new Dot(50, 58));
+        dots.add(new Dot(50, 59));
+        dots.add(new Dot(50, 60));
+        dots.add(new Dot(50, 61));
+        dots.add(new Dot(50, 62));
+        dots.add(new Dot(50, 63));
+        dots.add(new Dot(50, 64));
+        dots.add(new Dot(50, 65));
+        dots.add(new Dot(50, 66));
+        dots.add(new Dot(50, 67));
+        dots.add(new Dot(50, 68));
     }
 
     private void update(float delta) {
 
         if (dead) {
-            blink(delta);
+            color = Config.DEAD_COLOR;
             return;
-        } else if (confused) {
+        }
+
+        if (ghostMode) {
+            ghostMode();
+        }else if (confused) {
             color = Color.YELLOW;
         } else {
             color = Color.RED;
@@ -51,15 +83,74 @@ public class Agent extends GameObject {
         updateInput();
     }
 
-    public void updatePlayerState(PlayerState playerState) {
+    public void updatePlayerState() {
         //TODO rukl@rukl save playerstate
     }
 
-    public AgentMovement generateMove() {
+    private void blink(float delta) {
+     /*   if (currentBlinkLength++ > blinkingSpeed) {
+            currentBlinkLength = 0;
+            color = Config.DEFAULT_PLAYER_COLOR;
+        } else {
+            color = Config.BLINK_COLOR;
+        }*/
+    }
+
+
+    private void ghostMode() {
+        if (ghostTime++ > Config.GHOST_TIME) {
+            ghostTime = 0;
+            color = playerColor;
+            ghostMode = false;
+        } else {
+            color = Config.GHOST_MODE_COLOR;
+        }
+    }
+
+    public void generateMove() {
         update(0);
 
-        AgentMovement agentMovement;
+        //TODO rukl@rukl PlayerUpdate durch agentMovement funktionalität ersetzen oder damit verheiraten
+        if (!keyboardControlled) {
+            PlayerUpdate playerUpdate = brainySnakePlayer.tellPlayerUpdate();
+            return;
+        }
 
+        AgentMovement agentMovement = AgentMovement.MOVE_FORWARD;
+
+        if (right) {
+            if (currentOrientation == 0) {
+                agentMovement = AgentMovement.MOVE_RIGHT;
+            } else if (currentOrientation == 2) {
+                agentMovement = AgentMovement.MOVE_LEFT;
+            }
+        }
+
+        if (left) {
+            if (currentOrientation == 0) {
+                agentMovement = AgentMovement.MOVE_LEFT;
+            } else if (currentOrientation == 2) {
+                agentMovement = AgentMovement.MOVE_RIGHT;
+            }
+        }
+
+        if (up) {
+            if (currentOrientation == 1) {
+                agentMovement = AgentMovement.MOVE_LEFT;
+            } else if (currentOrientation == 3) {
+                agentMovement = AgentMovement.MOVE_RIGHT;
+            }
+        }
+
+        if (down) {
+            if (currentOrientation == 1) {
+                agentMovement = AgentMovement.MOVE_RIGHT;
+            } else if (currentOrientation == 3) {
+                agentMovement = AgentMovement.MOVE_LEFT;
+            }
+        }
+
+        /*
         if (left) {
             agentMovement = AgentMovement.MOVE_LEFT;
         } else if (right) {
@@ -67,24 +158,14 @@ public class Agent extends GameObject {
         } else {
             agentMovement = AgentMovement.MOVE_FORWARD;
         }
+        */
 
-        left = right = false;
-        up = true;
-        return agentMovement;
+        left = right = up = false;
+        this.agentMovement = agentMovement;
     }
 
-    private void blink(float delta) {
-        if (currentBlinkLength++ > blinkingSpeed) {
-            currentBlinkLength = 0;
-            color = Config.DEFAULT_PLAYER_COLOR;
-        } else {
-            color = Config.TWINKLE_COLOR;
-        }
-    }
 
-    /**
-     * TODO rukl@rukl DOC
-     */
+
     private void updateInput() {
         if (KeyBoardControl.LEFT && !right) {
             left = true;
@@ -104,10 +185,6 @@ public class Agent extends GameObject {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
     private void spinRight() {
         if (++currentOrientation >= orientations.length) {
             currentOrientation = 0;
@@ -123,20 +200,18 @@ public class Agent extends GameObject {
     /**
      * What is the next Agent Head Position depending on the next GameEvent
      *
-     * @param agentMovement
-     *
      * @return
      */
-    public Dot getNextPosition(AgentMovement agentMovement) {
+    public Dot getNextPosition() {
         int saveCurrentOrientation = currentOrientation;
-        Dot nextPosition           = nextPositionIs(agentMovement);
+        Dot nextPosition = nextPositionIs(agentMovement);
         currentOrientation = saveCurrentOrientation;
         return nextPosition;
     }
 
-    public void moveToNextPosition(AgentMovement agentMovement) {
+    public void moveToNextPosition() {
         dots.add(nextPositionIs(agentMovement));
-        dots.remove(dots.get(0));
+        confused = false;
     }
 
     private void spin(AgentMovement agentMovement) {
@@ -173,8 +248,51 @@ public class Agent extends GameObject {
         return nextPosition;
     }
 
+    public void removeTail() {
+        dots.remove(0);
+    }
+
+    public boolean isConfused() {
+        return confused;
+    }
+
     public void setConfused(boolean isConfused) {
         this.confused = isConfused;
     }
 
+    public boolean containsPosition(Dot position) {
+        for (Dot dot : dots) {
+            if (position.x == dot.x && position.y == dot.y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<GameEvent> getGameEvents() {
+        return gameEvents;
+    }
+
+    public void endround() {
+        gameEvents.clear();
+        agentMovement = null;
+    }
+
+    public void setGhostMode() {
+        ghostMode = true;
+        ghostTime = 0;
+    }
+
+    public boolean isGhostMode() {
+        return ghostMode;
+    }
+
+    public void kill(){
+        dead = true;
+        Gdx.app.log("AGENT: " , "Player " + brainySnakePlayer.getPlayerName() + " has dieded");
+    }
+
+    public boolean isDead(){
+        return dead;
+    }
 }

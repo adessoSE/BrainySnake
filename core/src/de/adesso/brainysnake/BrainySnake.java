@@ -87,7 +87,6 @@ public class BrainySnake extends ApplicationAdapter {
             }
         }
 
-
         //draw pixmap to batch
         texture.draw(pixmap, 0, 0);
         batch.begin();
