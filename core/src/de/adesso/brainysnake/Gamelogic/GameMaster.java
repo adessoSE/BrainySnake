@@ -27,7 +27,7 @@ public class GameMaster {
     private BrainySnakePlayer playerThree = new SamplePlayer();
     private BrainySnakePlayer playerFour  = new SamplePlayer();
 
-    List<AgentPlayer> agentPlayerList = new ArrayList<AgentPlayer>();
+    List<PlayerHandler> playerHandlerList = new ArrayList<PlayerHandler>();
 
     List<Agent> agents = new ArrayList<Agent>();
 
@@ -38,21 +38,13 @@ public class GameMaster {
     public GameMaster(Level level) {
         this.level = level;
 
-        // TODO ftk@rukl AgentPlayer ist wie dein Agent.class wird hier nur mit der Implementierung sowie der Startposition initialisiert
+        // TODO ftk@rukl PlayerHandler ist wie dein Agent.class wird hier nur mit der Implementierung sowie der Startposition initialisiert
         // Darfst du aber gerne so benennen wie du willst :)
-        agentPlayerList = new ArrayList<AgentPlayer>();
-        agentPlayerList.add(new AgentPlayer(playerOne, UP,
-                                            level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH,
-                                                                           Color.BLUE)));
-        agentPlayerList.add(new AgentPlayer(playerTwo, RIGHT,
-                                            level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH,
-                                                                           Color.GREEN)));
-        agentPlayerList.add(new AgentPlayer(playerThree, DOWN,
-                                            level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH,
-                                                                           Color.ORANGE)));
-        agentPlayerList.add(new AgentPlayer(playerFour, LEFT,
-                                            level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH,
-                                                                           Color.CYAN)));
+        playerHandlerList = new ArrayList<PlayerHandler>();
+        playerHandlerList.add(new PlayerHandler(playerOne, UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH, Color.BLUE)));
+        playerHandlerList.add(new PlayerHandler(playerOne, RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH, Color.GREEN)));
+        playerHandlerList.add(new PlayerHandler(playerOne, DOWN, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH, Color.ORANGE)));
+        playerHandlerList.add(new PlayerHandler(playerOne, LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH, Color.CYAN)));
     }
 
     public void registerAgent(List<Agent> agents) {
