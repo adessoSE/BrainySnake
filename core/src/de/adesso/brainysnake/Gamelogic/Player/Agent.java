@@ -1,6 +1,7 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
@@ -65,6 +66,11 @@ public class Agent extends GameObject {
     }
 
     private void update(float delta) {
+
+        if (dead) {
+            color = Config.DEAD_COLOR;
+            return;
+        }
 
         if (ghostMode) {
             ghostMode();
@@ -279,5 +285,14 @@ public class Agent extends GameObject {
 
     public boolean isGhostMode() {
         return ghostMode;
+    }
+
+    public void kill(){
+        dead = true;
+        Gdx.app.log("AGENT: " , "Player " + brainySnakePlayer.getPlayerName() + " has dieded");
+    }
+
+    public boolean isDead(){
+        return dead;
     }
 }

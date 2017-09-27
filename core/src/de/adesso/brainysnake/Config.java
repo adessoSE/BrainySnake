@@ -13,6 +13,7 @@ public class Config {
     public static Color BARRIER_COLOR = Color.LIGHT_GRAY;
     public static Color DEFAULT_PLAYER_COLOR = Color.RED;
     public static Color BLINK_COLOR = Color.YELLOW;
+    public static Color DEAD_COLOR = Color.VIOLET;
     public static Color GHOST_MODE_COLOR = Color.BLUE;
     public static int BLINKING_SPEED = 5; //Blink length in Update-Calls
     public static int QUANTITY_BARRIERS = 6;

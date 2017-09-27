@@ -15,7 +15,9 @@ public class GameMaster {
     //Alle Spiele erzeugen
     private BrainySnakePlayer playerOne = new SamplePlayer();
     private BrainySnakePlayer playerTwo = new SamplePlayer();
+
     List<Agent> agents = new ArrayList<Agent>();
+    List<Agent> deadAgents = new ArrayList<Agent>();
 
     //TODO rukl@rukl change to dto or representation object. do not operate on real data
     private Level level;
@@ -29,11 +31,12 @@ public class GameMaster {
     }
 
     public void update(float delta) {
-        //check timeout
-        getNextMoveActions();
+        gameLoop();
     }
 
-    public void getNextMoveActions() {
+    public void gameLoop() {
+
+        //TODO rukl@rukl check timeOut
 
         //update playerstate for each agent
         for (Agent agent : agents) {
@@ -52,12 +55,14 @@ public class GameMaster {
 
         //check react to gameevents of agents
         for (Agent agent : agents) {
-
             List<GameEvent> gameEvents = agent.getGameEvents();
             int collectedPoints = 0;
             for (GameEvent gameEvent : gameEvents) {
                 switch (gameEvent) {
-
+                    case DIEDED:
+                        agent.kill();
+                        deadAgents.add(agent);
+                        break;
                     case MOVED:
                         //move player as he planned
                         agent.moveToNextPosition();
@@ -83,8 +88,6 @@ public class GameMaster {
                         break;
                     case CONSUMED_POINT:
                         collectedPoints++;
-                        //agent.
-                    case DIEDED:
                         break;
                 }
             }
@@ -102,6 +105,12 @@ public class GameMaster {
             agent.endround();
         }
 
+
+        for (Agent agent : deadAgents) {
+            agents.remove(agent);
+        }
+
+
         // setup Score for each agent;
 
 
@@ -110,6 +119,12 @@ public class GameMaster {
     }
 
     private void validateEvents(Agent agent) {
+
+        if (agent.getDots().size() <= 1) {
+            agent.getGameEvents().add(GameEvent.DIEDED);
+            return;
+        }
+
         Dot nextPosition = agent.getNextPosition();
         if (level.checkCollision(nextPosition.x, nextPosition.y)) {
             agent.getGameEvents().add(GameEvent.COLLISION_WITH_LEVEL);
@@ -127,7 +142,6 @@ public class GameMaster {
                     agent.getGameEvents().add(GameEvent.HIT_AGENT);
                     tempAgent.getGameEvents().add(GameEvent.HIT_BY_AGENT);
                 }
-
             }
         }
 
