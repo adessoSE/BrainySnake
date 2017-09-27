@@ -18,4 +18,12 @@ public class AgentChoice {
     public static AgentChoice createNoChoice() {
         return new AgentChoice(false, AgentMovement.NO_MOVE);
     }
+
+    public boolean isHasChosen() {
+        return hasChosen;
+    }
+
+    public AgentMovement getAgentMovement() {
+        return agentMovement;
+    }
 }

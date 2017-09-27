@@ -1,22 +1,23 @@
 package de.adesso.brainysnake.Gamelogic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
+import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
-import de.adesso.brainysnake.Gamelogic.Player.Agent;
-import de.adesso.brainysnake.Gamelogic.Player.AgentMovement;
-import de.adesso.brainysnake.Gamelogic.Player.AgentPlayer;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerState;
+import de.adesso.brainysnake.Gamelogic.Player.*;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 
-import static de.adesso.brainysnake.Gamelogic.Player.Orientation.*;
+import static de.adesso.brainysnake.playercommon.Orientation.*;
+
 
 public class GameMaster {
 
@@ -109,7 +110,13 @@ public class GameMaster {
 
         Map<PlayerHandler, AgentChoice> playerStatus = this.playerController.getPlayerStatus();
         for(PlayerHandler playerHandler : playerStatus.keySet()) {
+            // Theoretisch können wir die SamplePlayer schon laufen lassen
+            playerHandler.getGameObject();
 
+            // TODO @Rudi hier die Daten die wir von den Agenten erhalten. Wir können das natürlich auch auf koordinaten umrechnen
+            AgentChoice agentChoice = playerStatus.get(playerHandler);
+            boolean hasChosen = agentChoice.isHasChosen();
+            AgentMovement agentMovement = agentChoice.getAgentMovement(); // TODO ftk hier kann ich auch Orientation geben
         }
 
 

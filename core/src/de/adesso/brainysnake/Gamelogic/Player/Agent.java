@@ -9,12 +9,13 @@ import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.GameEvent;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
+import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.adesso.brainysnake.Gamelogic.Player.Orientation.*;
+import static de.adesso.brainysnake.playercommon.Orientation.*;
 
 public class Agent extends GameObject {
 
