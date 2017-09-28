@@ -7,13 +7,14 @@ import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.Gamelogic.Player.*;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
+import de.adesso.brainysnake.playercommon.GameEvent;
 import de.adesso.brainysnake.playercommon.Orientation;
+import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 
 import static de.adesso.brainysnake.playercommon.Orientation.*;
@@ -94,7 +95,7 @@ public class GameMaster {
 
         //update playerstate for each agent
         for (Agent agent : agents) {
-            agent.updatePlayerState();
+           // agent.updatePlayerState(gameEvent);
         }
 
         // TODO Wir brauchen eine logische Sicht auf das Spiel.
@@ -119,7 +120,6 @@ public class GameMaster {
             AgentMovement agentMovement = agentChoice.getAgentMovement(); // TODO ftk hier kann ich auch Orientation geben
         }
 
-
         //check validity of agent movements and moveToNextPosition, if action is valid
         for (Agent agent : agents) {
             validateEvents(agent);
@@ -127,8 +127,8 @@ public class GameMaster {
 
         //check react to gameevents of agents
         for (Agent agent : agents) {
-            List<GameEvent> gameEvents = agent.getGameEvents();
-            int collectedPoints = 0;
+            List<GameEvent> gameEvents      = agent.getGameEvents();
+            int             collectedPoints = 0;
             for (GameEvent gameEvent : gameEvents) {
                 switch (gameEvent) {
                     case DIEDED:
@@ -140,6 +140,7 @@ public class GameMaster {
                         agent.moveToNextPosition();
                         break;
                     case COLLISION_WITH_LEVEL:
+                //        agent.getPlayerState().getPlayerGameEvent();
                         agent.setConfused(true);
                         collectedPoints--;
                         break;
@@ -192,12 +193,12 @@ public class GameMaster {
 
     private void validateEvents(Agent agent) {
 
-        if (agent.getDots().size() <= 1) {
+        if (agent.getPositions().size() <= 1) {
             agent.getGameEvents().add(GameEvent.DIEDED);
             return;
         }
 
-        Dot nextPosition = agent.getNextPosition();
+        Point2D nextPosition = agent.getNextPosition();
         if (level.checkCollision(nextPosition.x, nextPosition.y)) {
             agent.getGameEvents().add(GameEvent.COLLISION_WITH_LEVEL);
             return;

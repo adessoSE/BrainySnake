@@ -1,19 +1,20 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
-import de.adesso.brainysnake.Gamelogic.GameEvent;
+import de.adesso.brainysnake.playercommon.GameEvent;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.Orientation;
+import de.adesso.brainysnake.playercommon.PlayerState;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
-
-import java.util.ArrayList;
-import java.util.List;
+import de.adesso.brainysnake.playercommon.math.Point2D;
 
 import static de.adesso.brainysnake.playercommon.Orientation.*;
 
@@ -22,6 +23,8 @@ public class Agent extends GameObject {
     private final Color playerColor;
 
     private BrainySnakePlayer brainySnakePlayer;
+
+    private PlayerState playerState;
 
     private boolean left, right, up, down;
 
@@ -45,25 +48,25 @@ public class Agent extends GameObject {
         this.keyboardControlled = keyboardControlled;
         this.playerColor = playerColor;
 
-        dots.add(new Dot(50, 50));
-        dots.add(new Dot(50, 51));
-        dots.add(new Dot(50, 52));
-        dots.add(new Dot(50, 53));
-        dots.add(new Dot(50, 54));
-        dots.add(new Dot(50, 55));
-        dots.add(new Dot(50, 56));
-        dots.add(new Dot(50, 57));
-        dots.add(new Dot(50, 58));
-        dots.add(new Dot(50, 59));
-        dots.add(new Dot(50, 60));
-        dots.add(new Dot(50, 61));
-        dots.add(new Dot(50, 62));
-        dots.add(new Dot(50, 63));
-        dots.add(new Dot(50, 64));
-        dots.add(new Dot(50, 65));
-        dots.add(new Dot(50, 66));
-        dots.add(new Dot(50, 67));
-        dots.add(new Dot(50, 68));
+        positions.add(new Point2D(50, 50));
+        positions.add(new Point2D(50, 51));
+        positions.add(new Point2D(50, 52));
+        positions.add(new Point2D(50, 53));
+        positions.add(new Point2D(50, 54));
+        positions.add(new Point2D(50, 55));
+        positions.add(new Point2D(50, 56));
+        positions.add(new Point2D(50, 57));
+        positions.add(new Point2D(50, 58));
+        positions.add(new Point2D(50, 59));
+        positions.add(new Point2D(50, 60));
+        positions.add(new Point2D(50, 61));
+        positions.add(new Point2D(50, 62));
+        positions.add(new Point2D(50, 63));
+        positions.add(new Point2D(50, 64));
+        positions.add(new Point2D(50, 65));
+        positions.add(new Point2D(50, 66));
+        positions.add(new Point2D(50, 67));
+        positions.add(new Point2D(50, 68));
     }
 
     private void update(float delta) {
@@ -84,19 +87,13 @@ public class Agent extends GameObject {
         updateInput();
     }
 
-    public void updatePlayerState() {
-        //TODO rukl@rukl save playerstate
+    public void updatePlayerState(GameEvent gameEvent) {
+        new PlayerState(0, 0, 0, positions.get(positions.size() - 1), positions.get(0), false, null, ghostMode, null);
     }
 
-    private void blink(float delta) {
-     /*   if (currentBlinkLength++ > blinkingSpeed) {
-            currentBlinkLength = 0;
-            color = Config.DEFAULT_PLAYER_COLOR;
-        } else {
-            color = Config.BLINK_COLOR;
-        }*/
+    public PlayerState getPlayerState() {
+        return playerState;
     }
-
 
     private void ghostMode() {
         if (ghostTime++ > Config.GHOST_TIME) {
@@ -203,15 +200,15 @@ public class Agent extends GameObject {
      *
      * @return
      */
-    public Dot getNextPosition() {
+    public Point2D getNextPosition() {
         int saveCurrentOrientation = currentOrientation;
-        Dot nextPosition = nextPositionIs(agentMovement);
+        Point2D nextPosition = nextPositionIs(agentMovement);
         currentOrientation = saveCurrentOrientation;
         return nextPosition;
     }
 
     public void moveToNextPosition() {
-        dots.add(nextPositionIs(agentMovement));
+        positions.add(nextPositionIs(agentMovement));
         confused = false;
     }
 
@@ -227,21 +224,21 @@ public class Agent extends GameObject {
         }
     }
 
-    private Dot nextPositionIs(AgentMovement agentMovement) {
+    private Point2D nextPositionIs(AgentMovement agentMovement) {
         spin(agentMovement);
-        Dot nextPosition = null;
+        Point2D nextPosition = null;
         switch (orientations[currentOrientation]) {
             case UP:
-                nextPosition = new Dot(dots.get(dots.size() - 1).x, dots.get(dots.size() - 1).y + 1);
+                nextPosition = new Point2D(positions.get(positions.size() - 1).x, positions.get(positions.size() - 1).y + 1);
                 break;
             case RIGHT:
-                nextPosition = new Dot(dots.get(dots.size() - 1).x + 1, dots.get(dots.size() - 1).y);
+                nextPosition = new Point2D(positions.get(positions.size() - 1).x + 1, positions.get(positions.size() - 1).y);
                 break;
             case DOWN:
-                nextPosition = new Dot(dots.get(dots.size() - 1).x, dots.get(dots.size() - 1).y - 1);
+                nextPosition = new Point2D(positions.get(positions.size() - 1).x, positions.get(positions.size() - 1).y - 1);
                 break;
             case LEFT:
-                nextPosition = new Dot(dots.get(dots.size() - 1).x - 1, dots.get(dots.size() - 1).y);
+                nextPosition = new Point2D(positions.get(positions.size() - 1).x - 1, positions.get(positions.size() - 1).y);
                 break;
             default:
         }
@@ -250,7 +247,7 @@ public class Agent extends GameObject {
     }
 
     public void removeTail() {
-        dots.remove(0);
+        positions.remove(0);
     }
 
     public boolean isConfused() {
@@ -261,8 +258,8 @@ public class Agent extends GameObject {
         this.confused = isConfused;
     }
 
-    public boolean containsPosition(Dot position) {
-        for (Dot dot : dots) {
+    public boolean containsPosition(Point2D position) {
+        for (Point2D dot : this.positions) {
             if (position.x == dot.x && position.y == dot.y) {
                 return true;
             }
@@ -295,5 +292,9 @@ public class Agent extends GameObject {
 
     public boolean isDead(){
         return dead;
+    }
+
+    public BrainySnakePlayer getBrainySnakePlayer() {
+        return brainySnakePlayer;
     }
 }

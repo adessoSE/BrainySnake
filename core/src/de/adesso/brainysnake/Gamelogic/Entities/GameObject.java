@@ -6,39 +6,40 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
+import de.adesso.brainysnake.playercommon.math.Point2D;
 
 public class GameObject {
 
-    protected List<Dot> dots;
+    protected List<Point2D> positions;
 
     protected Color color;
 
     public GameObject() {
-        dots = new ArrayList<Dot>();
+        positions = new ArrayList<Point2D>();
         color = Config.DEFAULT_PLAYER_COLOR;
     }
 
 
-    public GameObject(List<Dot> dots) {
-        this(dots, Color.MAROON);
+    public GameObject(List<Point2D> positions) {
+        this(positions, Color.MAROON);
     }
 
-    public GameObject(List<Dot> dots, Color color) {
-        if (dots == null) {
-            this.dots = new ArrayList<Dot>();
+    public GameObject(List<Point2D> positions, Color color) {
+        if (positions == null) {
+            this.positions = new ArrayList<Point2D>();
         } else {
-            this.dots = dots;
+            this.positions = positions;
         }
 
         this.color = color;
     }
 
-    public List<Dot> getDots() {
-        return dots;
+    public List<Point2D> getPositions() {
+        return positions;
     }
 
-    public void setDots(List<Dot> dots) {
-        this.dots = dots;
+    public void setPositions(List<Point2D> positions) {
+        this.positions = positions;
     }
 
     public Color getColor() {
@@ -50,6 +51,6 @@ public class GameObject {
     }
 
     public int size() {
-        return dots.size();
+        return positions.size();
     }
 }

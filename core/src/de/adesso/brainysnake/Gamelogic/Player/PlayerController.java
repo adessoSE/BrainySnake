@@ -110,6 +110,8 @@ public class PlayerController {
             } catch (InterruptedException e) {
                 // TODO
                 e.printStackTrace();
+                Gdx.app.error("PlayerController: ", e.getMessage());
+
             } catch (ExecutionException e) {
                 // TODO
                 e.printStackTrace();
