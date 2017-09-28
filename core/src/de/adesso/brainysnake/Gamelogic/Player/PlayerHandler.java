@@ -27,7 +27,7 @@ public class PlayerHandler {
 
     private boolean dead, ghostMode, confused, blinked;
 
-    private int ghostTime = 0;
+    private int ghostTime = 0, blinkTime = 0;
 
     private Orientation orientation;
 
@@ -49,7 +49,7 @@ public class PlayerHandler {
         return this.playerName;
     }
 
-    private void update(float delta) {
+    public void update() {
 
         if (dead) {
             return;
@@ -65,21 +65,25 @@ public class PlayerHandler {
     private void ghostMode() {
         if (ghostTime++ > Config.GHOST_TIME) {
             ghostTime = 0;
-            snake.setGhostMode();
+            snake.reset();
             ghostMode = false;
         } else {
-            snake.reset();
+            snake.setGhostMode();
         }
     }
 
     private void blink() {
-        blinked = !blinked;
+        if (blinkTime++ > Config.BLINK_TIME) {
+            blinkTime = 0;
+            blinked = !blinked;
+        }
 
         if (blinked) {
-            snake.blink();
-        } else {
             snake.reset();
+        } else {
+            snake.blink();
         }
+
     }
 
     /**
@@ -136,8 +140,16 @@ public class PlayerHandler {
         Gdx.app.log("AGENT: ", "Player " + brainySnakePlayer.getPlayerName() + " has dieded");
     }
 
+    public boolean isDead() {
+        return dead;
+    }
+
     public void penalty() {
-        snake.removeTail();
+        if (snake.countPoints() <= 1) {
+            dead = true;
+        } else {
+            snake.removeTail();
+        }
     }
 
     private int getOrientationByEnum(Orientation orientation) {
@@ -200,7 +212,8 @@ public class PlayerHandler {
     }
 
     public void setGhostMode() {
-        this.ghostMode = true;
+        ghostMode = true;
+        ghostTime = 0;
     }
 
     public boolean isGhostMode() {
@@ -213,7 +226,6 @@ public class PlayerHandler {
 
     public void endround() {
         roundEvents.clear();
-
     }
 
     public boolean isOrientationValid(Orientation orientation) {
@@ -232,5 +244,9 @@ public class PlayerHandler {
 
     public void setCurrentOrientation(Orientation currentOrientation) {
         this.currentOrientation = currentOrientation;
+    }
+
+    public void grantPoint() {
+
     }
 }

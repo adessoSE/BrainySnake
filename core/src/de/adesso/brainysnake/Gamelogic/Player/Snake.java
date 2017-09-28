@@ -33,7 +33,6 @@ public class Snake {
     }
 
     public void setNextPosition(Point2D nextPosition) {
-        body.getPositions().removeLast();
         body.getPositions().addFirst(getHeadPosition());
         setHead(nextPosition);
     }
@@ -43,8 +42,8 @@ public class Snake {
     }
 
     public void setGhostMode() {
-        head.getColor().a *= Config.GHOSTMODE_OPACITY;
-        body.getColor().a *= Config.GHOSTMODE_OPACITY;
+        head.setColor(Config.GHOSTMODE_COLOR);
+        body.setColor(Config.GHOSTMODE_COLOR);
     }
 
     public void blink() {
@@ -61,9 +60,12 @@ public class Snake {
     }
 
     public void setColor(Color color) {
-        headColor = color;
+        headColor = new Color(color);
         bodyColor = new Color(color);
         bodyColor.a = Config.SNAKE_BODY_LIGHTING;
+
+        head.setColor(headColor);
+        body.setColor(bodyColor);
     }
 
     public GameObject getHead() {

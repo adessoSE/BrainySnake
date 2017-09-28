@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.adesso.brainysnake.Config;
+import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
@@ -27,6 +28,8 @@ public class GameMaster {
     // Alle Spiele erzeugen
     private BrainySnakePlayer playerOne = new SamplePlayer() {
 
+        private boolean left, right, up, down;
+
         @Override
         public String getPlayerName() {
             return "SamplePlayer One";
@@ -34,7 +37,38 @@ public class GameMaster {
 
         @Override
         public PlayerUpdate tellPlayerUpdate() {
-            return new PlayerUpdate(DOWN);
+            if (KeyBoardControl.LEFT && !right) {
+                left = true;
+                right = up = down = false;
+            }
+            if (KeyBoardControl.RIGHT && !left) {
+                right = true;
+                left = up = down = false;
+            }
+            if (KeyBoardControl.UP && !down) {
+                up = true;
+                left = right = down = false;
+            }
+            if (KeyBoardControl.DOWN && !up) {
+                down = true;
+                left = right = up = false;
+            }
+
+            if (left) {
+                return new PlayerUpdate(Orientation.LEFT);
+            }
+            if (right) {
+                return new PlayerUpdate(Orientation.RIGHT);
+            }
+            if (up) {
+                return new PlayerUpdate(Orientation.UP);
+            }
+            if (down) {
+                return new PlayerUpdate(Orientation.DOWN);
+            }
+
+            return null;
+
         }
     };
     private BrainySnakePlayer playerTwo = new SamplePlayer() {
@@ -87,16 +121,16 @@ public class GameMaster {
 
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
-        brainySnakePlayers.add(playerTwo);
-        brainySnakePlayers.add(playerThree);
-        brainySnakePlayers.add(playerFour);
+        // brainySnakePlayers.add(playerTwo);
+        // brainySnakePlayers.add(playerThree);
+        // brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
         Map<Orientation, Snake> brainySnakePlayersUiModel = new HashMap<Orientation, Snake>();
         brainySnakePlayersUiModel.put(UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH));
-         brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
+        // brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
+        // brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
+        // brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
 
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
@@ -139,8 +173,11 @@ public class GameMaster {
                         // move player as he planned
                         playerHandler.moveToNextPosition();
                         break;
+                    case CONFUSED:
+                        playerHandler.setConfused(true);
+                        collectedPoints++;
+                        break;
                     case COLLISION_WITH_LEVEL:
-                        // agent.getPlayerState().getPlayerGameEvent();
                         playerHandler.setConfused(true);
                         collectedPoints--;
                         break;
@@ -165,12 +202,16 @@ public class GameMaster {
             }
 
             // if no points where collected, just move the snake
-            if (collectedPoints < 0) {
-                // playerHandler.penalty();
+            if (collectedPoints <= 0) {
+                playerHandler.penalty();
+                if (collectedPoints < -1) {
+                    playerHandler.penalty();
+                }
             }
 
             // TODO rukl@rukl wenn der agent an dieser Stelle nur noch einen Punkt hat stirbt er
             playerHandler.endround();
+            playerHandler.update();
         }
 
         for (PlayerHandler dead : deadPlayer) {
@@ -186,7 +227,7 @@ public class GameMaster {
     private void validateEvents(PlayerHandler playerHandler, PlayerChoice playerChoice) {
         List<RoundEvents> roundEvents = playerHandler.getRoundEvents();
 
-        if (playerHandler.getSnake().countPoints() <= 1) {
+        if (playerHandler.isDead() || playerHandler.getSnake().countPoints() <= 1) {
             roundEvents.add(DIEDED);
             return;
         }
@@ -200,6 +241,8 @@ public class GameMaster {
         if (playerChoice.isHasChosen() && playerHandler.isOrientationValid(playerChoice.getOrientation())) {
             playerHandler.setCurrentOrientation(playerChoice.getOrientation());
             roundEvents.add(MOVED);
+        } else {
+            roundEvents.add(CONFUSED);
         }
 
         // did the player bit any snake object
