@@ -34,7 +34,7 @@ public class GameMaster {
 
         @Override
         public PlayerUpdate tellPlayerUpdate() {
-            return new PlayerUpdate(Orientation.UP);
+            return new PlayerUpdate(DOWN);
         }
     };
     private BrainySnakePlayer playerTwo = new SamplePlayer() {
@@ -46,7 +46,7 @@ public class GameMaster {
 
         @Override
         public PlayerUpdate tellPlayerUpdate() {
-            return new PlayerUpdate(Orientation.DOWN);
+            return new PlayerUpdate(DOWN);
         }
     };
     private BrainySnakePlayer playerThree = new SamplePlayer() {
@@ -58,7 +58,7 @@ public class GameMaster {
 
         @Override
         public PlayerUpdate tellPlayerUpdate() {
-            return new PlayerUpdate(Orientation.RIGHT);
+            return new PlayerUpdate(RIGHT);
         }
     };
     private BrainySnakePlayer playerFour = new SamplePlayer() {
@@ -70,7 +70,7 @@ public class GameMaster {
 
         @Override
         public PlayerUpdate tellPlayerUpdate() {
-            return new PlayerUpdate(Orientation.LEFT);
+            return new PlayerUpdate(LEFT);
         }
     };
 
@@ -87,16 +87,16 @@ public class GameMaster {
 
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
-     //   brainySnakePlayers.add(playerTwo);
-     //   brainySnakePlayers.add(playerThree);
-     //   brainySnakePlayers.add(playerFour);
+        brainySnakePlayers.add(playerTwo);
+        brainySnakePlayers.add(playerThree);
+        brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
         Map<Orientation, Snake> brainySnakePlayersUiModel = new HashMap<Orientation, Snake>();
         brainySnakePlayersUiModel.put(UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH));
-      // brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
-     //   brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
-     //   brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
+         brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
 
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
@@ -126,7 +126,7 @@ public class GameMaster {
 
         // check react to gameevents of agents
         List<PlayerHandler> deadPlayer = new ArrayList<PlayerHandler>();
-        for (PlayerHandler playerHandler: playerController.getPlayerHandlerList()) {
+        for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             List<RoundEvents> roundEvents = playerHandler.getRoundEvents();
             int collectedPoints = 0;
             for (RoundEvents roundEvent : roundEvents) {
@@ -166,14 +166,14 @@ public class GameMaster {
 
             // if no points where collected, just move the snake
             if (collectedPoints < 0) {
-          //     playerHandler.penalty();
+                // playerHandler.penalty();
             }
 
             // TODO rukl@rukl wenn der agent an dieser Stelle nur noch einen Punkt hat stirbt er
             playerHandler.endround();
         }
 
-        for (PlayerHandler dead: deadPlayer) {
+        for (PlayerHandler dead : deadPlayer) {
             playerController.getPlayerHandlerList().remove(dead);
         }
 
@@ -197,7 +197,8 @@ public class GameMaster {
             return;
         }
 
-        if (playerChoice.isHasChosen()) {
+        if (playerChoice.isHasChosen() && playerHandler.isOrientationValid(playerChoice.getOrientation())) {
+            playerHandler.setCurrentOrientation(playerChoice.getOrientation());
             roundEvents.add(MOVED);
         }
 

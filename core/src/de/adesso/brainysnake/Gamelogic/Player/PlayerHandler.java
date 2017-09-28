@@ -34,6 +34,7 @@ public class PlayerHandler {
     private Snake snake;
 
     private String playerName;
+    private boolean orientationValid;
 
     public PlayerHandler(BrainySnakePlayer brainySnakePlayer, Orientation orientation, Snake snake) {
         this.brainySnakePlayer = brainySnakePlayer;
@@ -213,5 +214,23 @@ public class PlayerHandler {
     public void endround() {
         roundEvents.clear();
 
+    }
+
+    public boolean isOrientationValid(Orientation orientation) {
+        switch (orientation) {
+            case UP:
+                return !currentOrientation.equals(Orientation.DOWN);
+            case DOWN:
+                return !currentOrientation.equals(Orientation.UP);
+            case LEFT:
+                return !currentOrientation.equals(Orientation.RIGHT);
+            case RIGHT:
+                return !currentOrientation.equals(Orientation.LEFT);
+        }
+        return true;
+    }
+
+    public void setCurrentOrientation(Orientation currentOrientation) {
+        this.currentOrientation = currentOrientation;
     }
 }
