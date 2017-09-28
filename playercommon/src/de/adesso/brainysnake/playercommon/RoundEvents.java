@@ -1,11 +1,11 @@
 package de.adesso.brainysnake.playercommon;
 
-public enum GameEvent {
+public enum RoundEvents {
     MOVED,
     COLLISION_WITH_LEVEL,
-    HIT_AGENT,
-    HIT_BY_AGENT,
-    HIT_HIMSELF,
+    BIT_AGENT,
+    BIT_BY_AGENT,
+    BIT_HIMSELF,
     DIEDED,
     CONSUMED_POINT,
 }

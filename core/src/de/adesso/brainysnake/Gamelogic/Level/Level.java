@@ -1,12 +1,14 @@
 package de.adesso.brainysnake.Gamelogic.Level;
 
-
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
+
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
+import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
@@ -30,10 +32,10 @@ public class Level {
         points = new GameObject(null, Config.POINT_COLLOR);
     }
 
-    private List<Point2D> buildBarriers() {
-        List<Point2D> barriers     = new ArrayList<Point2D>();
-        int           gapBarriersX = width / 4;
-        int           gapBarriersY = height / 3;
+    private LinkedList<Point2D> buildBarriers() {
+        LinkedList<Point2D> barriers = new LinkedList<Point2D>();
+        int gapBarriersX = width / 4;
+        int gapBarriersY = height / 3;
 
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 2; y++) {
@@ -61,19 +63,19 @@ public class Level {
         return barrierDots;
     }
 
-    private List<Point2D> buildOuterWalls() {
-        List<Point2D> points = new ArrayList<Point2D>();
+    private LinkedList<Point2D> buildOuterWalls() {
+        LinkedList<Point2D> points = new LinkedList<Point2D>();
         for (int x = 0; x < width; x++) {
-            //wall bottom
+            // wall bottom
             points.add(new Point2D(x, 0));
-            //wall top
+            // wall top
             points.add(new Point2D(x, height - 1));
         }
 
         for (int y = 1; y < width; y++) {
-            //wall left
+            // wall left
             points.add(new Point2D(0, y));
-            //wall right
+            // wall right
             points.add(new Point2D(width - 1, y));
         }
 
@@ -110,15 +112,14 @@ public class Level {
 
     /**
      * @param x
-     *         positions in Level
+     *            positions in Level
      * @param y
-     *         positions in Level
-     *
+     *            positions in Level
      * @return do positions hit levelwall or barrier
      */
     public boolean checkCollision(int x, int y) {
 
-        //check if doc collides with level element
+        // check if doc collides with level element
         for (Point2D tempPoint2D : levelObject.getPositions()) {
             if (tempPoint2D.getX() == x && tempPoint2D.getY() == y) {
                 return true;
@@ -134,29 +135,38 @@ public class Level {
         return false;
     }
 
-    public GameObject createStartingGameObject(Orientation orientation, int initialLength) {
-        List<Point2D> elements = new ArrayList<Point2D>();
+    public Snake createStartingGameObject(Orientation orientation, int initialLength) {
+        LinkedList<Point2D> head = new LinkedList<Point2D>();
+        LinkedList<Point2D> body = new LinkedList<Point2D>();
 
         int centerX = (int) Math.floor(this.width / 2D);
         int centerY = (int) Math.floor(this.height / 2D);
 
         for (int i = 0; i <= initialLength; i++) {
-            switch (orientation) {
-                case UP:
-                    elements.add(new Point2D(centerX + 1, centerY + i + 1));
-                    break;
-                case DOWN:
-                    elements.add(new Point2D(centerX - 1, centerY - i - 1));
-                    break;
-                case RIGHT:
-                    elements.add(new Point2D(centerX + i + 1, centerY + 1));
-                    break;
-                case LEFT:
-                    elements.add(new Point2D(centerX - i - 1, centerY - 1));
-                    break;
+            Point2D positionIn = getPositionIn(orientation, centerX, centerY, i);
+            if (i == initialLength) {
+                head.addFirst(positionIn);
+            } else {
+                body.addFirst(positionIn);
             }
         }
-        return new GameObject(elements);
+        return new Snake(new GameObject(head), new GameObject(body));
+    }
+
+    private Point2D getPositionIn(Orientation orientation, int centerX, int centerY, int length) {
+        int offset = 5;
+        switch (orientation) {
+            case UP:
+                return new Point2D(centerX + offset, centerY + length + 1);
+            case DOWN:
+                return new Point2D(centerX - offset, centerY - length - 1);
+            case RIGHT:
+                return new Point2D(centerX + length + 1, centerY + offset);
+            case LEFT:
+                return new Point2D(centerX - length - 1, centerY - offset);
+            default:
+                return null;
+        }
     }
 
     public void spreadPoints() {

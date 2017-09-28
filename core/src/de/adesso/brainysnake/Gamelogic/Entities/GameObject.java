@@ -1,8 +1,7 @@
 package de.adesso.brainysnake.Gamelogic.Entities;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
@@ -10,23 +9,22 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 
 public class GameObject {
 
-    protected List<Point2D> positions;
+    protected LinkedList<Point2D> positions;
 
     protected Color color;
 
     public GameObject() {
-        positions = new ArrayList<Point2D>();
+        positions = new LinkedList<Point2D>();
         color = Config.DEFAULT_PLAYER_COLOR;
     }
 
-
-    public GameObject(List<Point2D> positions) {
+    public GameObject(LinkedList<Point2D> positions) {
         this(positions, Color.MAROON);
     }
 
-    public GameObject(List<Point2D> positions, Color color) {
+    public GameObject(LinkedList<Point2D> positions, Color color) {
         if (positions == null) {
-            this.positions = new ArrayList<Point2D>();
+            this.positions = new LinkedList<Point2D>();
         } else {
             this.positions = positions;
         }
@@ -34,11 +32,11 @@ public class GameObject {
         this.color = color;
     }
 
-    public List<Point2D> getPositions() {
+    public LinkedList<Point2D> getPositions() {
         return positions;
     }
 
-    public void setPositions(List<Point2D> positions) {
+    public void setPositions(LinkedList<Point2D> positions) {
         this.positions = positions;
     }
 
