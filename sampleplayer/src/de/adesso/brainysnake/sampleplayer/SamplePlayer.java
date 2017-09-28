@@ -1,11 +1,11 @@
 package de.adesso.brainysnake.sampleplayer;
 
+import java.util.Random;
+
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.PlayerState;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
-
-import java.util.Random;
 
 public class SamplePlayer implements BrainySnakePlayer {
 
@@ -20,7 +20,7 @@ public class SamplePlayer implements BrainySnakePlayer {
     public boolean handlePlayerStatusUpdate(PlayerState playerState) {
         /* The SamplePlayer is very lazy, it just stores the last data*/
         this.playerState = playerState;
-        System.out.println("Player: " + this.getPlayerName() + " got update");
+        //System.out.println("Player: " + this.getPlayerName() + " got update");
         return true;
     }
 

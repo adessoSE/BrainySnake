@@ -7,10 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.playercommon.math.Point2D;
 
 public class BrainySnake extends ApplicationAdapter {
 
@@ -82,7 +82,7 @@ public class BrainySnake extends ApplicationAdapter {
         List<GameObject> gameObjects = game.draw(Gdx.graphics.getDeltaTime());
         for (GameObject gameObject : gameObjects) {
             pixmap.setColor(gameObject.getColor());
-            for (Dot tempDot : gameObject.getDots()) {
+            for (Point2D tempDot : gameObject.getPositions()) {
                 pixmap.drawPixel(tempDot.getX(), tempDot.getY());
             }
         }

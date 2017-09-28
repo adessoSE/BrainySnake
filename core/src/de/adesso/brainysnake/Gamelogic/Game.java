@@ -7,7 +7,8 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
-import de.adesso.brainysnake.Gamelogic.Player.Agent;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
+import de.adesso.brainysnake.Gamelogic.Player.Snake;
 
 public class Game {
 
@@ -18,7 +19,6 @@ public class Game {
     public void init(int levelHeight, int levelWidth) {
         level = new Level(levelHeight, levelWidth, Color.WHITE);
         gameMaster = new GameMaster(level);
-        gameMaster.registerPlayer();
     }
 
     public void update(float delta) {
@@ -30,8 +30,10 @@ public class Game {
         gameObjects.add(level.getLevel());
         gameObjects.add(level.getBarriers());
         gameObjects.add(level.getPoints());
-        for (Agent agent : gameMaster.getAgents()) {
-            gameObjects.add(agent);
+        for (PlayerHandler playerHandler : gameMaster.getPlayerHandler()) {
+            Snake snake = playerHandler.getSnake();
+            gameObjects.add(snake.getHead());
+            gameObjects.add(snake.getBody());
         }
         return gameObjects;
     }

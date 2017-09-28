@@ -2,7 +2,13 @@ package de.adesso.brainysnake.playercommon;
 
 public enum Orientation {
     UP,
-    DOWN,
     RIGHT,
-    LEFT,
+    DOWN,
+    LEFT;
+
+    private static int size = Orientation.values().length;
+
+    public static int getSize() {
+        return size;
+    }
 }

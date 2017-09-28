@@ -8,24 +8,24 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
  */
 public final class PlayerState {
 
-    private final int movesPlayed;
-    private final int movesRermaining;
-    private final int playerPoints;
-    private final Point2D playersHead;
-    private final Point2D getPlayersTail;
-    private final boolean gotPenalty;
-    private final GameEvent playerGameEvent;
-    private final boolean ghostMode;
-    private final PlayerView playerView;
+    private final int         movesPlayed;
+    private final int         movesRermaining;
+    private final int         playerPoints;
+    private final Point2D     playersHead;
+    private final Point2D     getPlayersTail;
+    private final boolean     gotPenalty;
+    private final RoundEvents playerRoundEvents;
+    private final boolean     ghostMode;
+    private final PlayerView  playerView;
 
-    public PlayerState(int movesPlayed, int movesRermaining, int playerPoints, Point2D playersHead, Point2D getPlayersTail, boolean gotPenalty, GameEvent playerGameEvent, boolean ghostMode, PlayerView playerView) {
+    public PlayerState(int movesPlayed, int movesRermaining, int playerPoints, Point2D playersHead, Point2D getPlayersTail, boolean gotPenalty, RoundEvents playerRoundEvents, boolean ghostMode, PlayerView playerView) {
         this.movesPlayed = movesPlayed;
         this.movesRermaining = movesRermaining;
         this.playerPoints = playerPoints;
         this.playersHead = playersHead;
         this.getPlayersTail = getPlayersTail;
         this.gotPenalty = gotPenalty;
-        this.playerGameEvent = playerGameEvent;
+        this.playerRoundEvents = playerRoundEvents;
         this.ghostMode = ghostMode;
         this.playerView = playerView;
     }
@@ -54,8 +54,8 @@ public final class PlayerState {
         return gotPenalty;
     }
 
-    public GameEvent getPlayerGameEvent() {
-        return playerGameEvent;
+    public RoundEvents getPlayerRoundEvents() {
+        return playerRoundEvents;
     }
 
     public boolean isGhostMode() {

@@ -1,14 +1,16 @@
 package de.adesso.brainysnake.Gamelogic.Level;
 
-
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
+
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Entities.Dot;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
+import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.playercommon.Orientation;
+import de.adesso.brainysnake.playercommon.math.Point2D;
 
 public class Level {
 
@@ -20,7 +22,7 @@ public class Level {
 
     private GameObject points;
 
-    private int maxPointsInLevel     = Config.MAX_POINTS_IN_LEVEL;
+    private int maxPointsInLevel = Config.MAX_POINTS_IN_LEVEL;
 
     public Level(int height, int width, Color color) {
         this.height = height;
@@ -30,10 +32,10 @@ public class Level {
         points = new GameObject(null, Config.POINT_COLLOR);
     }
 
-    private List<Dot> buildBarriers() {
-        List<Dot> barriers         = new ArrayList<Dot>();
-        int       gapBarriersX     = width / 4;
-        int       gapBarriersY     = height / 3;
+    private LinkedList<Point2D> buildBarriers() {
+        LinkedList<Point2D> barriers = new LinkedList<Point2D>();
+        int gapBarriersX = width / 4;
+        int gapBarriersY = height / 3;
 
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 2; y++) {
@@ -44,40 +46,40 @@ public class Level {
         return barriers;
     }
 
-    private List<Dot> addBarrier(int x, int y) {
-        List<Dot> barrierDots = new ArrayList<Dot>();
+    private List<Point2D> addBarrier(int x, int y) {
+        List<Point2D> barrierDots = new ArrayList<Point2D>();
 
-        barrierDots.add(new Dot(x, y + 1));
-        barrierDots.add(new Dot(x, y));
-        barrierDots.add(new Dot(x, y - 1));
+        barrierDots.add(new Point2D(x, y + 1));
+        barrierDots.add(new Point2D(x, y));
+        barrierDots.add(new Point2D(x, y - 1));
 
-        barrierDots.add(new Dot(x + 1, y + 1));
-        barrierDots.add(new Dot(x + 1, y));
-        barrierDots.add(new Dot(x + 1, y - 1));
+        barrierDots.add(new Point2D(x + 1, y + 1));
+        barrierDots.add(new Point2D(x + 1, y));
+        barrierDots.add(new Point2D(x + 1, y - 1));
 
-        barrierDots.add(new Dot(x - 1, y + 1));
-        barrierDots.add(new Dot(x - 1, y));
-        barrierDots.add(new Dot(x - 1, y - 1));
+        barrierDots.add(new Point2D(x - 1, y + 1));
+        barrierDots.add(new Point2D(x - 1, y));
+        barrierDots.add(new Point2D(x - 1, y - 1));
         return barrierDots;
     }
 
-    private List<Dot> buildOuterWalls() {
-        List<Dot> dots = new ArrayList<Dot>();
+    private LinkedList<Point2D> buildOuterWalls() {
+        LinkedList<Point2D> points = new LinkedList<Point2D>();
         for (int x = 0; x < width; x++) {
-            //wall bottom
-            dots.add(new Dot(x, 0));
-            //wall top
-            dots.add(new Dot(x, height - 1));
+            // wall bottom
+            points.add(new Point2D(x, 0));
+            // wall top
+            points.add(new Point2D(x, height - 1));
         }
 
         for (int y = 1; y < width; y++) {
-            //wall left
-            dots.add(new Dot(0, y));
-            //wall right
-            dots.add(new Dot(width - 1, y));
+            // wall left
+            points.add(new Point2D(0, y));
+            // wall right
+            points.add(new Point2D(width - 1, y));
         }
 
-        return dots;
+        return points;
     }
 
     public int getWidth() {
@@ -109,21 +111,23 @@ public class Level {
     }
 
     /**
-     * @param x position in Level
-     * @param y position in Level
-     * @return do position hit levelwall or barrier
+     * @param x
+     *            positions in Level
+     * @param y
+     *            positions in Level
+     * @return do positions hit levelwall or barrier
      */
     public boolean checkCollision(int x, int y) {
 
-        //check if doc collides with level element
-        for (Dot tempDot : levelObject.getDots()) {
-            if (tempDot.getX() == x && tempDot.getY() == y) {
+        // check if doc collides with level element
+        for (Point2D tempPoint2D : levelObject.getPositions()) {
+            if (tempPoint2D.getX() == x && tempPoint2D.getY() == y) {
                 return true;
             }
         }
 
-        for (Dot tempDot : barriers.getDots()) {
-            if (tempDot.getX() == x && tempDot.getY() == y) {
+        for (Point2D tempPoint2D : barriers.getPositions()) {
+            if (tempPoint2D.getX() == x && tempPoint2D.getY() == y) {
                 return true;
             }
         }
@@ -131,51 +135,60 @@ public class Level {
         return false;
     }
 
-    public GameObject createStartingGameObject(Orientation orientation, int initialLength) {
-        List<Dot> elements = new ArrayList<Dot>();
+    public Snake createStartingGameObject(Orientation orientation, int initialLength) {
+        LinkedList<Point2D> head = new LinkedList<Point2D>();
+        LinkedList<Point2D> body = new LinkedList<Point2D>();
 
         int centerX = (int) Math.floor(this.width / 2D);
         int centerY = (int) Math.floor(this.height / 2D);
 
         for (int i = 0; i <= initialLength; i++) {
-            switch (orientation) {
-                case UP:
-                    elements.add(new Dot(centerX + 1, centerY + i + 1));
-                    break;
-                case DOWN:
-                    elements.add(new Dot(centerX - 1, centerY - i - 1));
-                    break;
-                case RIGHT:
-                    elements.add(new Dot(centerX + i + 1, centerY + 1));
-                    break;
-                case LEFT:
-                    elements.add(new Dot(centerX - i - 1, centerY - 1));
-                    break;
+            Point2D positionIn = getPositionIn(orientation, centerX, centerY, i);
+            if (i == initialLength) {
+                head.addFirst(positionIn);
+            } else {
+                body.addFirst(positionIn);
             }
         }
-        return new GameObject(elements);
+        return new Snake(new GameObject(head), new GameObject(body));
+    }
+
+    private Point2D getPositionIn(Orientation orientation, int centerX, int centerY, int length) {
+        int offset = 5;
+        switch (orientation) {
+            case UP:
+                return new Point2D(centerX + offset, centerY + length + 1);
+            case DOWN:
+                return new Point2D(centerX - offset, centerY - length - 1);
+            case RIGHT:
+                return new Point2D(centerX + length + 1, centerY + offset);
+            case LEFT:
+                return new Point2D(centerX - length - 1, centerY - offset);
+            default:
+                return null;
+        }
     }
 
     public void spreadPoints() {
         for (int i = 0; i < (maxPointsInLevel - points.size()); i++) {
-            Dot randomLevelPosition = null;
+            Point2D randomLevelPosition = null;
             do {
                 randomLevelPosition = getRandomLevelPosition();
             } while (randomLevelPosition == null || checkCollision(randomLevelPosition.x, randomLevelPosition.y));
-            points.getDots().add(new Dot(randomLevelPosition.x, randomLevelPosition.y));
+            points.getPositions().add(new Point2D(randomLevelPosition.x, randomLevelPosition.y));
         }
     }
 
-    private Dot getRandomLevelPosition() {
+    private Point2D getRandomLevelPosition() {
         int randomXPosition = 0 + (int) (Math.random() * width);
         int randomYPosition = 0 + (int) (Math.random() * height);
-        return new Dot(randomXPosition, randomYPosition);
+        return new Point2D(randomXPosition, randomYPosition);
     }
 
-    public boolean tryConsumePoint(Dot position) {
-        for (Dot dot : points.getDots()) {
-            if (dot.x == position.x && dot.y == position.y) {
-                points.getDots().remove(dot);
+    public boolean tryConsumePoint(Point2D position) {
+        for (Point2D Point2D : points.getPositions()) {
+            if (Point2D.x == position.x && Point2D.y == position.y) {
+                points.getPositions().remove(Point2D);
                 return true;
             }
         }
