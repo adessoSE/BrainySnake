@@ -110,29 +110,8 @@ public class Level {
         return points;
     }
 
-    /**
-     * @param x
-     *            positions in Level
-     * @param y
-     *            positions in Level
-     * @return do positions hit levelwall or barrier
-     */
-    public boolean checkCollision(int x, int y) {
-
-        // check if doc collides with level element
-        for (Point2D tempPoint2D : levelObject.getPositions()) {
-            if (tempPoint2D.getX() == x && tempPoint2D.getY() == y) {
-                return true;
-            }
-        }
-
-        for (Point2D tempPoint2D : barriers.getPositions()) {
-            if (tempPoint2D.getX() == x && tempPoint2D.getY() == y) {
-                return true;
-            }
-        }
-
-        return false;
+    public boolean checkCollision(Point2D point2D) {
+        return levelObject.getPositions().contains(point2D) || barriers.getPositions().contains(point2D);
     }
 
     public Snake createStartingGameObject(Orientation orientation, int initialLength) {
@@ -174,7 +153,7 @@ public class Level {
             Point2D randomLevelPosition = null;
             do {
                 randomLevelPosition = getRandomLevelPosition();
-            } while (randomLevelPosition == null || checkCollision(randomLevelPosition.x, randomLevelPosition.y));
+            } while (randomLevelPosition == null || checkCollision(randomLevelPosition));
             points.getPositions().add(new Point2D(randomLevelPosition.x, randomLevelPosition.y));
         }
     }
@@ -186,10 +165,9 @@ public class Level {
     }
 
     public boolean tryConsumePoint(Point2D position) {
-        for (Point2D Point2D : points.getPositions()) {
-            if (Point2D.x == position.x && Point2D.y == position.y) {
-                points.getPositions().remove(Point2D);
-                return true;
+        for (Point2D point2D : points.getPositions()) {
+            if (point2D.x == position.x && point2D.y == position.y) {
+                return points.getPositions().remove(point2D);
             }
         }
 

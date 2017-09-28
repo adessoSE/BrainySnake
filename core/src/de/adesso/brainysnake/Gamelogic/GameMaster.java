@@ -236,7 +236,7 @@ public class GameMaster {
         }
 
         Point2D nextPosition = playerHandler.getNextPositionBy(playerChoice.getOrientation());
-        if (level.checkCollision(nextPosition.x, nextPosition.y)) {
+        if (level.checkCollision(nextPosition)) {
             roundEvents.add(COLLISION_WITH_LEVEL);
             playerHandler.setConfused(true);
             return;
@@ -259,7 +259,7 @@ public class GameMaster {
             }
         }
 
-        if (level.tryConsumePoint(nextPosition)) {
+        if (!playerHandler.isGhostMode() && level.tryConsumePoint(nextPosition)) {
             roundEvents.add(CONSUMED_POINT);
         }
     }
