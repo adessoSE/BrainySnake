@@ -59,7 +59,11 @@ public class PlayerHandler {
             ghostMode();
         } else if (confused) {
             blink();
+        } else {
+            snake.reset();
         }
+
+
     }
 
     private void ghostMode() {
@@ -172,26 +176,29 @@ public class PlayerHandler {
         return nextPositionIs(currentOrientation);
     }
 
+    public Point2D getNextPositionBy(Orientation orientation) {
+        return nextPositionIs(orientation);
+    }
+
     public void moveToNextPosition() {
         this.snake.setNextPosition(nextPositionIs(currentOrientation));
         confused = false;
     }
 
     private Point2D nextPositionIs(Orientation orientation) {
-        Point2D nextPosition = null;
-        Point2D cpy = snake.getHeadPosition().cpy();
+        Point2D nextPosition = snake.getHeadPosition().cpy();
         switch (orientation) {
             case UP:
-                nextPosition = cpy.add(0, 1);
+                nextPosition.add(0, 1);
                 break;
             case RIGHT:
-                nextPosition = cpy.add(1, 0);
+                nextPosition.add(1, 0);
                 break;
             case DOWN:
-                nextPosition = cpy.add(0, -1);
+                nextPosition.add(0, -1);
                 break;
             case LEFT:
-                nextPosition = cpy.add(-1, 0);
+                nextPosition.add(-1, 0);
                 break;
             default:
         }

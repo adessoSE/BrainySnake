@@ -121,16 +121,16 @@ public class GameMaster {
 
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
-        // brainySnakePlayers.add(playerTwo);
-        // brainySnakePlayers.add(playerThree);
-        // brainySnakePlayers.add(playerFour);
+         brainySnakePlayers.add(playerTwo);
+         brainySnakePlayers.add(playerThree);
+         brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
         Map<Orientation, Snake> brainySnakePlayersUiModel = new HashMap<Orientation, Snake>();
         brainySnakePlayersUiModel.put(UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH));
-        // brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
-        // brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
-        // brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
+         brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
+         brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
+         brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
 
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
@@ -172,6 +172,7 @@ public class GameMaster {
                     case MOVED:
                         // move player as he planned
                         playerHandler.moveToNextPosition();
+                        playerHandler.setConfused(false);
                         break;
                     case CONFUSED:
                         playerHandler.setConfused(true);
@@ -232,18 +233,19 @@ public class GameMaster {
             return;
         }
 
-        Point2D nextPosition = playerHandler.getNextPosition();
+        if (!playerChoice.isHasChosen() || !playerHandler.isOrientationValid(playerChoice.getOrientation())) {
+            roundEvents.add(CONFUSED);
+            return;
+        }
+
+        Point2D nextPosition = playerHandler.getNextPositionBy(playerChoice.getOrientation());
         if (level.checkCollision(nextPosition.x, nextPosition.y)) {
             roundEvents.add(COLLISION_WITH_LEVEL);
             return;
         }
 
-        if (playerChoice.isHasChosen() && playerHandler.isOrientationValid(playerChoice.getOrientation())) {
-            playerHandler.setCurrentOrientation(playerChoice.getOrientation());
-            roundEvents.add(MOVED);
-        } else {
-            roundEvents.add(CONFUSED);
-        }
+        playerHandler.setCurrentOrientation(playerChoice.getOrientation());
+        roundEvents.add(MOVED);
 
         // did the player bit any snake object
         for (PlayerHandler player : playerController.getPlayerHandlerList()) {
