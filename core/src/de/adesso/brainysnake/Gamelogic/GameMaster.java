@@ -80,7 +80,7 @@ public class GameMaster {
 
         @Override
         public PlayerUpdate tellPlayerUpdate() {
-            return new PlayerUpdate(DOWN);
+            return null;
         }
     };
     private BrainySnakePlayer playerThree = new SamplePlayer() {
@@ -121,16 +121,16 @@ public class GameMaster {
 
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
-         brainySnakePlayers.add(playerTwo);
-         brainySnakePlayers.add(playerThree);
-         brainySnakePlayers.add(playerFour);
+        brainySnakePlayers.add(playerTwo);
+        brainySnakePlayers.add(playerThree);
+        brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
         Map<Orientation, Snake> brainySnakePlayersUiModel = new HashMap<Orientation, Snake>();
         brainySnakePlayersUiModel.put(UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH));
-         brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
-         brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
-         brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
 
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
@@ -166,29 +166,25 @@ public class GameMaster {
             for (RoundEvents roundEvent : roundEvents) {
                 switch (roundEvent) {
                     case DIEDED:
-                        playerHandler.kill();
                         deadPlayer.add(playerHandler);
                         break;
                     case MOVED:
                         // move player as he planned
                         playerHandler.moveToNextPosition();
-                        playerHandler.setConfused(false);
                         break;
                     case CONFUSED:
-                        playerHandler.setConfused(true);
                         collectedPoints++;
                         break;
                     case COLLISION_WITH_LEVEL:
-                        playerHandler.setConfused(true);
                         collectedPoints--;
                         break;
                     case BIT_HIMSELF:
                         collectedPoints--;
-                        playerHandler.setGhostMode();
                         break;
                     case BIT_AGENT:
-                        playerHandler.setGhostMode();
-                        collectedPoints++;
+                        if (!playerHandler.isGhostMode()) {
+                            collectedPoints++;
+                        }
                         break;
                     case BIT_BY_AGENT:
                         // agent was Hit by another agent
@@ -230,32 +226,37 @@ public class GameMaster {
 
         if (playerHandler.isDead() || playerHandler.getSnake().countPoints() <= 1) {
             roundEvents.add(DIEDED);
+            playerHandler.kill();
             return;
         }
 
         if (!playerChoice.isHasChosen() || !playerHandler.isOrientationValid(playerChoice.getOrientation())) {
             roundEvents.add(CONFUSED);
+            playerHandler.setConfused(true);
             return;
         }
 
         Point2D nextPosition = playerHandler.getNextPositionBy(playerChoice.getOrientation());
         if (level.checkCollision(nextPosition.x, nextPosition.y)) {
             roundEvents.add(COLLISION_WITH_LEVEL);
+            playerHandler.setConfused(true);
             return;
         }
 
         playerHandler.setCurrentOrientation(playerChoice.getOrientation());
         roundEvents.add(MOVED);
+        playerHandler.setConfused(false);
 
         // did the player bit any snake object
         for (PlayerHandler player : playerController.getPlayerHandlerList()) {
-            if (playerHandler.gotBitten(nextPosition)) {
+            if (!playerHandler.isGhostMode() && player.gotBitten(nextPosition)) {
                 if (player.equals(playerHandler)) {
                     roundEvents.add(BIT_HIMSELF);
                 } else {
                     roundEvents.add(BIT_AGENT);
                     player.getRoundEvents().add(BIT_BY_AGENT);
                 }
+                playerHandler.setGhostMode();
             }
         }
 
