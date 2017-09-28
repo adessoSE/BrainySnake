@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic;
+package de.adesso.brainysnake.playercommon;
 
 public enum GameEvent {
     MOVED,
