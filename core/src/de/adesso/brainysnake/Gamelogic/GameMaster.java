@@ -206,7 +206,6 @@ public class GameMaster {
                 }
             }
 
-            // TODO rukl@rukl wenn der agent an dieser Stelle nur noch einen Punkt hat stirbt er
             playerHandler.endround();
             playerHandler.update();
         }

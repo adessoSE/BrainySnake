@@ -50,7 +50,6 @@ public class PlayerHandler {
     }
 
     public void update() {
-
         if (dead) {
             return;
         }
@@ -62,8 +61,6 @@ public class PlayerHandler {
         } else {
             snake.reset();
         }
-
-
     }
 
     private void ghostMode() {
@@ -87,7 +84,6 @@ public class PlayerHandler {
         } else {
             snake.blink();
         }
-
     }
 
     /**
@@ -95,7 +91,6 @@ public class PlayerHandler {
      */
     public void calculatePlayerState(GlobalGameState gameState) {
         // TODO Calc PlayerState from GlobalGameState
-
         // TODO hier noch den korrekten playerstate berechnen
         // <Fake Data>
         Point2D head = Utils.fromGridPoint2(new GridPoint2(5, 5));
