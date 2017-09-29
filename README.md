@@ -1,5 +1,5 @@
 # BrainySnake
-![GitHub Logo](/Dokumentation/brainySnake.png)
+![brainySnakePic](/Dokumentation/brainySnake.png)
 
 ## Build Project for IntelliJ
 1. checkout project
@@ -15,7 +15,7 @@
 
 ## Spielregeln
 
-![GitHub Logo](/Dokumentation/explainSnake.png)
+![explainSnakePic](/Dokumentation/explainSnake.jpg)
 
 * Pro Runde kann eine Schlange sich ein Feld nach links, rechts oder nach vorne bewegen.
 * Eine Schlange besteht aus Körper und Kopf. 
