@@ -13,21 +13,18 @@ import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
-import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
-import de.adesso.brainysnake.playercommon.Orientation;
-import de.adesso.brainysnake.playercommon.PlayerUpdate;
-import de.adesso.brainysnake.playercommon.RoundEvents;
+import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 
 import static de.adesso.brainysnake.playercommon.Orientation.*;
-import static de.adesso.brainysnake.playercommon.RoundEvents.*;
+import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 
 public class GameMaster {
 
     // Alle Spiele erzeugen
     private BrainySnakePlayer playerOne = new SamplePlayer() {
-
+        PlayerState playerState;
         private boolean left, right, up, down;
 
         @Override
@@ -37,6 +34,9 @@ public class GameMaster {
 
         @Override
         public PlayerUpdate tellPlayerUpdate() {
+
+            System.out.println(playerState.getGhostModeRemaining());
+
             if (KeyBoardControl.LEFT && !right) {
                 left = true;
                 right = up = down = false;
@@ -68,7 +68,14 @@ public class GameMaster {
             }
 
             return null;
+        }
 
+        @Override
+        public boolean handlePlayerStatusUpdate(PlayerState playerState) {
+        /* The SamplePlayer is very lazy, it just stores the last data*/
+            this.playerState = playerState;
+            //System.out.println("Player: " + this.getPlayerName() + " got update");
+            return true;
         }
     };
     private BrainySnakePlayer playerTwo = new SamplePlayer() {
@@ -92,6 +99,7 @@ public class GameMaster {
 
         @Override
         public PlayerUpdate tellPlayerUpdate() {
+
             return new PlayerUpdate(RIGHT);
         }
     };
@@ -145,13 +153,6 @@ public class GameMaster {
 
         // TODO rukl@rukl check timeOut
 
-        // TODO Wir brauchen eine logische Sicht auf das Spiel.
-
-        /**
-         * Calculates the PlayerState and updates the Agents via call
-         */
-        this.playerController.updatePlayerState(new GlobalGameState());
-
         Map<PlayerHandler, PlayerChoice> playerStatus = this.playerController.getPlayerStatus();
         for (PlayerHandler playerHandler : playerStatus.keySet()) {
             PlayerChoice playerChoice = playerStatus.get(playerHandler);
@@ -161,9 +162,9 @@ public class GameMaster {
         // check react to gameevents of agents
         List<PlayerHandler> deadPlayer = new ArrayList<PlayerHandler>();
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
-            List<RoundEvents> roundEvents = playerHandler.getRoundEvents();
+            List<RoundEvent> roundEvents = playerHandler.getRoundEvents();
             int collectedPoints = 0;
-            for (RoundEvents roundEvent : roundEvents) {
+            for (RoundEvent roundEvent : roundEvents) {
                 switch (roundEvent) {
                     case DIEDED:
                         deadPlayer.add(playerHandler);
@@ -186,7 +187,7 @@ public class GameMaster {
                             collectedPoints++;
                         }
                         break;
-                    case BIT_BY_AGENT:
+                    case BIT_BY_PLAYER:
                         // agent was Hit by another agent
                         if (!playerHandler.isGhostMode()) {
                             collectedPoints--;
@@ -214,14 +215,15 @@ public class GameMaster {
             playerController.getPlayerHandlerList().remove(dead);
         }
 
-        // setup Score for each agent;
+        // calculates the playerState and updates the playercontroller via call
+        this.playerController.updatePlayerState(new GlobalGameState());
 
         // spread new points in level
         level.spreadPoints();
     }
 
     private void validateEvents(PlayerHandler playerHandler, PlayerChoice playerChoice) {
-        List<RoundEvents> roundEvents = playerHandler.getRoundEvents();
+        List<RoundEvent> roundEvents = playerHandler.getRoundEvents();
 
         if (playerHandler.isDead() || playerHandler.getSnake().countPoints() <= 1) {
             roundEvents.add(DIEDED);
@@ -253,7 +255,7 @@ public class GameMaster {
                     roundEvents.add(BIT_HIMSELF);
                 } else {
                     roundEvents.add(BIT_AGENT);
-                    player.getRoundEvents().add(BIT_BY_AGENT);
+                    player.getRoundEvents().add(BIT_BY_PLAYER);
                 }
                 playerHandler.setGhostMode();
             }

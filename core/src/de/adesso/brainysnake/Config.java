@@ -4,6 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 
 public class Config {
 
+    /*Gamepleysettings*/
+
+    public static final int MAX_ROUNDS = 1000;
+    /*others*/
+
     public static final float UPDATE_RATE       = 30f;
     public static final Color POINT_COLLOR      = Color.RED;
     public static final float GHOSTMODE_OPACITY = 1f;

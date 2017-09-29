@@ -28,6 +28,10 @@ public class Snake {
         return head.getPositions().get(0);
     }
 
+    public Point2D getTailPosition() {
+        return body.getPositions().get(0);
+    }
+
     private void setHead(Point2D head) {
         this.head.getPositions().set(0, head);
     }

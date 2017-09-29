@@ -8,25 +8,29 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
  */
 public final class PlayerState {
 
-    private final int         movesPlayed;
-    private final int         movesRermaining;
-    private final int         playerPoints;
-    private final Point2D     playersHead;
-    private final Point2D     getPlayersTail;
-    private final boolean     gotPenalty;
-    private final RoundEvents playerRoundEvents;
-    private final boolean     ghostMode;
-    private final PlayerView  playerView;
+    private final int movesPlayed;
+    private final int movesRermaining;
+    private final int playerPoints;
+    private final Point2D playersHead;
+    private final Point2D getPlayersTail;
+    private boolean ghostModeActive;
+    private final int ghostModeRemaining;
+    private final boolean bitByPlayer;
+    private final boolean moved;
+    private final boolean collisionWithLevel;
+    private final PlayerView playerView;
 
-    public PlayerState(int movesPlayed, int movesRermaining, int playerPoints, Point2D playersHead, Point2D getPlayersTail, boolean gotPenalty, RoundEvents playerRoundEvents, boolean ghostMode, PlayerView playerView) {
+    public PlayerState(int movesPlayed, int movesRermaining, int playerPoints, Point2D playersHead, Point2D playerTail, boolean ghostModeActive, int ghostModeRemaining, boolean bitByPlayer, boolean moved, boolean collisionWithLevel, PlayerView playerView) {
         this.movesPlayed = movesPlayed;
         this.movesRermaining = movesRermaining;
         this.playerPoints = playerPoints;
         this.playersHead = playersHead;
-        this.getPlayersTail = getPlayersTail;
-        this.gotPenalty = gotPenalty;
-        this.playerRoundEvents = playerRoundEvents;
-        this.ghostMode = ghostMode;
+        this.getPlayersTail = playerTail;
+        this.ghostModeActive = ghostModeActive;
+        this.ghostModeRemaining = ghostModeRemaining;
+        this.bitByPlayer = bitByPlayer;
+        this.moved = moved;
+        this.collisionWithLevel = collisionWithLevel;
         this.playerView = playerView;
     }
 
@@ -50,16 +54,24 @@ public final class PlayerState {
         return getPlayersTail;
     }
 
-    public boolean isGotPenalty() {
-        return gotPenalty;
+    public boolean isGhostModeActive() {
+        return ghostModeActive;
     }
 
-    public RoundEvents getPlayerRoundEvents() {
-        return playerRoundEvents;
+    public int getGhostModeRemaining() {
+        return ghostModeRemaining;
     }
 
-    public boolean isGhostMode() {
-        return ghostMode;
+    public boolean isBitByPlayer() {
+        return bitByPlayer;
+    }
+
+    public boolean isMoved() {
+        return moved;
+    }
+
+    public boolean isCollisionWithLevel() {
+        return collisionWithLevel;
     }
 
     public PlayerView getPlayerView() {

@@ -5,23 +5,20 @@ import java.util.List;
 import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.GridPoint2;
 
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Utils;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
-// TODO Kopf-Farbe kenntlich machen
-// Technisch von Logisch trennen
+//TODO Technisch von Logisch trennen
 public class PlayerHandler {
 
     private Orientation currentOrientation;
 
     private BrainySnakePlayer brainySnakePlayer;
 
-    private List<RoundEvents> roundEvents = new ArrayList<RoundEvents>();
+    private List<RoundEvent> roundEvents = new ArrayList<RoundEvent>();
 
     private PlayerState lastPlayerState;
 
@@ -29,12 +26,9 @@ public class PlayerHandler {
 
     private int ghostTime = 0, blinkTime = 0;
 
-    private Orientation orientation;
-
     private Snake snake;
 
     private String playerName;
-    private boolean orientationValid;
 
     public PlayerHandler(BrainySnakePlayer brainySnakePlayer, Orientation orientation, Snake snake) {
         this.brainySnakePlayer = brainySnakePlayer;
@@ -90,11 +84,30 @@ public class PlayerHandler {
      * Calculates the next PlayerState from global GameData
      */
     public void calculatePlayerState(GlobalGameState gameState) {
-        // TODO Calc PlayerState from GlobalGameState
-        // TODO hier noch den korrekten playerstate berechnen
-        // <Fake Data>
-        Point2D head = Utils.fromGridPoint2(new GridPoint2(5, 5));
-        Point2D tail = Utils.fromGridPoint2(new GridPoint2(5, 1));
+
+
+        int points = snake.countPoints();
+        Point2D head = new Point2D(snake.getHeadPosition());
+        Point2D tail = new Point2D(snake.getHeadPosition());
+        int ghostModeRemaining = Config.GHOST_TIME - ghostTime;
+
+        boolean bitByPlayer = false;
+        boolean moved = false;
+        boolean collisionWithLevel = false;
+
+        for (RoundEvent roundEvent : roundEvents) {
+            switch (roundEvent) {
+                case BIT_BY_PLAYER:
+                    bitByPlayer = true;
+                    break;
+                case MOVED:
+                    moved = true;
+                    break;
+                case COLLISION_WITH_LEVEL:
+                    collisionWithLevel = true;
+                    break;
+            }
+        }
 
         List<Field> fieldList = new ArrayList<Field>();
         for (int x = -3; x <= 3; x++) {
@@ -104,12 +117,7 @@ public class PlayerHandler {
         }
 
         PlayerView playerView = new PlayerView(fieldList);
-        this.lastPlayerState = new PlayerState(100, 200, 5, head, tail, false, RoundEvents.MOVED, false, playerView);
-        // </Fake Data>
-    }
-
-    public Orientation getOrientation() {
-        return orientation;
+        this.lastPlayerState = new PlayerState(GlobalGameState.countMoves, GlobalGameState.movesRemaining(), points, head, tail,ghostMode, ghostModeRemaining, bitByPlayer, moved, collisionWithLevel, playerView);
     }
 
     public PlayerState getLastPlayerState() {
@@ -151,26 +159,6 @@ public class PlayerHandler {
         }
     }
 
-    private int getOrientationByEnum(Orientation orientation) {
-        Orientation[] orientationValues = Orientation.values();
-        for (int i = 0; i < orientationValues.length; i++) {
-            if (orientation.equals(orientationValues[i])) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    /**
-     * What is the next Agent Head Position depending on the next GameEvent
-     *
-     * @return
-     */
-    public Point2D getNextPosition() {
-        return nextPositionIs(currentOrientation);
-    }
-
     public Point2D getNextPositionBy(Orientation orientation) {
         return nextPositionIs(orientation);
     }
@@ -201,7 +189,7 @@ public class PlayerHandler {
         return nextPosition;
     }
 
-    public List<RoundEvents> getRoundEvents() {
+    public List<RoundEvent> getRoundEvents() {
         return roundEvents;
     }
 

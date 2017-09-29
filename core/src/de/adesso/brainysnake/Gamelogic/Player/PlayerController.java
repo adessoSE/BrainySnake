@@ -80,7 +80,7 @@ public class PlayerController {
         Map<PlayerHandler, Future<Boolean>> playerPushes = new HashMap<PlayerHandler, Future<Boolean>>();
 
         for (PlayerHandler player : this.playerHandlerList) {
-            player.calculatePlayerState(gameState); // TODO <--
+            player.calculatePlayerState(gameState);
 
             Callable pushWorker = new PlayerStatePush(player);
             Future pushProcessed = playerStatePushExecutor.submit(pushWorker);
@@ -111,19 +111,15 @@ public class PlayerController {
                 playerUpdate = playerUpdateFuture.get(Config.MAX_AGENT_PROCESSING_TIME_MS, TimeUnit.MILLISECONDS);
                 agentChoiceMap.put(playerHandler, handlePlayerUpdate(playerUpdate, playerHandler));
             } catch (InterruptedException e) {
-                // TODO
-                e.printStackTrace();
-                Gdx.app.error("PlayerController: ", e.getMessage());
-
+                Gdx.app.error("PlayerController: Future Operation was interrupted ", e.getMessage());
             } catch (ExecutionException e) {
-                // TODO
-                e.printStackTrace();
+                Gdx.app.error("PlayerController: ExecutionException ", e.getMessage());
             } catch (TimeoutException e) {
-
                 agentChoiceMap.put(playerHandler, PlayerChoice.createNoChoice());
-                // TODO auch das müssen wir testen
+                // TODO auch das müssen wir testen -> Problem: wenn einer failed, dann failen gleich alle
                 Gdx.app.error("PlayerController",
                         "Player: " + playerHandler.getPlayerName() + " got Timeout after " + Config.MAX_AGENT_PROCESSING_TIME_MS + " ms", e);
+                continue;
             }
 
         }
