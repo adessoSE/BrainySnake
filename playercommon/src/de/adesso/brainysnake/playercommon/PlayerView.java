@@ -17,4 +17,8 @@ public final class PlayerView {
     public List<Field> getVisibleFields() {
         return Collections.unmodifiableList(visibleFields);
     }
+
+    public List<Field> copy() {
+        return null;
+    }
 }

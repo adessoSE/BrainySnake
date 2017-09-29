@@ -15,7 +15,7 @@ public class GameObject {
 
     public GameObject() {
         positions = new LinkedList<Point2D>();
-        color = Config.DEFAULT_PLAYER_COLOR;
+        color = Config.COLOR_404;
     }
 
     public GameObject(LinkedList<Point2D> positions) {

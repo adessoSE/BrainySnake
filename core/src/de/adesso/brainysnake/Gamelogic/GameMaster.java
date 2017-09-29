@@ -24,6 +24,7 @@ public class GameMaster {
 
     // Alle Spiele erzeugen
     private BrainySnakePlayer playerOne = new SamplePlayer() {
+
         PlayerState playerState;
         private boolean left, right, up, down;
 
@@ -72,9 +73,8 @@ public class GameMaster {
 
         @Override
         public boolean handlePlayerStatusUpdate(PlayerState playerState) {
-        /* The SamplePlayer is very lazy, it just stores the last data*/
+            /* The SamplePlayer is very lazy, it just stores the last data */
             this.playerState = playerState;
-            //System.out.println("Player: " + this.getPlayerName() + " got update");
             return true;
         }
     };
@@ -129,16 +129,16 @@ public class GameMaster {
 
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
-        brainySnakePlayers.add(playerTwo);
-        brainySnakePlayers.add(playerThree);
-        brainySnakePlayers.add(playerFour);
+      //  brainySnakePlayers.add(playerTwo);
+      //  brainySnakePlayers.add(playerThree);
+     //   brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
         Map<Orientation, Snake> brainySnakePlayersUiModel = new HashMap<Orientation, Snake>();
         brainySnakePlayersUiModel.put(UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
+      //  brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
+      //  brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
+      //  brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
 
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
@@ -153,6 +153,7 @@ public class GameMaster {
 
         GlobalGameState.countMoves++;
         if (gameOver()) {
+            // TODO show game overscreen
             return;
         }
 
@@ -162,7 +163,7 @@ public class GameMaster {
             validateEvents(playerHandler, playerChoice);
         }
 
-        // check react to gameevents of agents
+        // check reaction to gameevents of agents
         List<PlayerHandler> deadPlayer = new ArrayList<PlayerHandler>();
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             List<RoundEvent> roundEvents = playerHandler.getRoundEvents();
@@ -205,15 +206,17 @@ public class GameMaster {
             // if no points where collected, just move the snake
             if (collectedPoints <= 0) {
                 playerHandler.penalty();
+                // if negative points where collected, add another penalty
                 if (collectedPoints < -1) {
                     playerHandler.penalty();
                 }
             }
 
-            playerHandler.endround();
-            playerHandler.update();
+            // reset data an update view of player
+            endRoundForPlayer(playerHandler);
         }
 
+        // remove dead player from playerlist
         for (PlayerHandler dead : deadPlayer) {
             playerController.getPlayerHandlerList().remove(dead);
         }
@@ -223,6 +226,36 @@ public class GameMaster {
 
         // spread new points in level
         level.spreadPoints();
+    }
+
+    //TODO extract playerview generator to utils or common helper class
+    private void endRoundForPlayer(PlayerHandler playerHandler) {
+
+        List<PlayerHandler> playerHandlerList = playerController.getPlayerHandlerList();
+        List<Point2D> playerViewPositions = PlayerViewHelper.generatePlayerView(playerHandler.getCurrentOrientation(), playerHandler.getHeadPosition());
+        List<Point2D> playerPositions = playerController.getPlayerPositions();
+        List<Field> playerView = new ArrayList<Field>();
+        for (Point2D point2D : playerViewPositions) {
+
+            if(!level.levelContainsPosition(point2D)){
+                playerView.add(new Field(point2D, FieldType.NONE));
+                continue;
+            }
+
+            if (level.checkCollision(point2D)) {
+                playerView.add(new Field(point2D, FieldType.LEVEL));
+            }else if(level.isPointOn(point2D)){
+                playerView.add(new Field(point2D, FieldType.POINT));
+            } /*if (playerPositions.contains(point2D)) {
+                playerView.add(new Field(point2D, FieldType.PLAYER));
+            } else {
+                playerView.add(new Field(point2D, FieldType.EMPTY));
+            }*/
+        }
+
+        playerHandler.updatePlayerView(new PlayerView(playerView));
+        playerHandler.endround();
+        playerHandler.update();
     }
 
     private boolean gameOver() {

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
-
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.playercommon.*;
@@ -19,6 +18,8 @@ public class PlayerHandler {
     private BrainySnakePlayer brainySnakePlayer;
 
     private List<RoundEvent> roundEvents = new ArrayList<RoundEvent>();
+
+    private PlayerView playerView;
 
     private PlayerState lastPlayerState;
 
@@ -108,14 +109,6 @@ public class PlayerHandler {
             }
         }
 
-        List<Field> fieldList = new ArrayList<Field>();
-        for (int x = -3; x <= 3; x++) {
-            for (int y = 1; y < 6; y++) {
-                fieldList.add(new Field(new Point2D(head.x + x, head.y + y), GameObjectType.EMPTY));
-            }
-        }
-
-        PlayerView playerView = new PlayerView(fieldList);
         this.lastPlayerState = new PlayerState(GlobalGameState.countMoves, GlobalGameState.movesRemaining(), points, head, tail,ghostMode, ghostModeRemaining, bitByPlayer, moved, collisionWithLevel, playerView);
     }
 
@@ -192,6 +185,10 @@ public class PlayerHandler {
         return snake;
     }
 
+    public Point2D getHeadPosition(){
+        return snake.getHeadPosition();
+    }
+
     public void setConfused(boolean confused) {
         this.confused = confused;
     }
@@ -231,7 +228,19 @@ public class PlayerHandler {
         this.currentOrientation = currentOrientation;
     }
 
+    public Orientation getCurrentOrientation() {
+        return currentOrientation;
+    }
+
     public void grantPoint() {
 
+    }
+
+    public void updatePlayerView(PlayerView playerView) {
+        this.playerView = playerView;
+    }
+
+    public PlayerView getPlayerView() {
+        return playerView;
     }
 }

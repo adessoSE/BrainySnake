@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
-
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
@@ -64,22 +63,22 @@ public class Level {
     }
 
     private LinkedList<Point2D> buildOuterWalls() {
-        LinkedList<Point2D> points = new LinkedList<Point2D>();
+        LinkedList<Point2D> positionts = new LinkedList<Point2D>();
         for (int x = 0; x < width; x++) {
             // wall bottom
-            points.add(new Point2D(x, 0));
+            positionts.add(new Point2D(x, 0));
             // wall top
-            points.add(new Point2D(x, height - 1));
+            positionts.add(new Point2D(x, height - 1));
         }
 
         for (int y = 1; y < width; y++) {
             // wall left
-            points.add(new Point2D(0, y));
+            positionts.add(new Point2D(0, y));
             // wall right
-            points.add(new Point2D(width - 1, y));
+            positionts.add(new Point2D(width - 1, y));
         }
 
-        return points;
+        return positionts;
     }
 
     public int getWidth() {
@@ -174,4 +173,15 @@ public class Level {
         return false;
     }
 
+    public boolean isPointOn(Point2D position) {
+        for (Point2D point2D : points.getPositions()) {
+            return point2D.x == position.x && point2D.y == position.y;
+        }
+
+        return false;
+    }
+
+    public boolean levelContainsPosition(Point2D point2D) {
+        return point2D.x >= 0 && point2D.y >= 0 && point2D.x < width && point2D.y < height;
+    }
 }

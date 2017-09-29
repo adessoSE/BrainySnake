@@ -5,12 +5,14 @@ import java.util.concurrent.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Utils;
+import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
+import de.adesso.brainysnake.playercommon.math.Point2D;
 
 /**
  * Encapsulates thread- calls to the agents
@@ -35,7 +37,7 @@ public class PlayerController {
         // Shuffle Starting Positions
         List<Orientation> startOrientations = new ArrayList<Orientation>();
         startOrientations.addAll(playerGameObjects.keySet());
-      //  Collections.shuffle(startOrientations);
+        // Collections.shuffle(startOrientations);
 
         // Add player to handler
         this.playerHandlerList = new ArrayList<PlayerHandler>();
@@ -45,7 +47,7 @@ public class PlayerController {
             Color color = gameColors.remove(gameColors.size() - 1);
             Orientation startOrientation = startOrientations.remove(startOrientations.size() - 1);
 
-            Snake snake= playerGameObjects.remove(startOrientation);
+            Snake snake = playerGameObjects.remove(startOrientation);
             snake.setColor(color);
 
             this.playerHandlerList.add(new PlayerHandler(player, startOrientation, snake));
@@ -67,12 +69,10 @@ public class PlayerController {
                 Gdx.app.error("PlayerController",
                         "Player: " + playerHandler.getPlayerName() + " got Timeout after " + Config.MAX_AGENT_PROCESSING_TIME_MS + " ms", e);
             } catch (ExecutionException e) {
-                Gdx.app.error("PlayerController: ", "ExecutionException - "  + e.getMessage());
+                Gdx.app.error("PlayerController: ", "ExecutionException - " + e.getMessage());
             } catch (TimeoutException e) {
-                Gdx.app.error("PlayerController: ",
-                              "Waiting for Player " + playerHandler.getPlayerName() + " aborted. Timout");
+                Gdx.app.error("PlayerController: ", "Waiting for Player " + playerHandler.getPlayerName() + " aborted. Timout");
             }
-
         }
     }
 
@@ -153,26 +153,27 @@ public class PlayerController {
 
     class PlayerStatePush implements Callable<Boolean> {
 
-
         private PlayerHandler playerHandler;
 
         public PlayerStatePush(PlayerHandler playerHandler) {
             this.playerHandler = playerHandler;
         }
+
         @Override
         public Boolean call() throws Exception {
             return playerHandler.sendPlayerState();
         }
 
     }
-    class PlayerUpdateRequestCallable implements Callable<PlayerUpdate> {
 
+    class PlayerUpdateRequestCallable implements Callable<PlayerUpdate> {
 
         private PlayerHandler playerHandler;
 
         public PlayerUpdateRequestCallable(PlayerHandler playerHandler) {
             this.playerHandler = playerHandler;
         }
+
         @Override
         public PlayerUpdate call() throws Exception {
             return playerHandler.requestPlayerUpdate();
@@ -186,5 +187,14 @@ public class PlayerController {
             return PlayerChoice.createNoChoice();
         }
         return new PlayerChoice(playerUpdate.getNextStep());
+    }
+
+    public LinkedList<Point2D> getPlayerPositions() {
+        LinkedList<Point2D> playerPositions = new LinkedList<Point2D>();
+        for (PlayerHandler playerHandler : playerHandlerList) {
+            playerPositions.addAll(playerHandler.getSnake().getAllSnakePositions());
+        }
+
+        return playerPositions;
     }
 }

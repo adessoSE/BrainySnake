@@ -5,18 +5,18 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 public class Field {
 
     private final Point2D position;
-    private final GameObjectType gameObject;
+    private final FieldType fieldType;
 
-    public Field(Point2D position, GameObjectType gameObject) {
+    public Field(Point2D position, FieldType fieldType) {
         this.position = position;
-        this.gameObject = gameObject;
+        this.fieldType = fieldType;
     }
 
     public Point2D getPosition() {
         return position;
     }
 
-    public GameObjectType getGameObject() {
-        return gameObject;
+    public FieldType getFieldType() {
+        return fieldType;
     }
 }

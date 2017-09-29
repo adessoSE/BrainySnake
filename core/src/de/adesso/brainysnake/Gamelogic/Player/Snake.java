@@ -1,7 +1,8 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
-import com.badlogic.gdx.graphics.Color;
+import java.util.LinkedList;
 
+import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.playercommon.math.Point2D;
@@ -82,5 +83,12 @@ public class Snake {
 
     public int countPoints(){
         return head.getPositions().size() + body.getPositions().size();
+    }
+
+    public LinkedList<Point2D> getAllSnakePositions(){
+        LinkedList<Point2D> positions = new LinkedList<Point2D>();
+        positions.addAll(head.getPositions());
+        positions.addAll(body.getPositions());
+        return positions;
     }
 }
