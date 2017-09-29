@@ -33,11 +33,6 @@ public class GameMaster {
         public String getPlayerName() {
             return "SamplePlayer Two";
         }
-
-        @Override
-        public PlayerUpdate tellPlayerUpdate() {
-            return null;
-        }
     };
     private BrainySnakePlayer playerThree = new SamplePlayer() {
 
@@ -45,23 +40,12 @@ public class GameMaster {
         public String getPlayerName() {
             return "SamplePlayer Three";
         }
-
-        @Override
-        public PlayerUpdate tellPlayerUpdate() {
-
-            return new PlayerUpdate(RIGHT);
-        }
     };
     private BrainySnakePlayer playerFour = new SamplePlayer() {
 
         @Override
         public String getPlayerName() {
             return "SamplePlayer Four";
-        }
-
-        @Override
-        public PlayerUpdate tellPlayerUpdate() {
-            return new PlayerUpdate(LEFT);
         }
     };
 

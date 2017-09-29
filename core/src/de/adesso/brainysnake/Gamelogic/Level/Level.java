@@ -135,13 +135,13 @@ public class Level {
         int offset = 5;
         switch (orientation) {
             case UP:
-                return new Point2D(centerX + offset, centerY + length + 1);
+                return new Point2D(centerX + offset, centerY + length + Config.STARTING_POSITION_SPACE);
             case DOWN:
-                return new Point2D(centerX - offset, centerY - length - 1);
+                return new Point2D(centerX - offset, centerY - length - Config.STARTING_POSITION_SPACE);
             case RIGHT:
-                return new Point2D(centerX + length + 1, centerY + offset);
+                return new Point2D(centerX + length + Config.STARTING_POSITION_SPACE, centerY + offset);
             case LEFT:
-                return new Point2D(centerX - length - 1, centerY - offset);
+                return new Point2D(centerX - length - Config.STARTING_POSITION_SPACE, centerY - offset);
             default:
                 return null;
         }

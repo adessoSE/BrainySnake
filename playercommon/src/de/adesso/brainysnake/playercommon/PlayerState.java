@@ -12,7 +12,7 @@ public final class PlayerState {
     private final int movesRermaining;
     private final int playerPoints;
     private final Point2D playersHead;
-    private final Point2D getPlayersTail;
+    private final Point2D playersTail;
     private boolean ghostModeActive;
     private final int ghostModeRemaining;
     private final boolean bitByPlayer;
@@ -25,7 +25,7 @@ public final class PlayerState {
         this.movesRermaining = movesRermaining;
         this.playerPoints = playerPoints;
         this.playersHead = playersHead;
-        this.getPlayersTail = playerTail;
+        this.playersTail = playerTail;
         this.ghostModeActive = ghostModeActive;
         this.ghostModeRemaining = ghostModeRemaining;
         this.bitByPlayer = bitByPlayer;
@@ -50,8 +50,8 @@ public final class PlayerState {
         return playersHead;
     }
 
-    public Point2D getGetPlayersTail() {
-        return getPlayersTail;
+    public Point2D getPlayersTail() {
+        return playersTail;
     }
 
     public boolean isGhostModeActive() {

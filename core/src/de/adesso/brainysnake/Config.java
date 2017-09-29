@@ -10,6 +10,7 @@ public class Config {
     public static int PLAYERVIEW_OFFSET_TO_LEFT      = 5;
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
     public static int PLAYERVIEW_OFFSET_TO_AHEAD     = 10;
+    public static int STARTING_POSITION_SPACE = 8;
 
     /* others */
     public static final float UPDATE_RATE = 30f;
