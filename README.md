@@ -1,4 +1,5 @@
 # BrainySnake
+![GitHub Logo](/Dokumentation/brainySnake.png)
 
 ## Build Project for IntelliJ
 1. checkout project
@@ -12,10 +13,10 @@
 1. set _desktop_ as classpath of module
 1. run
 
-# HowTo
-
 ## Spielregeln
-(hier bild einfügen explainSnake)
+
+![GitHub Logo](/Dokumentation/explainSnake.png)
+
 * Pro Runde kann eine Schlange sich ein Feld nach links, rechts oder nach vorne bewegen.
 * Eine Schlange besteht aus Körper und Kopf. 
 * Wenn die Schlange mit einem Levelelement kollidiert, verliert sie ein Feld ihres Körpers. Wenn eine Schlange keine Körperfelder übrig hat, stirbt sie und scheidet aus der Spielrunde aus.
