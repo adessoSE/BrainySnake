@@ -81,4 +81,8 @@ public class Game {
     }
 
 
+    public boolean isGameOver() {
+        return gameMaster.isGameOver();
+    }
+
 }

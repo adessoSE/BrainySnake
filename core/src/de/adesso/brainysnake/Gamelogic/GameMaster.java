@@ -13,6 +13,7 @@ import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
+import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.*;
@@ -70,6 +71,7 @@ public class GameMaster {
     private PlayerController playerController;
 
     private Level level;
+    private boolean gameOver;
 
     public GameMaster(Level level) {
         // Create UI ?
@@ -100,8 +102,10 @@ public class GameMaster {
     public void gameLoop() {
 
         GlobalGameState.countMoves++;
-        if (gameOver()) {
-            // TODO show game overscreen
+        UiState.getINSTANCE().setRoundsRemaining(GlobalGameState.movesRemaining());
+        List<PlayerHandler> winner = getWinner();
+        if (winner.size() > 0) {
+            gameOver = true;
             return;
         }
 
@@ -180,7 +184,6 @@ public class GameMaster {
         this.playerController.updatePlayerState(new GlobalGameState());
     }
 
-    // TODO extract playerview generator to utils or common helper class
     private void endRoundForPlayer(PlayerHandler playerHandler) {
         List<PlayerHandler> playerHandlerList = playerController.getPlayerHandlerList();
         List<Point2D> playerViewPositions = PlayerViewHelper.generatePlayerView(playerHandler.getCurrentOrientation(), playerHandler.getHeadPosition());
@@ -207,11 +210,28 @@ public class GameMaster {
         playerHandler.updatePlayerView(new PlayerView(playerView));
         playerHandler.endround();
         playerHandler.update();
-        UiState.getINSTANCE().updatePlayerPoints(playerHandler.getPlayerName(), playerHandler.getSnake().getHeadColor());
+        UiState.getINSTANCE().updatePlayerPoints(playerHandler.getPlayerName(), new UIPlayerInformation(playerHandler.getSnake().getHeadColor(), playerHandler.getSnake().countPoints()));
     }
 
-    private boolean gameOver() {
-        return GlobalGameState.movesRemaining() <= 0;
+    public List<PlayerHandler> getWinner() {
+        List<PlayerHandler> winner = new ArrayList<PlayerHandler>();
+        if (GlobalGameState.movesRemaining() <= 0) {
+
+            int maxPoints =-1;
+            for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
+                maxPoints = Math.max(maxPoints, playerHandler.getSnake().countPoints());
+            }
+
+            for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
+                if (playerHandler.getSnake().countPoints() == maxPoints) {
+                    winner.add(playerHandler);
+                }
+            }
+        } else if (playerController.getPlayerHandlerList().size() <= 1) {
+            winner.add(playerController.getPlayerHandlerList().get(0));
+        }
+
+        return winner;
     }
 
     private void validateEvents(PlayerHandler playerHandler, PlayerChoice playerChoice) {
@@ -264,5 +284,9 @@ public class GameMaster {
 
     public void shutdown() {
         this.playerController.shutdown();
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 }
