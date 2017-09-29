@@ -18,7 +18,9 @@ import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import de.adesso.brainysnake.sampleplayer.SamplePlayer2;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
+import de.adesso.brainysnake.sampleplayer.YourPlayer;
 
 import static de.adesso.brainysnake.playercommon.Orientation.*;
 import static de.adesso.brainysnake.playercommon.RoundEvent.*;
@@ -64,8 +66,8 @@ public class GameMaster {
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
         brainySnakePlayers.add(playerTwo);
-        brainySnakePlayers.add(playerThree);
-        brainySnakePlayers.add(playerFour);
+        brainySnakePlayers.add(yourPlayer);
+        //brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
         Map<Orientation, Snake> brainySnakePlayersUiModel = new HashMap<Orientation, Snake>();
@@ -191,7 +193,7 @@ public class GameMaster {
 
         }
 
-        playerHandler.updatePlayerView(new PlayerView(playerView));
+        playerHandler.updatePlayerView(new PlayerView(playerView, playerHandler.getCurrentOrientation()));
         playerHandler.endround();
         playerHandler.update();
         UiState.getINSTANCE().updatePlayerPoints(playerHandler.getPlayerName(), new UIPlayerInformation(playerHandler.getSnake().getHeadColor(), playerHandler.getSnake().countPoints()));
