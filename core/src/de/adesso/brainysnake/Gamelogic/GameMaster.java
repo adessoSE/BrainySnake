@@ -29,6 +29,7 @@ public class GameMaster {
 
     // Alle Spiele erzeugen
     private BrainySnakePlayer playerOne = new KeyBoardPlayer();
+    private BrainySnakePlayer yourPlayer = new YourPlayer();
     private BrainySnakePlayer playerTwo = new SamplePlayer() {
 
         @Override
