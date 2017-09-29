@@ -32,5 +32,5 @@ public class Config {
     public static final int MAX_POINTS_IN_LEVEL = 15;
     public static final int GHOST_TIME = 30;
     public static final int BLINK_TIME = ((int) UPDATE_RATE / 10) + 1;
-    public static final int MAX_AGENT_PROCESSING_TIME_MS = 100;
+    public static final int MAX_AGENT_PROCESSING_TIME_MS = 1000;
 }

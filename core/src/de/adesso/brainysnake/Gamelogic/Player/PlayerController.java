@@ -116,7 +116,7 @@ public class PlayerController {
                 Gdx.app.error("PlayerController: ExecutionException ", e.getMessage());
             } catch (TimeoutException e) {
                 agentChoiceMap.put(playerHandler, PlayerChoice.createNoChoice());
-                // TODO auch das müssen wir testen -> Problem: wenn einer failed, dann failen gleich alle
+                playerHandler.kill();
                 Gdx.app.error("PlayerController",
                         "Player: " + playerHandler.getPlayerName() + " got Timeout after " + Config.MAX_AGENT_PROCESSING_TIME_MS + " ms", e);
                 continue;
