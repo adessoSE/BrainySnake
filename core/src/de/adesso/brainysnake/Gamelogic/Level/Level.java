@@ -175,7 +175,9 @@ public class Level {
 
     public boolean isPointOn(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
-            return point2D.x == position.x && point2D.y == position.y;
+            if (point2D.x == position.x && point2D.y == position.y) {
+                return true;
+            }
         }
 
         return false;

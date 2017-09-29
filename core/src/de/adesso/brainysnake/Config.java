@@ -5,10 +5,11 @@ import com.badlogic.gdx.graphics.Color;
 public class Config {
 
     /* gamepleysettings */
-    public static final int MAX_ROUNDS = 1000;
-    public static int PLAYERVIEW_OFFSET_TO_LEFT = 5;
+    public static final int MAX_ROUNDS               = 1000;
+    public static final boolean RENDER_PLAYERVIEW        = true;
+    public static int PLAYERVIEW_OFFSET_TO_LEFT      = 5;
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
-    public static int PLAYERVIEW_OFFSET_TO_AHEAD = 10;
+    public static int PLAYERVIEW_OFFSET_TO_AHEAD     = 10;
 
     /* others */
     public static final float UPDATE_RATE = 30f;
@@ -22,6 +23,7 @@ public class Config {
     public static Color BARRIER_COLOR = Color.LIGHT_GRAY;
     public static Color COLOR_404 = Color.PINK;
     public static Color BLINK_COLOR = Color.YELLOW;
+
     public static Color DEAD_COLOR = Color.VIOLET;
     public static int BLINKING_SPEED = 5; // Blink length in Update-Calls
     public static int QUANTITY_BARRIERS = 6;

@@ -253,7 +253,8 @@ public class GameMaster {
                 playerView.add(new Field(point2D, FieldType.LEVEL));
             } else if (level.isPointOn(point2D)) {
                 playerView.add(new Field(point2D, FieldType.POINT));
-            } else if (playerPositions.contains(point2D)) { playerView.add(new Field(point2D, FieldType.PLAYER)); } else { playerView.add(new Field(point2D,
+            } else if (playerPositions.contains(point2D)) {
+                playerView.add(new Field(point2D, FieldType.PLAYER)); } else { playerView.add(new Field(point2D,
                 FieldType.EMPTY)); }
 
         }
