@@ -85,7 +85,6 @@ public class PlayerHandler {
      */
     public void calculatePlayerState(GlobalGameState gameState) {
 
-
         int points = snake.countPoints();
         Point2D head = new Point2D(snake.getHeadPosition());
         Point2D tail = new Point2D(snake.getHeadPosition());
@@ -118,10 +117,6 @@ public class PlayerHandler {
 
         PlayerView playerView = new PlayerView(fieldList);
         this.lastPlayerState = new PlayerState(GlobalGameState.countMoves, GlobalGameState.movesRemaining(), points, head, tail,ghostMode, ghostModeRemaining, bitByPlayer, moved, collisionWithLevel, playerView);
-    }
-
-    public PlayerState getLastPlayerState() {
-        return lastPlayerState;
     }
 
     /**

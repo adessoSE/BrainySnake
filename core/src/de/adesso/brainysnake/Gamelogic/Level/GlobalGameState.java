@@ -10,5 +10,4 @@ public class GlobalGameState {
     public static int movesRemaining(){
         return maxRounds - countMoves;
     }
-
 }

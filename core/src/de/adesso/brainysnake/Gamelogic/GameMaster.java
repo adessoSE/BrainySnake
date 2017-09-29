@@ -151,7 +151,10 @@ public class GameMaster {
 
     public void gameLoop() {
 
-        // TODO rukl@rukl check timeOut
+        GlobalGameState.countMoves++;
+        if (gameOver()) {
+            return;
+        }
 
         Map<PlayerHandler, PlayerChoice> playerStatus = this.playerController.getPlayerStatus();
         for (PlayerHandler playerHandler : playerStatus.keySet()) {
@@ -220,6 +223,10 @@ public class GameMaster {
 
         // spread new points in level
         level.spreadPoints();
+    }
+
+    private boolean gameOver() {
+        return GlobalGameState.movesRemaining() <= 0;
     }
 
     private void validateEvents(PlayerHandler playerHandler, PlayerChoice playerChoice) {
