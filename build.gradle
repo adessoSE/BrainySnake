@@ -57,6 +57,14 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile group: 'junit', name: 'junit', version: '4.12'
     }
+
+    sourceSets {
+        test {
+            resources {
+                srcDir "test"
+            }
+        }
+    }
 }
 
 project(":sampleplayer") {
