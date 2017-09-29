@@ -62,7 +62,7 @@ public class Game {
                     temp.setColor(Color.GOLD);
                     break;
                 case POINT:
-                    temp.setColor(Color.YELLOW);
+                    temp.setColor(Color.ORANGE);
                     break;
             }
 

@@ -8,7 +8,7 @@ public class Config {
     public static final int MAX_ROUNDS = 1000;
     public static int PLAYERVIEW_OFFSET_TO_LEFT = 5;
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
-    public static int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
+    public static int PLAYERVIEW_OFFSET_TO_AHEAD = 10;
 
     /* others */
     public static final float UPDATE_RATE = 30f;

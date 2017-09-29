@@ -7,8 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
+
 import de.adesso.brainysnake.Gamelogic.Game;
+import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
@@ -23,8 +24,8 @@ public class BrainySnake extends ApplicationAdapter {
     private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SITZE;
     private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SITZE;
 
-    private OrthographicCamera cam;
-    private OrthographicCamera fontCam;
+    private OrthographicCamera mainCamera;
+    private OrthographicCamera fontCamera;
 
     private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
     private float timeSinceLastRender;
@@ -47,6 +48,8 @@ public class BrainySnake extends ApplicationAdapter {
         game = new Game();
         game.init(HEIGHT, WIDTH);
         Gdx.input.setInputProcessor(new KeyBoardControl(game));
+        batch = new SpriteBatch();
+        batch.setProjectionMatrix(mainCamera.combined);
     }
 
     @Override
@@ -60,34 +63,33 @@ public class BrainySnake extends ApplicationAdapter {
             timeSinceLastRender = 0f;
             game.update(Gdx.graphics.getDeltaTime());
         }
-
-        batch = new SpriteBatch();
-        batch.setProjectionMatrix(cam.combined);
-
         draw();
     }
 
     private void initializeCamera() {
-        cam = new OrthographicCamera();
-        cam.setToOrtho(true, WIDTH, HEIGHT);
-        fontCam = new OrthographicCamera();
-        fontCam.setToOrtho(false, WIDTH, HEIGHT);
+        mainCamera = new OrthographicCamera();
+        mainCamera.setToOrtho(true, WIDTH, HEIGHT);
+        fontCamera = new OrthographicCamera();
+        fontCamera.setToOrtho(false, WIDTH, HEIGHT);
     }
 
+    List<GameObject> gameObjects;
+
     public void draw() {
-        //Redraw the head.
+        // Redraw the head.
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
 
-        List<GameObject> gameObjects = game.draw(Gdx.graphics.getDeltaTime());
+        gameObjects = game.draw(Gdx.graphics.getDeltaTime());
         for (GameObject gameObject : gameObjects) {
             pixmap.setColor(gameObject.getColor());
             for (Point2D tempDot : gameObject.getPositions()) {
                 pixmap.drawPixel(tempDot.getX(), tempDot.getY());
             }
         }
+        gameObjects.clear();
 
-        //draw pixmap to batch
+        // draw pixmap to batch
         texture.draw(pixmap, 0, 0);
         batch.begin();
         sprite.draw(batch);
@@ -98,7 +100,7 @@ public class BrainySnake extends ApplicationAdapter {
     public void dispose() {
         texture.dispose();
         pixmap.dispose();
-        //TODO rukl@rukl do all the dispose here
+        batch.dispose();
     }
 
 }
