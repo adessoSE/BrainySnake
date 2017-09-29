@@ -36,13 +36,9 @@ public class BrainySnake extends ApplicationAdapter {
     private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
     private float timeSinceLastRender = 0;
 
-    public int renderCount = 0;
     private BitmapFont font;
-
-    List<GameObject> gameObjects;
-
+    private List<GameObject> gameObjects;
     private Game game;
-
     private boolean gameStarted;
 
     @Override
