@@ -1,12 +1,14 @@
-package de.adesso.brainysnake.Gamelogic;
+package de.adesso.brainysnake.Gamelogic.UI;
 
 import java.util.HashMap;
+
+import com.badlogic.gdx.graphics.Color;
 
 public final class UiState {
 
     private static UiState INSTANCE = null;
 
-    private HashMap<String, Long> playerMap = new HashMap<String, Long>();
+    private HashMap<String, Color> playerMap = new HashMap<String, Color>();
 
     private UiState() {
     }
@@ -19,11 +21,15 @@ public final class UiState {
         return INSTANCE;
     }
 
-    public void updatePlayerPoints(String playerName, long points) {
-        playerMap.put(playerName, points);
+    public void updatePlayerPoints(String playerName, Color color) {
+        playerMap.put(playerName, color);
     }
 
     public void rip(String playerName) {
-        playerMap.put(playerName, 0L);
+        playerMap.put(playerName, Color.DARK_GRAY);
+    }
+
+    public HashMap<String, Color> getPlayerMap() {
+        return playerMap;
     }
 }

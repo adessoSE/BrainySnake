@@ -13,6 +13,7 @@ import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
+import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
@@ -212,38 +213,33 @@ public class GameMaster {
                     playerHandler.penalty();
                 }
             }
-
-
         }
 
         // remove dead player from playerlist
         for (PlayerHandler dead : deadPlayer) {
             playerController.getPlayerHandlerList().remove(dead);
+            UiState.getINSTANCE().rip(dead.getPlayerName());
         }
 
         // spread new points in level
         level.spreadPoints();
 
-        for (PlayerHandler playerHandler: playerController.getPlayerHandlerList()) {
+        for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             // reset data an update view of player
             endRoundForPlayer(playerHandler);
         }
 
         // calculates the playerState and updates the playercontroller via call
         this.playerController.updatePlayerState(new GlobalGameState());
-
-
     }
 
     // TODO extract playerview generator to utils or common helper class
     private void endRoundForPlayer(PlayerHandler playerHandler) {
-
         List<PlayerHandler> playerHandlerList = playerController.getPlayerHandlerList();
         List<Point2D> playerViewPositions = PlayerViewHelper.generatePlayerView(playerHandler.getCurrentOrientation(), playerHandler.getHeadPosition());
         List<Point2D> playerPositions = playerController.getPlayerPositions();
         List<Field> playerView = new ArrayList<Field>();
         for (Point2D point2D : playerViewPositions) {
-
             if (!level.levelContainsPosition(point2D)) {
                 playerView.add(new Field(point2D, FieldType.NONE));
                 continue;
@@ -254,14 +250,17 @@ public class GameMaster {
             } else if (level.isPointOn(point2D)) {
                 playerView.add(new Field(point2D, FieldType.POINT));
             } else if (playerPositions.contains(point2D)) {
-                playerView.add(new Field(point2D, FieldType.PLAYER)); } else { playerView.add(new Field(point2D,
-                FieldType.EMPTY)); }
+                playerView.add(new Field(point2D, FieldType.PLAYER));
+            } else {
+                playerView.add(new Field(point2D, FieldType.EMPTY));
+            }
 
         }
 
         playerHandler.updatePlayerView(new PlayerView(playerView));
         playerHandler.endround();
         playerHandler.update();
+        UiState.getINSTANCE().updatePlayerPoints(playerHandler.getPlayerName(), playerHandler.getSnake().getHeadColor());
     }
 
     private boolean gameOver() {

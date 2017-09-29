@@ -1,34 +1,44 @@
 package de.adesso.brainysnake;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
+import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
 public class BrainySnake extends ApplicationAdapter {
 
     private Texture texture;
-    private SpriteBatch batch;
+    private SpriteBatch gameSpriteBatch;
+    private SpriteBatch fontSpriteBatch;
     private Sprite sprite;
     private Pixmap pixmap;
 
     private static int DOT_SITZE = 10;
     private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SITZE;
     private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SITZE;
+    private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
+    private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
 
     private OrthographicCamera mainCamera;
     private OrthographicCamera fontCamera;
 
     private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
-    private float timeSinceLastRender;
+    private float timeSinceLastRender = 0;
+
+    public int renderCount = 0;
+    private BitmapFont font;
+
+    List<GameObject> gameObjects;
 
     private Game game;
 
@@ -48,8 +58,13 @@ public class BrainySnake extends ApplicationAdapter {
         game = new Game();
         game.init(HEIGHT, WIDTH);
         Gdx.input.setInputProcessor(new KeyBoardControl(game));
-        batch = new SpriteBatch();
-        batch.setProjectionMatrix(mainCamera.combined);
+
+        gameSpriteBatch = new SpriteBatch();
+        gameSpriteBatch.setProjectionMatrix(mainCamera.combined);
+
+        fontSpriteBatch = new SpriteBatch();
+        fontSpriteBatch.setProjectionMatrix(fontCamera.combined);
+        font = new BitmapFont();
     }
 
     @Override
@@ -70,10 +85,8 @@ public class BrainySnake extends ApplicationAdapter {
         mainCamera = new OrthographicCamera();
         mainCamera.setToOrtho(true, WIDTH, HEIGHT);
         fontCamera = new OrthographicCamera();
-        fontCamera.setToOrtho(false, WIDTH, HEIGHT);
+        fontCamera.setToOrtho(false, APPLICATION_WIDTH , APPLICATION_HEIGHT);
     }
-
-    List<GameObject> gameObjects;
 
     public void draw() {
         // Redraw the head.
@@ -89,18 +102,30 @@ public class BrainySnake extends ApplicationAdapter {
         }
         gameObjects.clear();
 
-        // draw pixmap to batch
+        // draw pixmap to gameSpriteBatch
         texture.draw(pixmap, 0, 0);
-        batch.begin();
-        sprite.draw(batch);
-        batch.end();
+        gameSpriteBatch.begin();
+        sprite.draw(gameSpriteBatch);
+        gameSpriteBatch.end();
+
+        fontSpriteBatch.begin();
+        font.getData().setScale(1f);
+        HashMap<String, Color> playerMap = UiState.getINSTANCE().getPlayerMap();
+        int offset = 0;
+        for (String playername : playerMap.keySet()) {
+            font.setColor(playerMap.get(playername));
+            font.draw(fontSpriteBatch, playername, 20, APPLICATION_HEIGHT - 20 - offset);
+            offset += 20;
+        }
+
+        fontSpriteBatch.end();
     }
 
     @Override
     public void dispose() {
         texture.dispose();
         pixmap.dispose();
-        batch.dispose();
+        gameSpriteBatch.dispose();
     }
 
 }

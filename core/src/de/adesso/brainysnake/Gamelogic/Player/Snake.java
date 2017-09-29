@@ -91,4 +91,8 @@ public class Snake {
         positions.addAll(body.getPositions());
         return positions;
     }
+
+    public Color getHeadColor() {
+        return headColor;
+    }
 }

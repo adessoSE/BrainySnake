@@ -6,7 +6,7 @@ public class Config {
 
     /* gamepleysettings */
     public static final int MAX_ROUNDS               = 1000;
-    public static final boolean RENDER_PLAYERVIEW        = true;
+    public static final boolean RENDER_PLAYERVIEW    = true;
     public static int PLAYERVIEW_OFFSET_TO_LEFT      = 5;
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
     public static int PLAYERVIEW_OFFSET_TO_AHEAD     = 10;
