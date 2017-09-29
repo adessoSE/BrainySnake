@@ -13,6 +13,7 @@ import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
+import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
@@ -24,61 +25,7 @@ import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 public class GameMaster {
 
     // Alle Spiele erzeugen
-    private BrainySnakePlayer playerOne = new SamplePlayer() {
-
-        PlayerState playerState;
-        private boolean left, right, up, down;
-
-        @Override
-        public String getPlayerName() {
-            return "SamplePlayer One";
-        }
-
-        @Override
-        public PlayerUpdate tellPlayerUpdate() {
-
-            System.out.println(playerState.getGhostModeRemaining());
-
-            if (KeyBoardControl.LEFT && !right) {
-                left = true;
-                right = up = down = false;
-            }
-            if (KeyBoardControl.RIGHT && !left) {
-                right = true;
-                left = up = down = false;
-            }
-            if (KeyBoardControl.UP && !down) {
-                up = true;
-                left = right = down = false;
-            }
-            if (KeyBoardControl.DOWN && !up) {
-                down = true;
-                left = right = up = false;
-            }
-
-            if (left) {
-                return new PlayerUpdate(Orientation.LEFT);
-            }
-            if (right) {
-                return new PlayerUpdate(Orientation.RIGHT);
-            }
-            if (up) {
-                return new PlayerUpdate(Orientation.UP);
-            }
-            if (down) {
-                return new PlayerUpdate(Orientation.DOWN);
-            }
-
-            return null;
-        }
-
-        @Override
-        public boolean handlePlayerStatusUpdate(PlayerState playerState) {
-            /* The SamplePlayer is very lazy, it just stores the last data */
-            this.playerState = playerState;
-            return true;
-        }
-    };
+    private BrainySnakePlayer playerOne = new KeyBoardPlayer();
     private BrainySnakePlayer playerTwo = new SamplePlayer() {
 
         @Override
