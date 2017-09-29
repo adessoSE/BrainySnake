@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
@@ -41,6 +42,8 @@ public class BrainySnake extends ApplicationAdapter {
     List<GameObject> gameObjects;
 
     private Game game;
+
+    private boolean gameStarted;
 
     @Override
     public void create() {
@@ -72,23 +75,54 @@ public class BrainySnake extends ApplicationAdapter {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        if (KeyBoardControl.SPACE) {
+            gameStarted = true;
+        }
+
+        if (!gameStarted) {
+            drawStartScreen();
+            return;
+        }
+
         timeSinceLastRender += Gdx.graphics.getDeltaTime();
         if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
             // Do the actual rendering, pass timeSinceLastRender as delta time.
             timeSinceLastRender = 0f;
             game.update(Gdx.graphics.getDeltaTime());
         }
-        draw();
+        if (game.isGameOver()) {
+            drawGameOverScreen();
+            return;
+        }
+
+        drawGameLoop();
     }
 
     private void initializeCamera() {
         mainCamera = new OrthographicCamera();
         mainCamera.setToOrtho(true, WIDTH, HEIGHT);
         fontCamera = new OrthographicCamera();
-        fontCamera.setToOrtho(false, APPLICATION_WIDTH , APPLICATION_HEIGHT);
+        fontCamera.setToOrtho(false, APPLICATION_WIDTH, APPLICATION_HEIGHT);
     }
 
-    public void draw() {
+    public void drawStartScreen() {
+        pixmap.setColor(Color.BLACK);
+        pixmap.fill();
+
+        texture.draw(pixmap, 0, 0);
+        gameSpriteBatch.begin();
+        sprite.draw(gameSpriteBatch);
+        gameSpriteBatch.end();
+
+        fontSpriteBatch.begin();
+        font.getData().setScale(7f);
+        font.setColor(Color.WHITE);
+        font.draw(fontSpriteBatch, "BrainySnake", 20, APPLICATION_HEIGHT - 20);
+        font.draw(fontSpriteBatch, "Press (Space) to start", 20, APPLICATION_HEIGHT - 150);
+        fontSpriteBatch.end();
+    }
+
+    public void drawGameLoop() {
         // Redraw the head.
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
@@ -102,20 +136,56 @@ public class BrainySnake extends ApplicationAdapter {
         }
         gameObjects.clear();
 
-        // draw pixmap to gameSpriteBatch
+        // drawGameLoop pixmap to gameSpriteBatch
+        texture.draw(pixmap, 0, 0);
+        gameSpriteBatch.begin();
+        sprite.draw(gameSpriteBatch);
+        gameSpriteBatch.end();
+
+
+        fontSpriteBatch.begin();
+        font.getData().setScale(1f);
+
+        font.setColor(Color.WHITE);
+        font.draw(fontSpriteBatch, "Rounds remaining: ", 20, APPLICATION_HEIGHT - 20 );
+        font.draw(fontSpriteBatch, UiState.getINSTANCE().getRoundsRemaining(), 165, APPLICATION_HEIGHT - 20 );
+
+        HashMap<String, UIPlayerInformation> playerMap = UiState.getINSTANCE().getPlayerMap();
+        int offset = 20;
+        for (String playername : playerMap.keySet()) {
+            font.setColor(playerMap.get(playername).getColor());
+            font.draw(fontSpriteBatch, playername, 20, APPLICATION_HEIGHT - 20 - offset);
+            font.draw(fontSpriteBatch, playerMap.get(playername).getPoints(), 165, APPLICATION_HEIGHT - 20 - offset);
+            offset += 20;
+        }
+
+        fontSpriteBatch.end();
+    }
+
+    public void drawGameOverScreen() {
+
+        pixmap.setColor(Color.BLACK);
+        pixmap.fill();
+
         texture.draw(pixmap, 0, 0);
         gameSpriteBatch.begin();
         sprite.draw(gameSpriteBatch);
         gameSpriteBatch.end();
 
         fontSpriteBatch.begin();
-        font.getData().setScale(1f);
-        HashMap<String, Color> playerMap = UiState.getINSTANCE().getPlayerMap();
-        int offset = 0;
-        for (String playername : playerMap.keySet()) {
-            font.setColor(playerMap.get(playername));
-            font.draw(fontSpriteBatch, playername, 20, APPLICATION_HEIGHT - 20 - offset);
-            offset += 20;
+        font.getData().setScale(7f);
+        font.setColor(Color.WHITE);
+        font.draw(fontSpriteBatch, "Game Over", 20, APPLICATION_HEIGHT - 20);
+
+        int offset = 150;
+
+        font.getData().setScale(5f);
+        HashMap<String, UIPlayerInformation> playerMap = UiState.getINSTANCE().getPlayerMap();
+        for (String winnerName : playerMap.keySet()) {
+            font.setColor(playerMap.get(winnerName).getColor());
+            font.draw(fontSpriteBatch, winnerName, 20, APPLICATION_HEIGHT - offset);
+            font.draw(fontSpriteBatch, playerMap.get(winnerName).getPoints(), 750, APPLICATION_HEIGHT - offset);
+            offset += 120;
         }
 
         fontSpriteBatch.end();

@@ -8,7 +8,9 @@ public final class UiState {
 
     private static UiState INSTANCE = null;
 
-    private HashMap<String, Color> playerMap = new HashMap<String, Color>();
+    private int roundsRemaining = -1;
+
+    private HashMap<String, UIPlayerInformation> playerMap = new HashMap<String, UIPlayerInformation>();
 
     private UiState() {
     }
@@ -21,15 +23,25 @@ public final class UiState {
         return INSTANCE;
     }
 
-    public void updatePlayerPoints(String playerName, Color color) {
-        playerMap.put(playerName, color);
+    public void updatePlayerPoints(String playerName, UIPlayerInformation uiPlayerInformation) {
+        playerMap.put(playerName, uiPlayerInformation);
     }
 
     public void rip(String playerName) {
-        playerMap.put(playerName, Color.DARK_GRAY);
+        playerMap.put(playerName, new UIPlayerInformation(Color.GRAY, 0));
+
     }
 
-    public HashMap<String, Color> getPlayerMap() {
+    public HashMap<String, UIPlayerInformation> getPlayerMap() {
         return playerMap;
     }
+
+    public String getRoundsRemaining() {
+        return Integer.toString(roundsRemaining);
+    }
+
+    public void setRoundsRemaining(int roundsRemaining) {
+        this.roundsRemaining = roundsRemaining;
+    }
+
 }

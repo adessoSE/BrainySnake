@@ -16,6 +16,8 @@ public class KeyBoardControl extends InputAdapter {
 
     public static boolean DOWN;
 
+    public static boolean SPACE;
+
     public KeyBoardControl(Game game){
         this.game = game;
     }
@@ -38,7 +40,7 @@ public class KeyBoardControl extends InputAdapter {
             RIGHT = UP = LEFT = false;
         }
         if (k == Input.Keys.SPACE ){
-            //TODO rukl@rukl restart
+            SPACE = true;
         }
         return true;
     }
@@ -55,6 +57,9 @@ public class KeyBoardControl extends InputAdapter {
         }
         if (k == Input.Keys.DOWN){
             DOWN = false;
+        }
+        if (k == Input.Keys.SPACE){
+            SPACE = false;
         }
         return true;
     }
