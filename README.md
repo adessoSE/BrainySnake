@@ -4,6 +4,9 @@
 Brainysnake ist ein Snakespiel bei welchen ihr eure Schlange nicht aktiv selbst steurt, sondern über einen Bewegungsalgorythmus vorher festlegt, wie eure Schlange sicht verhalten soll. 
 Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann beginnt der Kampf um den Sieg. Gewonnen hat, wer nach 1000 Zügen (Anzahl der Züge ist konfigurierbar) noch lebt und die meisten Punktee hat. 
 
+
+# Open Project 
+
 ## Build Project for IntelliJ
 1. checkout project
 1. run _gradlew idea_ or for reinit _gradlew cleanidea idea_ in your favorite console
@@ -14,6 +17,17 @@ Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann b
 1. set _de.adesso.brainysnake.desktop.DesktopLauncher_ as Main class
 1. set _[projectPath]\BrainySnake\core\assets_ as Working directory
 1. set _desktop_ as classpath of module
+1. run
+
+## Build Project for eclipse
+1. checkout project
+1. import the Project with _File>Import>Gradle>Existing Gradle Project_
+
+## Create Desktop Run-Configuration in eclipse
+1. create a Run Configuration and choose _Java Application_
+1. Set _brainySnake-desktop_ as projecct
+1. Set _de.adesso.brainysnake.desktop.DesktopLauncher_ as Main class
+1. Save the new configuration
 1. run
 
 ## Spielregeln
