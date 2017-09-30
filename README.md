@@ -1,6 +1,9 @@
 # BrainySnake
 ![brainySnakePic](/Dokumentation/brainySnake.png)
 
+Brainysnake ist ein Snakespiel bei welchen ihr eure Schlange nicht aktiv selbst steurt, sondern über einen Bewegungsalgorythmus vorher festlegt, wie eure Schlange sicht verhalten soll. 
+Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann beginnt der Kampf um den Sieg. Gewonnen hat, wer nach 1000 Zügen (Anzahl der Züge ist konfigurierbar) noch lebt und die meisten Punktee hat. 
+
 ## Build Project for IntelliJ
 1. checkout project
 1. run _gradlew idea_ or for reinit _gradlew cleanidea idea_ in your favorite console
