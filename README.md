@@ -4,6 +4,12 @@
 Brainysnake ist ein Snake-Spiel bei welchen ihr eure Schlange nicht aktiv selbst steurt, sondern über einen Bewegungsalgorythmus vorher festlegt, wie eure Schlange sicht verhalten soll. 
 Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann beginnt der Kampf um den Sieg. Gewonnen hat, wer nach 1000 Zügen (Anzahl der Züge ist konfigurierbar) noch lebt und die meisten Punktee hat. 
 
+# doHack_2017
+
+**https://github.com/FlorianTim/BrainySnake**
+
+Bitte sendet euren Spieler bis 23:59 Uhr (30.09.2017) an folgende Emailadresse: brainysnake@gmail.com
+Falls abweichend, vergesst nicht eine Kontaktmöglichkeit anzugeben(für Rückmeldungen).
 
 # Open Project 
 
@@ -52,4 +58,6 @@ Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann b
 Implementiere deine Schlangensteuerung in der Klasse _YourPlayer_. Dazu kannst du dich an den Beispielimplementierungen der Klassen _SamplePlayer_ und _SamplePlayer2_ orientieren.
 Gib deiner Klasse einen eindeutigen Namen und gib diesen an über **getPlayerName** auch an die Spielumgebung zurück.
 Um mit der Schlangensteuerung vertraut zu werden, wird initial bei Spielstart eine Schlange erzeugt, die über die Pfeiltasten der Tastatur steuerbar ist.
+
+
 

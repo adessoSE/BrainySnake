@@ -13,7 +13,7 @@ public class Config {
     public static int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
 
     /* others */
-    public static final float UPDATE_RATE = 30f;
+    public static final float UPDATE_RATE = 10f;
     public static final Color POINT_COLLOR = Color.RED;
     public static final Color GHOSTMODE_COLOR = Color.GRAY;
     public static final float SNAKE_BODY_LIGHTING = 0.7f;
