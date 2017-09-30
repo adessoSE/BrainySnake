@@ -1,6 +1,9 @@
 package de.adesso.brainysnake.sampleplayer;
 
-import de.adesso.brainysnake.playercommon.*;
+import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
+import de.adesso.brainysnake.playercommon.PlayerState;
+import de.adesso.brainysnake.playercommon.PlayerUpdate;
+
 
 /**
  * Implementiere hier deine Schlangensteuerung.

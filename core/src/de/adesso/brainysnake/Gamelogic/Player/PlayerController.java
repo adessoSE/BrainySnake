@@ -118,7 +118,7 @@ public class PlayerController {
                 agentChoiceMap.put(playerHandler, PlayerChoice.createNoChoice());
                 playerHandler.kill();
                 Gdx.app.error("PlayerController",
-                        "Player: " + playerHandler.getPlayerName() + " got Timeout after " + Config.MAX_AGENT_PROCESSING_TIME_MS + " ms", e);
+                        "Player: " + playerHandler.getPlayerName() + " got Timeout after " + Config.MAX_AGENT_PROCESSING_TIME_MS + " ms and got killed ", e);
                 continue;
             }
 

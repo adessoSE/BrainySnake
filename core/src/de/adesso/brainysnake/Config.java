@@ -5,12 +5,12 @@ import com.badlogic.gdx.graphics.Color;
 public class Config {
 
     /* gamepleysettings */
-    public static final int MAX_ROUNDS               = 1000;
-    public static final boolean RENDER_PLAYERVIEW    = true;
-    public static int PLAYERVIEW_OFFSET_TO_LEFT      = 2;
+    public static final int MAX_ROUNDS = 1000;
+    public static final boolean RENDER_PLAYERVIEW = true;
+    public static int PLAYERVIEW_OFFSET_TO_LEFT = 2;
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
     public static int STARTING_POSITION_SPACE = 8;
-    public static int PLAYERVIEW_OFFSET_TO_AHEAD     = 5;
+    public static int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
 
     /* others */
     public static final float UPDATE_RATE = 30f;
@@ -32,5 +32,7 @@ public class Config {
     public static final int MAX_POINTS_IN_LEVEL = 15;
     public static final int GHOST_TIME = 30;
     public static final int BLINK_TIME = ((int) UPDATE_RATE / 10) + 1;
+
+    /* threaded playerupdate config */
     public static final int MAX_AGENT_PROCESSING_TIME_MS = 1000;
 }
