@@ -19,8 +19,6 @@ public class KeyBoardPlayer implements BrainySnakePlayer {
     @Override
     public PlayerUpdate tellPlayerUpdate() {
 
-        System.out.println(playerState.getGhostModeRemaining());
-
         if (KeyBoardControl.LEFT && !right) {
             left = true;
             right = up = down = false;
