@@ -147,7 +147,7 @@ public class GameMaster {
             if (collectedPoints <= 0) {
                 playerHandler.penalty();
                 // if negative points where collected, add another penalty
-                if (collectedPoints < -1) {
+                if (collectedPoints <= -1) {
                     playerHandler.penalty();
                 }
             }
