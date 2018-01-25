@@ -120,7 +120,7 @@ public class Level {
         int centerX = (int) Math.floor(this.width / 2D);
         int centerY = (int) Math.floor(this.height / 2D);
 
-        for (int i = 0; i <= initialLength; i++) {
+        for (int i = 1; i <= initialLength; i++) {
             Point2D positionIn = getPositionIn(orientation, centerX, centerY, i);
             if (i == initialLength) {
                 head.addFirst(positionIn);
