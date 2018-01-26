@@ -1,17 +1,10 @@
 # BrainySnake
 ![brainySnakePic](/Dokumentation/brainySnake.png)
 
-Brainysnake ist ein Snake-Spiel bei welchen ihr eure Schlange nicht aktiv selbst steurt, sondern über einen Bewegungsalgorythmus vorher festlegt, wie eure Schlange sicht verhalten soll. 
-Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann beginnt der Kampf um den Sieg. Gewonnen hat, wer nach 1000 Zügen (Anzahl der Züge ist konfigurierbar) noch lebt und die meisten Punktee hat. 
+Brainysnake ist ein Snake-Spiel bei welchem ihr eure Schlange nicht aktiv selbst steuert, sondern über einen Bewegungsalgorithmus vorher festlegt, wie eure Schlange sich verhalten soll.
+Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann beginnt der Kampf um den Sieg. Gewonnen hat, wer nach 1000 Zügen (Anzahl der Züge ist konfigurierbar) noch lebt und die meisten Punkte hat.
 
-# doHack_2017
-
-**https://github.com/FlorianTim/BrainySnake**
-
-Bitte sendet euren Spieler bis 23:59 Uhr (30.09.2017) an folgende Emailadresse: brainysnake@gmail.com
-Falls abweichend, vergesst nicht eine Kontaktmöglichkeit anzugeben(für Rückmeldungen).
-
-# Open Project 
+# Open Project
 
 ## Build Project for IntelliJ
 1. checkout project
@@ -42,22 +35,20 @@ Falls abweichend, vergesst nicht eine Kontaktmöglichkeit anzugeben(für Rückme
 ![explainSnakePic](/Dokumentation/explainSnake.jpg)
 
 * Pro Runde kann die Schlange sich um ein Feld nach links, rechts oder nach vorne bewegen.
-* Eine Schlange besteht aus Körper und Kopf. 
-* Wenn die Schlange mit einem Levelelement kollidiert, verliert sie ein Feld ihres Körpers. Wenn eine Schlange keine Körperelemente übrig hat, stirbt sie und scheidet aus der Spielrunde aus.
-* Wenn die Schlange einen Punkt findet, verlängert sich ihr Körper um ein Feld.
-* Eine Schlange kann eine andere Schlange beißen. In diesem Fall erhält die Schlange einen Punkt und geht in den Ghostmode
-    * Im Ghostmode ist die Schlange vor bissen anderer Schlangen geschützt. 
-    * Im Ghostmode kann die Schlange keine Punkte konsumieren.
-* Eine Schlange besitzt ein Sichtfeld. Das Sichtfelst ist ein zweidimensionales Raster, über welchen die Schlange folgende Informationen abfragen bzw. sehen kann:
+* Eine Schlange besteht aus Körper und Kopf.
+* Wenn die Schlange mit einem Levelelement kollidiert, verliert sie ein Feld ihres Körpers. Wenn eine Schlange keine Körperelemente übrig hat, stirbt sie und  scheidet aus der Spielrunde aus.
+* Wenn die Schlange einen Punkt einsammelt, verlängert sich ihr Körper um ein Feld. Ein Punkt wird eingesammelt indem die Schlange mit ihrem Kopf über den Punkt steuert.
+* Eine Schlange kann eine andere Schlange beißen. In diesem Fall erhält die Schlange einen Punkt und geht in den _Ghostmode_
+    * Im Ghostmode ist die Schlange vor Bissen anderer Schlangen geschützt
+    * Im Ghostmode kann die Schlange keine Punkte konsumieren
+* Eine Schlange besitzt ein Sichtfeld. Das Sichtfeld ist ein zweidimensionales Raster, über welchen die Schlange folgende Informationen abfragen bzw. sehen kann:
     * Levelelemente (Wände, Hindernisse)
-    * Punkt
+    * Punkte
     * Andere Schlangen
-* Wenn eine Schlange ein invalide Steueranweisung erhält (bspw. ist eine 180* Wendung nicht möglich) wechselt die Schlange in den _ConfusedMode_. In diesem Modus erhält die Schlange einen Punkt Abzug und fängt an zu Blinken.
-    
+* Wenn eine Schlange ein invalide Steueranweisung erhält (bspw. ist eine 180* Wendung nicht möglich) wechselt die Schlange in den _ConfusedMode_. In diesem Modus erhält die Schlange einen Punkt Abzug und fängt an zu blinkern.
+
+
 ## Howto
 Implementiere deine Schlangensteuerung in der Klasse _YourPlayer_. Dazu kannst du dich an den Beispielimplementierungen der Klassen _SamplePlayer_ und _SamplePlayer2_ orientieren.
-Gib deiner Klasse einen eindeutigen Namen und gib diesen an über **getPlayerName** auch an die Spielumgebung zurück.
-Um mit der Schlangensteuerung vertraut zu werden, wird initial bei Spielstart eine Schlange erzeugt, die über die Pfeiltasten der Tastatur steuerbar ist.
-
-
-
+Gib deiner Klasse einen eindeutigen Namen (siehe dazu die Methode **getPlayerName** in der YourPlayer Klasse)
+Um mit der Schlangensteuerung vertraut zu werden, wird initial bei Spielstart eine Schlange erzeugt, welche über die Pfeiltasten der Tastatur steuerbar ist.
