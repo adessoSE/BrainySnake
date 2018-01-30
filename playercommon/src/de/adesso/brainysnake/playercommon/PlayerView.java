@@ -20,10 +20,10 @@ public final class PlayerView {
      * Feldbreite in Feldern aus Sicht der Schlange. Bsp.: Eine Feldbreite von 5 bedeutet, dass die Schlange 2 Felder nach links und 2 Felder nach recht inkl.
      * das eigene Feld gucken kann.
      */
-    private final int viewWidth = 5;
+    private final int viewWidth;
 
     // Anzahl der Felder, die die Schlange nach vorne gucken kann
-    private final int visibilityRange = 10;
+    private final int visibilityRange;
 
     // Aktuelle Orientierung der Schlange nach oben, unten, links oder rechts
     private final Orientation currentOrientation;
@@ -34,9 +34,11 @@ public final class PlayerView {
      */
     private final List<Field> visibleFields;
 
-    public PlayerView(List<Field> visibleFields, Orientation currentOrientation) {
+    public PlayerView(List<Field> visibleFields, Orientation currentOrientation, int viewWidth, int visibilityRange) {
         this.visibleFields = visibleFields;
         this.currentOrientation = currentOrientation;
+        this.viewWidth = viewWidth;
+        this.visibilityRange = visibilityRange;
     }
 
     public int getViewWidth() {
