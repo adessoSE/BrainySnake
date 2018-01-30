@@ -31,7 +31,7 @@ public class PlayerController {
         List<Color> gameColors = Utils.getShuffledGameColors();
 
         if (playerList.size() > gameColors.size() || playerList.size() > playerGameObjects.size()) {
-            throw new IllegalArgumentException("To many players");
+            throw new IllegalArgumentException("Too many players");
         }
 
         // Shuffle Starting Positions
@@ -71,7 +71,7 @@ public class PlayerController {
             } catch (ExecutionException e) {
                 Gdx.app.error("PlayerController: ", "ExecutionException - " + e.getMessage());
             } catch (TimeoutException e) {
-                Gdx.app.error("PlayerController: ", "Waiting for Player " + playerHandler.getPlayerName() + " aborted. Timout");
+                Gdx.app.error("PlayerController: ", "Waiting for Player " + playerHandler.getPlayerName() + " aborted. Timeout");
             }
         }
     }
