@@ -55,4 +55,4 @@ Um mit der Schlangensteuerung vertraut zu werden, wird initial bei Spielstart ei
 
 ## Want to contribute?
 See the [contribution guide](https://github.com/adessoAG/BrainySnake/blob/master/CONTRIBUTING.md).
-Active Contributors can also join our [BrainySnake Slack] (https://brainysnake.slack.com) Channel.
+Active Contributors can also join our [BrainySnake Slack](https://brainysnake.slack.com) Channel.
