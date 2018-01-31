@@ -7,6 +7,6 @@ public enum RoundEvent {
     BIT_AGENT,
     BIT_BY_PLAYER,
     BIT_HIMSELF,
-    DIEDED,
+    DIED,
     CONSUMED_POINT,
 }
