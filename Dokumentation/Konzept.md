@@ -1,11 +1,12 @@
-# Konzeption des Simulationsspiels BrainySnake
+# Dokumentation des Simulationsspiels BrainySnake
 
-- [Konzeption des Simulationsspiels BrainySnake](#konzeption-des-simulationsspiels-brainysnake)
+- [Dokumentation des Simulationsspiels BrainySnake](#dokumentation-des-simulationsspiels-brainysnake)
     - [Spiel aus Sicht des Players](#spiel-aus-sicht-des-players)
     - [Herausforderungen für die Entwickler der Agenten](#herausforderungen-f%C3%BCr-die-entwickler-der-agenten)
     - [Technische Umsetzung](#technische-umsetzung)
         - [Objekt: _PlayerState_](#objekt-playerstate)
         - [Objekt: _PlayerView_](#objekt-playerview)
+        - [Objekt: _RoundEvent_](#objekt-roundevent)
     - [Projektstruktur (Gradle)](#projektstruktur-gradle)
     - [Programmablauf](#programmablauf)
         - [Simulationsablauf](#simulationsablauf)
@@ -50,6 +51,8 @@ Jeder Agent implementiert das Interface **BrainySnakePlayer**, welches folgende 
 
 ### Objekt: PlayerState
 
+Der Agent erhält das Objekt PlayerState in seiner Methode *handlePlayerStatusUpdate()* übergeben. In dem Objekt kann der Zustand der eigenen Schlange abgefragt werden.
+
 Übersicht der vorhandenen Daten:
 
 |    Name / Methode            |Beschreibung|Datentyp|
@@ -80,10 +83,27 @@ Der Agent erhält ein zweidimensionales Sichtfeld(viewWidth und viewRange), welc
 |viewRange / getViewRange()|Feldhöhe in Feldern aus Sicht der Schlange. Beginnend einen Punkt vor dem Kopf der Schlange.|int
 |visibleFields / getVisibleFields()|Liste mit allen sichtbaren Feldern für die Schlange. Der erste Eintrag in der Liste mit dem Index 0 ist aus Sicht der Schlange der Punkt links oben.|List of Fields
 
+### Objekt: RoundEvent
+
+Jede Runde werden für die jeweiligen Schlangen verschiedene RoundEvents berechnet. Diese RoundEvents können in dem PlayerState ausgelesen werden.
+
+Übersicht der vorhandenen Events:
+
+|    Name                       |Beschreibung                       |Abfragbar (siehe PlayerState)
+|----------------               |-------------------------------    |:-----------------:
+|MOVED                          | Bewegung der Schlange.                                    | true
+|BIT_BY_PLAYER                  | Biss an der eigenen Schlange von einem anderen Spieler.   | true
+|COLLISION_WITH_LEVEL           | Kollision mit Levelobjekten.                              | true
+|CONFUSED                       | Verwirrung der Schlange durch ungültiges Update.          | false
+|BIT_AGENT                      | Biss von der eigenen Schlange an einem anderen Spieler.   | false
+|BIT_HIMSELF                    | Biss von der eigenen Schlange an sich selber.             | false
+|DIED                           | Löschung der Schlange aufgrund Punktestand.               | false
+|CONSUMED_POINT                 | Konsum von Spielpunkten.                                  | false
+
 
 ## Projektstruktur (Gradle)
 
-Jeder Player (Agent) wird in ein **seperates Modul** ausgelagertwelches in den Core improtiert wird.  
+Jeder Player (Agent) wird in ein **seperates Modul** ausgelagert, welches in den Core improtiert wird.  
 Diese Auslagerung verhindert den Zugriff von den Agent auf fremden Code.
 Jedes Player Modul implementiert das Interface **BrainySnakePlayer** und importiert das Package **playerCommon**, welches das Interface und die Klassen beinhaltet (z.B. PlayerStatus, GameEvent und das BrainySnake Interface).
 
