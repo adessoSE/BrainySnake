@@ -52,3 +52,7 @@ Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann b
 Implementiere deine Schlangensteuerung in der Klasse _YourPlayer_. Dazu kannst du dich an den Beispielimplementierungen der Klassen _SamplePlayer_ und _SamplePlayer2_ orientieren.
 Gib deiner Klasse einen eindeutigen Namen (siehe dazu die Methode **getPlayerName** in der YourPlayer Klasse)
 Um mit der Schlangensteuerung vertraut zu werden, wird initial bei Spielstart eine Schlange erzeugt, welche über die Pfeiltasten der Tastatur steuerbar ist.
+
+## Want to contribute?
+See the [contribution guide](https://github.com/adessoAG/BrainySnake/blob/master/CONTRIBUTING.md).
+Active Contributors can also join our [BrainySnake Slack](https://brainysnake.slack.com) Channel.

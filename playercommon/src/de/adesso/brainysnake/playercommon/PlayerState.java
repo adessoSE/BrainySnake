@@ -9,7 +9,7 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 public final class PlayerState {
 
     private final int movesPlayed;
-    private final int movesRermaining;
+    private final int movesRemaining;
     private final int playerPoints;
     private final Point2D playersHead;
     private final Point2D playersTail;
@@ -20,9 +20,9 @@ public final class PlayerState {
     private final boolean collisionWithLevel;
     private final PlayerView playerView;
 
-    public PlayerState(int movesPlayed, int movesRermaining, int playerPoints, Point2D playersHead, Point2D playerTail, boolean ghostModeActive, int ghostModeRemaining, boolean bitByPlayer, boolean moved, boolean collisionWithLevel, PlayerView playerView) {
+    public PlayerState(int movesPlayed, int movesRemaining, int playerPoints, Point2D playersHead, Point2D playerTail, boolean ghostModeActive, int ghostModeRemaining, boolean bitByPlayer, boolean moved, boolean collisionWithLevel, PlayerView playerView) {
         this.movesPlayed = movesPlayed;
-        this.movesRermaining = movesRermaining;
+        this.movesRemaining = movesRemaining;
         this.playerPoints = playerPoints;
         this.playersHead = playersHead;
         this.playersTail = playerTail;
@@ -38,8 +38,8 @@ public final class PlayerState {
         return movesPlayed;
     }
 
-    public int getMovesRermaining() {
-        return movesRermaining;
+    public int getMovesRemaining() {
+        return movesRemaining;
     }
 
     public int getPlayerPoints() {
