@@ -6,7 +6,7 @@
     - [Technische Umsetzung](#technische-umsetzung)
         - [Objekt: _PlayerState_](#objekt-playerstate)
         - [Objekt: _PlayerView_](#objekt-playerview)
-    - [Projektstrucktur (Gradle)](#projektstrucktur-gradle)
+    - [Projektstruktur (Gradle)](#projektstruktur-gradle)
     - [Programmablauf](#programmablauf)
         - [Simulationsablauf](#simulationsablauf)
     - [Technische Herausforderungen](#technische-herausforderungen)
@@ -53,7 +53,7 @@ Jeder Agent implementiert das Interface **BrainySnakePlayer**, welches folgende 
 Übersicht der vorhandenen Daten:
 
 |    Name / Methode            |Beschreibung|Datentyp|
-|----------------|-------------------------------|-----------------------------|
+|:----------------|:-------------------------------|:-----------------------------:|
 |movesPlayed / getMovesPlayed()| Anzahl der gespielten Runden.|int
 |movesRemaining / getMovesRemaining()|Anzahl der übrigen zu spielenden Runden.|int
 |playerPoints / getPlayerPoints()|Aktuelle Spielerpunkte (Gesamtzahl von Kopf und Körperteileanzahl).|int
@@ -74,21 +74,21 @@ Der Agent erhält ein zweidimensionales Sichtfeld(viewWidth und viewRange), welc
 Übersicht der vorhandenen Daten:
 
 |    Name / Methode             |Beschreibung                       |Datentyp                       |
-|----------------               |-------------------------------    |-----------------------------  |
+|----------------               |-------------------------------    |:-----------------------------:|
 |currentOrientation/ getCurrentOrientation()| Aktuelle Orientierung der Schlange.|Orientation
 |viewWidth / getViewWidth()|Feldbreite in Feldern aus Sicht der Schlange. Das Feld beginnt vor dem Kopf der Schlange. Die Aufteilung findet in gleichen Anteilen nach rechts & links der Schlange statt.|int
 |viewRange / getViewRange()|Feldhöhe in Feldern aus Sicht der Schlange. Beginnend einen Punkt vor dem Kopf der Schlange.|int
 |visibleFields / getVisibleFields()|Liste mit allen sichtbaren Feldern für die Schlange. Der erste Eintrag in der Liste mit dem Index 0 ist aus Sicht der Schlange der Punkt links oben.|List of Fields
 
 
-## Projektstrucktur (Gradle)
+## Projektstruktur (Gradle)
 
-Jeder Player (Agent) wird in ein **seperates Modul** auisgelagert welches in den Core improtiert wird.  
-Damit sollten keine Zugriffe auf fremden Code möglich sein.  
-Jedes Player Modul importierrt **playerCommon** indem gemeinsame Interfaces und Klassen liegen. (z.B. PlayerStatus, GameEvent und das BrainySnake Interface)  
+Jeder Player (Agent) wird in ein **seperates Modul** ausgelagertwelches in den Core improtiert wird.  
+Diese Auslagerung verhindert den Zugriff von den Agent auf fremden Code.
+Jedes Player Modul implementiert das Interface **BrainySnakePlayer** und importiert das Package **playerCommon**, welches das Interface und die Klassen beinhaltet (z.B. PlayerStatus, GameEvent und das BrainySnake Interface).
 
 Modul           | Beschreibung                                          | Includes
----------       | ------------------                                    |--------
+---------       | ------------------                                    |:--------:
 desktop         | Starter für die Anwendung                             | core
 core            | Logik der Simulation                                  | SamplePlayer, PlayerOne, PlayerTwo, ...
 playerCommon    | Klassen, Interfaces, Enums die alle Agenten brauchen  | junit
@@ -116,20 +116,24 @@ playerOne       | Spieler (Agent) der zu Implementieren ist             | player
 ## Technische Herausforderungen
 ### Der Agent antwortet nicht
 
-__Problem:__ Fehler, der auftreten kann, wenn der Agent verschuldet oder unverschuldet in einer Endlosschleife läuft
-**Präventiv Lösung:** Unit-Tests schreiben
+__Problem:__ Fehler, der auftreten kann, wenn der Agent verschuldet oder unverschuldet in einer Endlosschleife läuft.
+
+**Präventiv Lösung:** Unit-Tests schreiben.
+
 **Laufzeit Lösung:** Der Aufruf jedes Agenten erfolgt ein eigenem Thread, welcher nach einer angemessenen Zeit terminiert, sofern keine Antwort eingegangen ist.
 Der Agent wird eingefroren (PlayerStatus frozen), wechselt zur Kennzeichnung des Status die Farbe und es werden zu diesem Zug keine Aktionen für diesen Agenten ausgeführt.
 
 ### Der Agent greift auf Fremden Code zu
-**Problem:** Der Agent könnte **Public Methoden** der Simulation der oder die **Public Methoden** anderer Agenten zugreifen.
+__Problem:__ Der Agent könnte **Public Methoden** der Simulation der oder die **Public Methoden** anderer Agenten zugreifen.
 Denkbar sind auch **Reflections** mit der Private Methoden aufgerufen werden.
+
 **Präventiv Lösung:** Wir verbieten das und kontrollieren den Quellcode der Agenten
+
 **Laufzeit Lösung:**
 
- 1. Die Simulation verwendet **keine öffentlichen Interfaces**, die Agenten werden von der Simulation aufgerufen.
- 1. Jeder Agent bekommt ein eigens Paket
- 1. **TODO:** Gibt es weitere Möglichkeiten Code zu isolieren?
+ - Die Simulation verwendet **keine öffentlichen Interfaces**, die Agenten werden von der Simulation aufgerufen.
+ - Jeder Agent bekommt ein eigenes Paket
+ - **TODO:** Gibt es weitere Möglichkeiten Code zu isolieren?
 
  ## Glossar
  - Ghostmode: Im Ghostmode kann der Agent keine Aktionen ausfürhen außer sich zu bewegen
