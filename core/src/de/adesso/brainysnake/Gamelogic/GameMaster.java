@@ -199,7 +199,7 @@ public class GameMaster {
 
         }
 
-        playerHandler.updatePlayerView(new PlayerView(playerView, playerHandler.getCurrentOrientation()));
+        playerHandler.updatePlayerView(new PlayerView(playerView, playerHandler.getCurrentOrientation(),Config.PLAYERVIEW_OFFSET_TO_VIEWWIDTH, Config.PLAYERVIEW_OFFSET_TO_AHEAD));
         playerHandler.update();
         UiState.getINSTANCE().updatePlayerPoints(playerHandler.getPlayerName(), new UIPlayerInformation(playerHandler.getSnake().getHeadColor(), playerHandler.getSnake().countPoints()));
     }
