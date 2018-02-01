@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 
 public class Config {
 
-    /* gamepleysettings */
+    /* gameplay settings */
     public static final int MAX_ROUNDS = 1000;
     public static final boolean RENDER_PLAYERVIEW = true;
     public static int PLAYERVIEW_OFFSET_TO_LEFT = 2;

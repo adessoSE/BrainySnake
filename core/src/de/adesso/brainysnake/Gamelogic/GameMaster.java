@@ -27,7 +27,7 @@ import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 
 public class GameMaster {
 
-    // Alle Spiele erzeugen
+    // Create players
     private BrainySnakePlayer playerOne = new KeyBoardPlayer();
     private BrainySnakePlayer yourPlayer = new YourPlayer();
     private BrainySnakePlayer playerTwo = new SamplePlayer() {
@@ -103,14 +103,14 @@ public class GameMaster {
         }
         playerStatus.clear();
 
-        // check reaction to gameevents of agents
+        // check reaction to game events of agents
         List<PlayerHandler> deadPlayer = new ArrayList<PlayerHandler>();
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             List<RoundEvent> roundEvents = playerHandler.getRoundEvents();
             int collectedPoints = 0;
             for (RoundEvent roundEvent : roundEvents) {
                 switch (roundEvent) {
-                    case DIEDED:
+                    case DIED:
                         deadPlayer.add(playerHandler);
                         break;
                     case MOVED:
@@ -153,7 +153,7 @@ public class GameMaster {
             }
         }
 
-        // remove dead player from playerlist
+        // remove dead player from player list
         for (PlayerHandler dead : deadPlayer) {
             playerController.getPlayerHandlerList().remove(dead);
             UiState.getINSTANCE().rip(dead.getPlayerName());
@@ -167,7 +167,7 @@ public class GameMaster {
             endRoundForPlayer(playerHandler);
         }
 
-        // calculates the playerState and updates the playercontroller via call
+        // calculates the playerState and updates the playerController via call
         this.playerController.updatePlayerState(new GlobalGameState());
     }
 
@@ -225,7 +225,7 @@ public class GameMaster {
         List<RoundEvent> roundEvents = playerHandler.getRoundEvents();
 
         if (playerHandler.isDead() || playerHandler.getSnake().countPoints() <= 1) {
-            roundEvents.add(DIEDED);
+            roundEvents.add(DIED);
             playerHandler.kill();
             return;
         }

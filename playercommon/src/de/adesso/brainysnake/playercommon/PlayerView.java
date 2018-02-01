@@ -3,22 +3,22 @@ package de.adesso.brainysnake.playercommon;
 import java.util.List;
 
 /**
- * Die Playerview bildet das Sichtfeld einer Schlange. Es ist quadratisch angeordnet und befindet sich ein Feld vor dem Kopf der Schlange. Die einzelnen Felder
- * sind als Liste im Playerview gespeichert. Das erste Feld in der Liste befindet sich immer hinten links aus Sicht der Schlange (Sichtweite + linker Reand der
- * Feldbreite) Das das letzte Element der List ist der Punkt vorne Rechts.
+ * Die PlayerView bildet das Sichtfeld einer Schlange. Es ist quadratisch angeordnet und befindet sich ein Feld vor dem Kopf der Schlange. Die einzelnen Felder
+ * sind als Liste im PlayerView gespeichert. Das erste Feld in der Liste befindet sich immer hinten links aus Sicht der Schlange (Sichtweite + linker Rand der
+ * Feldbreite). Das letzte Element der List ist der Punkt vorne Rechts.
  */
 
 // .....___5____
-// ....|5.....25|
-// ....|4.9...24|_
-// ..5.|3.8...23|_<Schlange
-// ....|2.7.....|
-// ....|1_6_____|
+// ....|4.....24|
+// ....|3.8...23|_
+// ..5.|2.7...22|_<Schlange
+// ....|1.6.....|
+// ....|0_5_____|
 public final class PlayerView {
 
     /*
-     * Feldbreite in Feldern aus Sicht der Schlange. Bsp.: Eine Feldbreite von 5 bedeutet, dass die Schlange 2 Felder nach links und 2 Felder nach recht inkl.
-     * das eigene Feld gucken kann.
+     * Feldbreite in Feldern aus Sicht der Schlange. Bsp.: Eine Feldbreite von 5 bedeutet, dass die Schlange 2 Felder nach links und 2 Felder nach rechts inkl.
+     * dem Feld vor dem eigenen Kopf sieht.
      */
     private final int viewWidth;
 
@@ -30,7 +30,7 @@ public final class PlayerView {
 
     /*
      * Enthält alle Felder, die die Schlange von seiner aktuellen Position aus sehen kann. Aus Sicht der Schlange ist das erste Feld in der Liste das Feld
-     * hinten links (Sichtweite) links
+     * hinten links (Sichtweite).
      */
     private final List<Field> visibleFields;
 
