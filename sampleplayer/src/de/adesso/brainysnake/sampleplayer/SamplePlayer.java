@@ -4,7 +4,7 @@ import de.adesso.brainysnake.playercommon.*;
 
 
 /**
- * Beispielsimplementierung eines Spielers.
+ * Example implementation of an agent.
  */
 public class SamplePlayer implements BrainySnakePlayer {
 
@@ -18,48 +18,46 @@ public class SamplePlayer implements BrainySnakePlayer {
 
     @Override
     public boolean handlePlayerStatusUpdate(PlayerState playerState) {
-        // Verarbeitung des neuen PlayerStatusUpdates. Speicherung des PlayerStates, sowie der beinhalteten PlayerView.
+        // Processing of the new  PlayerStatusUpdate. Storing the included PlayerState and the PlayerView.
         this.playerState = playerState;
         this.playerView = playerState.getPlayerView();
 
-        // Rückgabewert "true" bestätigt den kompletten Ablauf der Methode.
+        // Return value "true" confirms the completed execution.
         return true;
     }
 
     @Override
     public PlayerUpdate tellPlayerUpdate() {
-        // Speicherung der vorhandenen aktuellen Richtung der Schlange. Definition der neuen Schlangenrichtung, falls nichts bearbeitet wird soll die gleiche Richtung beibehalten werden.
+        // Storing of the current orientation of the snake. Decleration of the new orientation, if the value doesn't get changed the current orientation should be keeped up.
         Orientation currentOrientation = this.playerView.getCurrentOrientation();
         Orientation nextStep = currentOrientation;
 
         if (isLevelAhead()){
-            // Die Schlange weicht nach Links aus, falls die Schlange ein Levelobjekt ein Feld vor sich hat.
+            // The snake side steps to the left, if the snake detected a level object ahead.
             nextStep = turnLeft(currentOrientation);
         }
         else if(isPointVisible()){
-            // Definition, falls die Schlange einen Punkt in dem Sichtfeld hat.
+            // Definition of the behaviour when the sanke detected a consumable point in the PlayerView.
         }
         else if (isSnakeAhead()){
-            // Definition, falls die Schlange eine andere Schlange ein Feld vor sich hat. ACHTUNG: Kann auch die eigene Schlange sein!
+            // Definition of the behaviour when the snake detected a snake object ahead. Caution: The snake object could also be part of your own snake!
         }
 
-        // Rückgabe des erstellten PlayerUpdate mit der neuen definierten Richtung.
+        // Return of the new PlayerUpdate with the new orientation.
         return new PlayerUpdate(nextStep);
     }
 
-    // Prüfung des Feldes vor der Schlange, ob sich hier eine Levelobjekt befindet.
+    // Review of the field in front of the snake, if it equals a level object.
     private boolean isLevelAhead(){
-        // Das Feld 22 spiegelt die Position vor dem Schlangenkopf wieder. Siehe Dokumentation.
+        // Field 22 is the position in front of the head. Further information can be found in the documentation.
         return this.playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.LEVEL);
     }
-
-    // Prüfung des Feldes vor der Schlange, ob sich hier eine Schlange befindet. ACHTUNG: Kann auch die eigene Schlange sein!
+    // Review of the field in front of the snake, if it equals a snake object. Caution: The snake object could also be part of your own snake!
     private boolean isSnakeAhead(){
-        // Das Feld 22 spiegelt die Position vor dem Schlangenkopf wieder. Siehe Dokumentation.
+        // Field 22 is the position in front of the head. Further information can be found in the documentation.
         return this.playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.PLAYER);
     }
-
-    // Prüfung der sichtbaren Felder, ob sich hier ein Punkt drin befindet.
+    // Review of each field in the PlayerView, if it equals a consumable point.
     private boolean isPointVisible(){
         boolean pointDetected = false;
 
@@ -69,8 +67,8 @@ public class SamplePlayer implements BrainySnakePlayer {
         }
         return pointDetected;
     }
-
-    // Berechnung der neuen Richtung entsprechend der gegebenen Richtung
+    
+    // Calculation of the new orientation relating to the current orientation.
     private Orientation turnLeft(Orientation currentOrientation) {
         switch (currentOrientation) {
             case UP:
