@@ -33,26 +33,26 @@ public class SamplePlayer implements BrainySnakePlayer {
         Orientation nextStep = currentOrientation;
 
         if (isLevelAhead()){
-            // The snake side steps to the left, if the snake detected a level object ahead.
+            // The snake turns to the left, if the snake detects a level object ahead.
             nextStep = turnLeft(currentOrientation);
         }
         else if(isPointVisible()){
-            // Definition of the behaviour when the sanke detected a consumable point in the PlayerView.
+            // Definition of the behaviour when the sanke detects a consumable point in the PlayerView.
         }
         else if (isSnakeAhead()){
-            // Definition of the behaviour when the snake detected a snake object ahead. Caution: The snake object could also be part of your own snake!
+            // Definition of the behaviour when the snake detects a snake object ahead. Caution: The snake object could also be part of your own snake!
         }
 
         // Return of the new PlayerUpdate with the new orientation.
         return new PlayerUpdate(nextStep);
     }
 
-    // Review of the field in front of the snake, if it equals a level object.
+    // Check to see if the field in front of the snake contains a level object
     private boolean isLevelAhead(){
         // Field 22 is the position in front of the head. Further information can be found in the documentation.
         return this.playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.LEVEL);
     }
-    // Review of the field in front of the snake, if it equals a snake object. Caution: The snake object could also be part of your own snake!
+    // Check to see if the field in front of the snake contains a snake object. Caution: The snake object could also be part of your own snake!
     private boolean isSnakeAhead(){
         // Field 22 is the position in front of the head. Further information can be found in the documentation.
         return this.playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.PLAYER);
@@ -68,7 +68,7 @@ public class SamplePlayer implements BrainySnakePlayer {
         return pointDetected;
     }
     
-    // Calculation of the new orientation relating to the current orientation.
+    // Calculation of the new orientation using the current orientation.
     private Orientation turnLeft(Orientation currentOrientation) {
         switch (currentOrientation) {
             case UP:
