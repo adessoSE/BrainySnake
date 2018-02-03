@@ -2,9 +2,8 @@ package de.adesso.brainysnake.sampleplayer;
 
 import de.adesso.brainysnake.playercommon.*;
 
-
 /**
- * Example implementation of an agent.
+ * Example implementation of an agent
  */
 public class SamplePlayer implements BrainySnakePlayer {
 
@@ -28,18 +27,16 @@ public class SamplePlayer implements BrainySnakePlayer {
 
     @Override
     public PlayerUpdate tellPlayerUpdate() {
-        // Storing of the current orientation of the snake. Decleration of the new orientation, if the value doesn't get changed the current orientation should be keeped up.
+        // Storing of the current orientation of the snake. Declaration of the new orientation, if the value doesn't get changed the current orientation should be keeped up.
         Orientation currentOrientation = this.playerView.getCurrentOrientation();
         Orientation nextStep = currentOrientation;
 
-        if (isLevelAhead()){
+        if (isLevelAhead()) {
             // The snake turns to the left, if the snake detects a level object ahead.
             nextStep = turnLeft(currentOrientation);
-        }
-        else if(isPointVisible()){
-            // Definition of the behaviour when the sanke detects a consumable point in the PlayerView.
-        }
-        else if (isSnakeAhead()){
+        } else if (isPointVisible()) {
+            // Definition of the behaviour when the snake detects a consumable point in the PlayerView.
+        } else if (isSnakeAhead()) {
             // Definition of the behaviour when the snake detects a snake object ahead. Caution: The snake object could also be part of your own snake!
         }
 
@@ -47,28 +44,46 @@ public class SamplePlayer implements BrainySnakePlayer {
         return new PlayerUpdate(nextStep);
     }
 
-    // Check to see if the field in front of the snake contains a level object
-    private boolean isLevelAhead(){
+    /**
+     * @return Check to see if the field in front of the snake contains a level object
+     */
+    private boolean isLevelAhead() {
         // Field 22 is the position in front of the head. Further information can be found in the documentation.
-        return this.playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.LEVEL);
+        return playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.LEVEL);
     }
-    // Check to see if the field in front of the snake contains a snake object. Caution: The snake object could also be part of your own snake!
-    private boolean isSnakeAhead(){
+
+    /**
+     * Check to see if the field in front of the snake contains a snake object. Caution: The snake object could also be part of your own snake!
+     *
+     * @return snake is ahead
+     */
+    private boolean isSnakeAhead() {
         // Field 22 is the position in front of the head. Further information can be found in the documentation.
-        return this.playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.PLAYER);
+        return playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.PLAYER);
     }
-    // Review of each field in the PlayerView, if it equals a consumable point.
-    private boolean isPointVisible(){
+
+    /**
+     * @return Review of each field in the PlayerView, if it equals a consumable point.
+     */
+    private boolean isPointVisible() {
         boolean pointDetected = false;
 
-        for (Field visibleField : this.playerView.getVisibleFields()){
+        for (Field visibleField : playerView.getVisibleFields()) {
             pointDetected = visibleField.getFieldType().equals(FieldType.POINT);
-            if (pointDetected) break;
+            if (pointDetected){
+                break;
+            }
         }
+
         return pointDetected;
     }
-    
-    // Calculation of the new orientation using the current orientation.
+
+    /**
+     * Calculation of turing left relative to the current orientation
+     *
+     * @param currentOrientation
+     * @return new Orientation
+     */
     private Orientation turnLeft(Orientation currentOrientation) {
         switch (currentOrientation) {
             case UP:
@@ -79,8 +94,8 @@ public class SamplePlayer implements BrainySnakePlayer {
                 return Orientation.DOWN;
             case RIGHT:
                 return Orientation.UP;
+            default:
+                return null;
         }
-
-        return null;
     }
 }
