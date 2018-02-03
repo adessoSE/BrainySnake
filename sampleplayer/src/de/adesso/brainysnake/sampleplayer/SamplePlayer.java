@@ -61,6 +61,9 @@ public class SamplePlayer implements BrainySnakePlayer {
         // Field 22 is the position in front of the head. Further information can be found in the documentation.
         return playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.PLAYER);
     }
+    // Review of each field in the PlayerView, if it equals a consumable point.
+    private boolean isPointVisible(){
+        boolean pointDetected = false;
 
     /**
      * @return Review of each field in the PlayerView, if it equals a consumable point.
