@@ -172,7 +172,7 @@ public class GameMaster {
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             // reset data of player
-            playerHandler.endround();
+            playerHandler.endRound();
         }
     }
 
