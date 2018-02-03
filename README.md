@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/adessoAG/BrainySnake.svg?style=svg)](https://circleci.com/gh/adessoAG/BrainySnake)
+Buildstate master [![CircleCI](https://circleci.com/gh/adessoAG/BrainySnake.svg?style=svg)](https://circleci.com/gh/adessoAG/BrainySnake)
 
 # BrainySnake
 ![brainySnakePic](/Dokumentation/brainySnake.png)
