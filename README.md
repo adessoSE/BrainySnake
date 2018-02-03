@@ -17,8 +17,8 @@ Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann b
 ## Create Desktop Run-Configuration in IntelliJ
 1. create a new Application Configuration
 1. set _de.adesso.brainysnake.desktop.DesktopLauncher_ as Main class
-1. optional: set _[projectPath]\BrainySnake\core\assets_ as Working directory
-1. optional: set _desktop_ as classpath of module
+1. set _[projectPath]\BrainySnake\core\assets_ as Working directory
+1. set _desktop_ as classpath of module
 1. run
 
 ## Build Project for eclipse
