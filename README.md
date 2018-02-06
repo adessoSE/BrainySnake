@@ -1,8 +1,8 @@
 # BrainySnake
 ![brainySnakePic](/Dokumentation/brainySnake.png)
 
-Brainysnake ist ein Snake-Spiel bei welchem ihr eure Schlange nicht aktiv selbst steuert, sondern über einen Bewegungsalgorithmus vorher festlegt, wie eure Schlange sich verhalten soll.
-Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann beginnt der Kampf um den Sieg. Gewonnen hat, wer nach 1000 Zügen (Anzahl der Züge ist konfigurierbar) noch lebt und die meisten Punkte hat.
+BrainySnake is a game based on the all time classic game "Snake". In BrainySnakes you don't actively control your snake but instead program its behaviour so it follows certain patterns.
+During a game, multiple autonomous Snakes are loaded simultaneously and start battling for victory! After 1000 moves (number is adjustable), whoever is still alive and has the most points, wins.
 
 # Open Project
 
@@ -30,28 +30,30 @@ Dabei werden pro Spiel mehrere autonome Schlangen in einem Level geladen. Dann b
 1. Save the new configuration
 1. run
 
-## Spielregeln
+## Rules of the game
 
 ![explainSnakePic](/Dokumentation/explainSnake.jpg)
 
-* Pro Runde kann die Schlange sich um ein Feld nach links, rechts oder nach vorne bewegen.
-* Eine Schlange besteht aus Körper und Kopf.
-* Wenn die Schlange mit einem Levelelement kollidiert, verliert sie ein Feld ihres Körpers. Wenn eine Schlange keine Körperelemente übrig hat, stirbt sie und  scheidet aus der Spielrunde aus.
-* Wenn die Schlange einen Punkt einsammelt, verlängert sich ihr Körper um ein Feld. Ein Punkt wird eingesammelt indem die Schlange mit ihrem Kopf über den Punkt steuert.
-* Eine Schlange kann eine andere Schlange beißen. In diesem Fall erhält die Schlange einen Punkt und geht in den _Ghostmode_
-    * Im Ghostmode ist die Schlange vor Bissen anderer Schlangen geschützt
-    * Im Ghostmode kann die Schlange keine Punkte konsumieren
-* Eine Schlange besitzt ein Sichtfeld. Das Sichtfeld ist ein zweidimensionales Raster, über welchen die Schlange folgende Informationen abfragen bzw. sehen kann:
-    * Levelelemente (Wände, Hindernisse)
-    * Punkte
-    * Andere Schlangen
-* Wenn eine Schlange ein invalide Steueranweisung erhält (bspw. ist eine 180* Wendung nicht möglich) wechselt die Schlange in den _ConfusedMode_. In diesem Modus erhält die Schlange einen Punkt Abzug und fängt an zu blinkern.
+
+* Each move the Snake can decide to go either forwards, left or right.
+* A Snake consists of a body and a head.
+* If a Snake collides with a level element - an obstacle or a level border - it loses one "part" of its body. If a snake loses all its body parts (i.e. if only the head remains) it has lost the game and is removed.
+* If a Snake collects a point a "part" is added to its body (i.e. it gets one field longer). A point is collected by navigating the Snake's head over it.
+* A Snake can bite another snake. In this case the Snake gains a point and enters the "Ghostmode"
+    * During Ghostmode a Snake is protected from other Snakes' bites.
+    * During Ghostmode a Snake can not collect any points or bite other players.
+* A Snake has a specific field of view. The field of view is a two dimensional grid which can contain the following information:
+    * Position of level elements (borders, obstacles)
+    * Points
+    * Other Snakes
+* If a Snake receives an invalid command (e.g. going directly upwards while moving downwards) it switches into the "ConfusedMode". When entering ConfusedMode the Snake loses one point and starts blinking.
 
 
-## Howto
-Implementiere deine Schlangensteuerung in der Klasse _YourPlayer_. Dazu kannst du dich an den Beispielimplementierungen der Klassen _SamplePlayer_ und _SamplePlayer2_ orientieren.
-Gib deiner Klasse einen eindeutigen Namen (siehe dazu die Methode **getPlayerName** in der YourPlayer Klasse)
-Um mit der Schlangensteuerung vertraut zu werden, wird initial bei Spielstart eine Schlange erzeugt, welche über die Pfeiltasten der Tastatur steuerbar ist.
+## How To
+
+Implement your Snake behaviour in the "YourPlayer" class. You can see the "SamplePlayer" class to get an idea about how to start.
+Give your class a unique name - see the "getPlayerName" method to change your Snake's name. To get used to the movements of the Snakes you can use the arrow keys on your keyboard to control a special Snake which is generated 
+when the game is loaded.
 
 ## Want to contribute?
 See the [contribution guide](https://github.com/adessoAG/BrainySnake/blob/master/CONTRIBUTING.md).
