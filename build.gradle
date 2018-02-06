@@ -1,6 +1,4 @@
 buildscript {
-    
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -8,14 +6,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        
-
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE")
     }
 }
 
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
+    apply plugin: "org.springframework.boot"
 
     version = '1.0'
     ext {
@@ -32,6 +30,11 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        compile("org.springframework.boot:spring-boot-starter")
+        compile('org.springframework.boot:spring-boot-starter-logging')
     }
 }
 
