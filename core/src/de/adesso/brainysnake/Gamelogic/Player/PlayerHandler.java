@@ -87,8 +87,13 @@ public class PlayerHandler {
     public void calculatePlayerState(GlobalGameState gameState) {
 
         int points = snake.countPoints();
-        Point2D head = new Point2D(snake.getHeadPosition());
-        Point2D tail = new Point2D(snake.getTailPosition());
+        Point2D head = snake.getHeadPosition();
+        Point2D tail;
+        if(points > 1){
+        tail = snake.getTailPosition();
+        } else {
+        tail = null;
+        }
         int ghostModeRemaining = Config.GHOST_TIME - ghostTime;
 
         boolean bitByPlayer = false;
