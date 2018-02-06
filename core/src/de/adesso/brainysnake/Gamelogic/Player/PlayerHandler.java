@@ -88,7 +88,7 @@ public class PlayerHandler {
 
         int points = snake.countPoints();
         Point2D head = new Point2D(snake.getHeadPosition());
-        Point2D tail = new Point2D(snake.getHeadPosition());
+        Point2D tail = new Point2D(snake.getTailPosition());
         int ghostModeRemaining = Config.GHOST_TIME - ghostTime;
 
         boolean bitByPlayer = false;
