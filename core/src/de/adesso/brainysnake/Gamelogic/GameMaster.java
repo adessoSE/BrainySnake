@@ -127,15 +127,10 @@ public class GameMaster {
                         collectedPoints--;
                         break;
                     case BIT_AGENT:
-                        if (!playerHandler.isGhostMode()) {
-                            collectedPoints++;
-                        }
+                        collectedPoints++;
                         break;
                     case BIT_BY_PLAYER:
-                        // agent was Hit by another agent
-                        if (!playerHandler.isGhostMode()) {
-                            collectedPoints--;
-                        }
+                        collectedPoints--;
                         break;
                     case CONSUMED_POINT:
                         collectedPoints++;
@@ -204,7 +199,7 @@ public class GameMaster {
         List<PlayerHandler> winner = new ArrayList<PlayerHandler>();
         if (GlobalGameState.movesRemaining() <= 0) {
 
-            int maxPoints =-1;
+            int maxPoints = -1;
             for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
                 maxPoints = Math.max(maxPoints, playerHandler.getSnake().countPoints());
             }
