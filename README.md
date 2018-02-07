@@ -1,7 +1,7 @@
 # BrainySnake
 ![brainySnakePic](/Dokumentation/brainySnake.png)
 
-BrainySnake is a game based on the all time classic game "Snake". In BrainySnakes you don't actively control your snake but instead program its behaviour so it follows certain patterns.
+BrainySnake is a game based on the all time classic game "Snake". In BrainySnake you don't actively control your snake but instead program its behaviour so it follows certain patterns.
 During a game, multiple autonomous Snakes are loaded simultaneously and start battling for victory! After 1000 moves (number is adjustable), whoever is still alive and has the most points, wins.
 
 # Open Project
