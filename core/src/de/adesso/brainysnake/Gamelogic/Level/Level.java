@@ -87,7 +87,7 @@ public class Level {
     private boolean isConflicting(List<Point2D> points, Point2D newPoint) {
         for (Point2D point : points) {
             if (!point.equals(newPoint)) {
-                if (point.dst(newPoint) < 4f) {
+                if (point.dst(newPoint) < Config.DISTANCE_BETWEEN_BARRIERS) {
                     return true;
                 }
             }
