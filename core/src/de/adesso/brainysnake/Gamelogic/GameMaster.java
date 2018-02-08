@@ -158,7 +158,7 @@ public class GameMaster {
         level.spreadPoints();
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
-            // reset data an update view of player
+            // reset data and update view of player
             endRoundForPlayer(playerHandler);
         }
 
