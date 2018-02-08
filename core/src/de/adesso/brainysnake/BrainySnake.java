@@ -61,11 +61,16 @@ public class BrainySnake extends ApplicationAdapter {
         pixmap = new Pixmap(WIDTH, HEIGHT, Pixmap.Format.RGBA8888);
         stage = new Stage();
         createBasicSkin();
+        
+        try {
+            logoTexture = new Texture(Gdx.files.internal("./core/src/de/adesso/brainysnake/img/BrainySnake_Headline.png"));
+            TextureRegion region = new TextureRegion(logoTexture, 0, 0, 629, 180);
+            logoBrainySnake = new Image(region);
+            logoBrainySnake.setPosition(Config.APPLICATION_WIDTH / 4, Config.APPLICATION_HEIGHT - 250);
+        } catch (Exception e){
+            LOGGER.error(e.toString());
+        }
 
-        logoTexture = new Texture(Gdx.files.internal("./core/src/de/adesso/brainysnake/img/BrainySnake_Headline.png"));
-        TextureRegion region = new TextureRegion(logoTexture, 0, 0, 629, 180);
-        logoBrainySnake = new Image(region);
-        logoBrainySnake.setPosition(Config.APPLICATION_WIDTH / 4, Config.APPLICATION_HEIGHT - 250);
 
         texture = new Texture(pixmap);
 
