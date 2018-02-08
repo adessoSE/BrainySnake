@@ -33,13 +33,37 @@ public class Level {
 
     private LinkedList<Point2D> buildBarriers() {
         LinkedList<Point2D> barriers = new LinkedList<Point2D>();
-        int gapBarriersX = width / 4;
-        int gapBarriersY = height / 3;
 
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 2; y++) {
-                barriers.addAll(addBarrier((x + 1) * gapBarriersX, (y + 1) * gapBarriersY));
+        for (int x = 0; x < Config.QUANTITY_BARRIERS; x++) {
+            List<Point2D> barrierCenters = new ArrayList<>();
+            double xRandom = Math.random();
+            double yRandom = Math.random();
+
+            double xCenter = xRandom * width;
+            double yCenter = yRandom * height;
+
+            // Make sure barriers don't overlap with level borders
+            if (xCenter > (width - 1)) {
+                xCenter = xCenter - 2;
+            } else if (xCenter < 1) {
+                xCenter = xCenter + 2;
             }
+            if (yCenter > (height - 1)) {
+                yCenter = yCenter - 2;
+            } else if (yCenter < 1) {
+                yCenter = yCenter + 2;
+            }
+
+            // Make sure barriers don't overlap with each other
+            barrierCenters.add(new Point2D((int) xCenter, (int) yCenter));
+            for (Point2D existingBarrier : barrierCenters) {
+                if (xCenter > existingBarrier.getX() && xCenter - existingBarrier.getX() < 3) {
+                    xCenter = xCenter + 3;
+                } else if (xCenter < existingBarrier.getX() && xCenter - existingBarrier.getX() < 3) {
+                    xCenter = xCenter + 3;
+                }
+            }
+            barriers.addAll(addBarrier((int) xCenter, (int) yCenter));
         }
 
         return barriers;
