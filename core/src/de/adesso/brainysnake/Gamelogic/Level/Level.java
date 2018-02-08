@@ -32,7 +32,7 @@ public class Level {
     }
 
     private LinkedList<Point2D> buildBarriers() {
-        LinkedList<Point2D> barriers = new LinkedList<Point2D>();
+        LinkedList<Point2D> barriers = new LinkedList<>();
 
         for (int x = 0; x < Config.QUANTITY_BARRIERS; x++) {
             List<Point2D> barrierCenters = new ArrayList<>();
@@ -43,31 +43,25 @@ public class Level {
             double yCenter = yRandom * height;
 
             // Make sure barriers don't overlap with level borders
-            if (xCenter > (width - 1)) {
-                xCenter = xCenter - 2;
-            } else if (xCenter < 1) {
+            if (xCenter > (width - 2)) {
+                xCenter = xCenter - 3;
+            } else if (xCenter < 2) {
                 xCenter = xCenter + 2;
             }
-            if (yCenter > (height - 1)) {
-                yCenter = yCenter - 2;
-            } else if (yCenter < 1) {
+            if (yCenter > (height - 2)) {
+                yCenter = yCenter - 3;
+            } else if (yCenter < 2) {
                 yCenter = yCenter + 2;
             }
 
-            // Make sure barriers don't overlap with each other
-            barrierCenters.add(new Point2D((int) xCenter, (int) yCenter));
-            for (Point2D existingBarrier : barrierCenters) {
-                if (xCenter > existingBarrier.getX() && xCenter - existingBarrier.getX() < 3) {
-                    xCenter = xCenter + 3;
-                } else if (xCenter < existingBarrier.getX() && xCenter - existingBarrier.getX() < 3) {
-                    xCenter = xCenter + 3;
-                }
-            }
+            System.out.println(xCenter + " " + yCenter);
+
             barriers.addAll(addBarrier((int) xCenter, (int) yCenter));
         }
 
         return barriers;
     }
+
 
     private List<Point2D> addBarrier(int x, int y) {
         List<Point2D> barrierDots = new ArrayList<Point2D>();
