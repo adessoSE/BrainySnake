@@ -40,7 +40,7 @@ Der Agent wird von der Simulation nach seiner nächsten Aktion gefragt.
 
 Jeder Agent implementiert das Interface **BrainySnakePlayer**, welches folgende Methoden vorgibt:
 - **String getPlayerName()**
--- Agent wird nach dem gesetztem Spielernamen gefragt
+-- Agent wird nach dem gesetzten Spielernamen gefragt
 
 - **boolean handlePlayerStatusUpdate (PlayerState playerState)**
 -- Der Agent bekommt ein Update vom Spiel und kann damit seinen Datenstand aktualisieren.
@@ -51,7 +51,7 @@ Jeder Agent implementiert das Interface **BrainySnakePlayer**, welches folgende 
 
 ### Objekt: PlayerState
 
-Der Agent erhält das Objekt PlayerState in seiner Methode *handlePlayerStatusUpdate()* übergeben. In dem Objekt kann der Zustand der eigenen Schlange abgefragt werden.
+Der Agent bekommt das Objekt PlayerState in seiner Methode *handlePlayerStatusUpdate()* übergeben. In dem Objekt kann der Zustand der eigenen Schlange abgefragt werden.
 
 Übersicht der vorhandenen Daten:
 
@@ -59,11 +59,11 @@ Der Agent erhält das Objekt PlayerState in seiner Methode *handlePlayerStatusUp
 |:----------------|:-------------------------------|:-----------------------------:|
 |movesPlayed / getMovesPlayed()| Anzahl der gespielten Runden.|int
 |movesRemaining / getMovesRemaining()|Anzahl der übrigen zu spielenden Runden.|int
-|playerPoints / getPlayerPoints()|Aktuelle Spielerpunkte (Gesamtzahl von Kopf und Körperteileanzahl).|int
+|playerPoints / getPlayerPoints()|Aktuelle Spielerpunkte (Gesamtzahl von Kopf- und Körperteilanzahl).|int
 |playersHead / getPlayersHead()|Aktuelle Position des Kopfes von der Schlange.|Point2D
 |playersTail / getPlayersTail()|Aktuelle Position des Körpers von der Schlange. Es wird nur der letzte Punkt des Körpers zurückgegeben. Falls kein Körper vorhanden wird null zurückgegeben.|Point2D
 |ghostModeActive / isGhostModeActive()|Zustand des GhostMode bei der Schlange (GhostMode aktiv = true, GhostMode inaktiv = false).|boolean
-|ghostModeRemaining / getGhostModeRemaining()|Verbleibende Dauer von dem aktiven GhostMode. Bei nicht aktivem GhostMode wir die definierte maximale Dauer zurückgegeben.|int
+|ghostModeRemaining / getGhostModeRemaining()|Verbleibende Dauer von des aktiven GhostMode. Bei nicht aktivem GhostMode wir die definierte maximale Dauer zurückgegeben.|int
 |bitByPlayer / isBitByPlayer()|Mit dieser Methode kann der Zustand über einen Biss an einem Spieler geprüft werden.|boolean
 |moved / isMoved()|Mit dieser Methode kann der Zustand über die Bewegung der Schlage des Spielers geprüft werden.|boolean
 |collisionWithLevel / isCollisionWithLevel()|Mit dieser Methode kann der Zustand über die Kollision der Schlage des Spielers mit dem Level geprüft werden.|boolean
@@ -103,8 +103,8 @@ Jede Runde werden für die jeweiligen Schlangen verschiedene RoundEvents berechn
 
 ## Projektstruktur (Gradle)
 
-Jeder Player (Agent) wird in ein **seperates Modul** ausgelagert, welches in den Core improtiert wird.  
-Diese Auslagerung verhindert den Zugriff von den Agent auf fremden Code.
+Jeder Player (Agent) wird in ein **seperates Modul** ausgelagert, welches in den Core importiert wird.  
+Diese Auslagerung verhindert den Zugriff von den Agenten auf fremden Code.
 Jedes Player Modul implementiert das Interface **BrainySnakePlayer** und importiert das Package **playerCommon**, welches das Interface und die Klassen beinhaltet (z.B. PlayerStatus, GameEvent und das BrainySnake Interface).
 
 Modul           | Beschreibung                                          | Includes
@@ -144,7 +144,7 @@ __Problem:__ Fehler, der auftreten kann, wenn der Agent verschuldet oder unversc
 Der Agent wird eingefroren (PlayerStatus frozen), wechselt zur Kennzeichnung des Status die Farbe und es werden zu diesem Zug keine Aktionen für diesen Agenten ausgeführt.
 
 ### Der Agent greift auf Fremden Code zu
-__Problem:__ Der Agent könnte **Public Methoden** der Simulation der oder die **Public Methoden** anderer Agenten zugreifen.
+__Problem:__ Der Agent könnte auf **Public Methoden** der Simulation oder die **Public Methoden** anderer Agenten zugreifen.
 Denkbar sind auch **Reflections** mit der Private Methoden aufgerufen werden.
 
 **Präventiv Lösung:** Wir verbieten das und kontrollieren den Quellcode der Agenten
