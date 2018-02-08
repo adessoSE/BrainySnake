@@ -45,7 +45,7 @@ public class Level {
             barrierCenters.add(newBarrierPosition);
 
             // If a "new point" has a spatial conflict with an existing point, generate a new "new point" and check again
-            // If after a certain amount of tries (50) no fitting new point is found, break
+            // If after a certain amount of tries (50) no fitting new point is found, stop adding more points -> break
             while (isConflicting(barrierCenters, newBarrierPosition)) {
                 if (counter > 50) {
                     break outerloop;
