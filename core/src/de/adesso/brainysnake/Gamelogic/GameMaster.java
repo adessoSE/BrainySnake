@@ -158,15 +158,21 @@ public class GameMaster {
         level.spreadPoints();
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
-            // reset data and update view of player
-            endRoundForPlayer(playerHandler);
+
+            //update view of player
+            updateRoundForPlayer(playerHandler);
+
+            // calculates the playerState and updates the playercontroller via call
+            this.playerController.updatePlayerState(new GlobalGameState());
         }
 
-        // calculates the playerState and updates the playerController via call
-        this.playerController.updatePlayerState(new GlobalGameState());
+        for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
+            // reset data of player
+            playerHandler.endRound();
+        }
     }
 
-    private void endRoundForPlayer(PlayerHandler playerHandler) {
+    private void updateRoundForPlayer(PlayerHandler playerHandler) {
         List<PlayerHandler> playerHandlerList = playerController.getPlayerHandlerList();
         List<Point2D> playerViewPositions = PlayerViewHelper.generatePlayerView(playerHandler.getCurrentOrientation(), playerHandler.getHeadPosition());
         List<Point2D> playerPositions = playerController.getPlayerPositions();
@@ -189,8 +195,7 @@ public class GameMaster {
 
         }
 
-        playerHandler.updatePlayerView(new PlayerView(playerView, playerHandler.getCurrentOrientation()));
-        playerHandler.endRound();
+        playerHandler.updatePlayerView(new PlayerView(playerView, playerHandler.getCurrentOrientation(),Config.PLAYERVIEW_OFFSET_TO_VIEWWIDTH, Config.PLAYERVIEW_OFFSET_TO_AHEAD));
         playerHandler.update();
         UiState.getINSTANCE().updatePlayerPoints(playerHandler.getPlayerName(), new UIPlayerInformation(playerHandler.getSnake().getHeadColor(), playerHandler.getSnake().countPoints()));
     }

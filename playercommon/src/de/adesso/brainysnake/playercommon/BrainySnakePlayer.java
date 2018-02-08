@@ -1,5 +1,8 @@
 package de.adesso.brainysnake.playercommon;
 
+/**
+ * Interface for BrainySnake API-Functions
+ */
 public interface BrainySnakePlayer {
 
     /**

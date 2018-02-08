@@ -1,15 +1,14 @@
 package de.adesso.brainysnake.sampleplayer;
 
-import java.util.List;
-import java.util.Random;
-
 import de.adesso.brainysnake.playercommon.*;
-import de.adesso.brainysnake.playercommon.math.Point2D;
 
+/**
+ * Example implementation of an agent
+ */
 public class SamplePlayer implements BrainySnakePlayer {
 
     private PlayerState playerState;
-    Orientation[] orientations = new Orientation[2];
+    private PlayerView playerView;
 
     @Override
     public String getPlayerName() {
@@ -18,92 +17,85 @@ public class SamplePlayer implements BrainySnakePlayer {
 
     @Override
     public boolean handlePlayerStatusUpdate(PlayerState playerState) {
+        // Processing of the new  PlayerStatusUpdate. Storing the included PlayerState and the PlayerView.
         this.playerState = playerState;
-        if(orientations[0] == null) {
-            Point2D playersHead = playerState.getPlayersHead();
-            Point2D playersTail = playerState.getPlayersTail();
-            if((playersHead.x - playersTail.x) == 0) {
-                if((playersHead.y - playersTail.y) > 0) {
-                    orientations[0] = Orientation.UP;
-                } else {
-                    orientations[0] = Orientation.DOWN;
-                }
-            } else {
-                if((playersHead.x - playersTail.x) > 0) {
-                    orientations[0] = Orientation.RIGHT;
-                } else {
-                    orientations[0] = Orientation.LEFT;
-                }
-            }
-        }
+        this.playerView = playerState.getPlayerView();
+
+        // Return value "true" confirms the completed execution.
         return true;
     }
 
     @Override
     public PlayerUpdate tellPlayerUpdate() {
-        Orientation orientation= chooseNext();
-        Point2D nextPosition;
+        // Storing of the current orientation of the snake. Declaration of the new orientation, if the value doesn't get changed the current orientation should be keeped up.
+        Orientation currentOrientation = this.playerView.getCurrentOrientation();
+        Orientation nextStep = currentOrientation;
 
-        do {
-            nextPosition = this.nextPoint2D(orientation);
-        } while (hitWall(nextPosition));
-
-        orientations[0] = orientation;
-        return new PlayerUpdate(orientations[0]);
-    }
-
-    private Orientation chooseNext() {
-        Orientation orientation;
-        do {
-            orientation = Orientation.values()[(new Random().nextInt(Orientation.values().length))];
-        } while (doesInvert(orientation));
-        orientations[1] = orientation;
-
-        int rand = (int) (Math.random() * orientations.length);
-        return orientations[rand];
-    }
-
-    private boolean doesInvert(Orientation orientation) {
-        switch (orientations[0]) {
-            case DOWN:
-                return (orientation != Orientation.UP) ? false : true;
-            case UP:
-                return (orientation != Orientation.DOWN) ? false : true;
-            case RIGHT:
-                return (orientation != Orientation.LEFT) ? false : true;
-            case LEFT:
-                return (orientation != Orientation.RIGHT) ? false : true;
+        if (isLevelAhead()) {
+            // The snake turns to the left, if the snake detects a level object ahead.
+            nextStep = turnLeft(currentOrientation);
+        } else if (isPointVisible()) {
+            // Definition of the behaviour when the snake detects a consumable point in the PlayerView.
+        } else if (isSnakeAhead()) {
+            // Definition of the behaviour when the snake detects a snake object ahead. Caution: The snake object could also be part of your own snake!
         }
-        return true;
+
+        // Return of the new PlayerUpdate with the new orientation.
+        return new PlayerUpdate(nextStep);
     }
 
-    private boolean hitWall(Point2D nextPoint) {
-        List<Field> visibleFields = this.playerState.getPlayerView().getVisibleFields();
-        for(Field field : visibleFields) {
-            if(field.getPosition().equals(nextPoint) && field.getFieldType() == FieldType.LEVEL) {
-                return true;
+    /**
+     * @return Check to see if the field in front of the snake contains a level object
+     */
+    private boolean isLevelAhead() {
+        // Field 22 is the position in front of the head. Further information can be found in the documentation.
+        return playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.LEVEL);
+    }
+
+    /**
+     * Check to see if the field in front of the snake contains a snake object. Caution: The snake object could also be part of your own snake!
+     *
+     * @return snake is ahead
+     */
+    private boolean isSnakeAhead() {
+        // Field 22 is the position in front of the head. Further information can be found in the documentation.
+        return playerView.getVisibleFields().get(22).getFieldType().equals(FieldType.PLAYER);
+    }
+
+    /**
+     * @return Review of each field in the PlayerView, if it equals a consumable point.
+     */
+    private boolean isPointVisible() {
+        boolean pointDetected = false;
+
+        for (Field visibleField : playerView.getVisibleFields()) {
+            pointDetected = visibleField.getFieldType().equals(FieldType.POINT);
+            if (pointDetected){
+                break;
             }
         }
-        return false;
+
+        return pointDetected;
     }
 
-    private Point2D nextPoint2D(Orientation orientation) {
-        Point2D nextPosition = this.playerState.getPlayersHead().cpy();
-        switch (orientation) {
+    /**
+     * Calculation of turing left relative to the current orientation
+     *
+     * @param currentOrientation
+     * @return new Orientation
+     */
+    private Orientation turnLeft(Orientation currentOrientation) {
+        switch (currentOrientation) {
             case UP:
-                nextPosition.add(0, 1);
-                break;
-            case RIGHT:
-                nextPosition.add(1, 0);
-                break;
+                return Orientation.LEFT;
             case DOWN:
-                nextPosition.add(0, -1);
-                break;
+                return Orientation.RIGHT;
             case LEFT:
-                nextPosition.add(-1, 0);
-                break;
+                return Orientation.DOWN;
+            case RIGHT:
+                return Orientation.UP;
             default:
+                return null;
         }
-        return nextPosition;
     }
 }
