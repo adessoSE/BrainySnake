@@ -35,27 +35,27 @@ public class Level {
         LinkedList<Point2D> barriers = new LinkedList<>();
         List<Point2D> barrierCenters = new ArrayList<>();
 
+        // Number of barriers to be created, defined in config file
         for (int x = 0; x < Config.QUANTITY_BARRIERS; x++) {
 
             Point2D newBarrierPosition = generateBarrierPosition();
 
             barrierCenters.add(newBarrierPosition);
 
-            System.out.println(barrierCenters.get(0).getX() + " " + newBarrierPosition.getX());
-
-            if (!barrierCenters.get(0).equals(newBarrierPosition)) {
-                System.out.println("ENTERED!");
-                while (isConflicting(barrierCenters, newBarrierPosition)) {
-                    barrierCenters.remove(newBarrierPosition);
-                    newBarrierPosition = generateBarrierPosition();
-                    barrierCenters.add(newBarrierPosition);
-                    System.out.println("KONFLIKT!");
-                }
+            // If a "new point" has a spatial conflict with an existing point, generate a new "new point" and check again
+            while (isConflicting(barrierCenters, newBarrierPosition)) {
+                barrierCenters.remove(newBarrierPosition);
+                newBarrierPosition = generateBarrierPosition();
+                barrierCenters.add(newBarrierPosition);
             }
 
             barriers.addAll(addBarrier(newBarrierPosition.getX(), newBarrierPosition.getY()));
         }
 
+        for (Point2D point : barrierCenters) {
+            System.out.println(point.getX() + " " + point.getY());
+
+        }
         return barriers;
     }
 
@@ -87,15 +87,11 @@ public class Level {
     private boolean isConflicting(List<Point2D> points, Point2D newPoint) {
         for (Point2D point : points) {
             if (!point.equals(newPoint)) {
-                if (point.dst(newPoint) < 5f) {
-                    System.out.println(point.dst(newPoint));
+                if (point.dst(newPoint) < 4f) {
                     return true;
                 }
             }
         }
-//        Point2D point1 = new Point2D(50, 50);
-//        Point2D point2 = new Point2D(30, 30);
-//        System.out.println("GEHT" + point1.dst(point2));
         return false;
     }
 
