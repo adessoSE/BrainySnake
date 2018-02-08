@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,9 +13,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BrainySnake extends ApplicationAdapter {
 
@@ -23,12 +27,15 @@ public class BrainySnake extends ApplicationAdapter {
     private SpriteBatch fontSpriteBatch;
     private Sprite sprite;
     private Pixmap pixmap;
+    private Music backgroundSound;
 
     private static int DOT_SITZE = 10;
     private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SITZE;
     private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SITZE;
     private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
     private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
 
     private OrthographicCamera mainCamera;
     private OrthographicCamera fontCamera;
@@ -46,6 +53,12 @@ public class BrainySnake extends ApplicationAdapter {
         pixmap = new Pixmap(WIDTH, HEIGHT, Pixmap.Format.RGBA8888);
 
         texture = new Texture(pixmap);
+
+        try {
+            backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("./core/src/de/adesso/brainysnake/sound/track.mp3"));
+        } catch (Exception e){
+            LOGGER.error(e.toString());
+        }
 
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
@@ -102,6 +115,11 @@ public class BrainySnake extends ApplicationAdapter {
     }
 
     public void drawStartScreen() {
+        if(!backgroundSound.isPlaying()){
+            backgroundSound.setLooping(true);
+            backgroundSound.play();
+        }
+
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
 
