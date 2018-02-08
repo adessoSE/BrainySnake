@@ -36,26 +36,29 @@ public class Level {
         List<Point2D> barrierCenters = new ArrayList<>();
 
         // Number of barriers to be created, defined in config file
+        outer_loop:
         for (int x = 0; x < Config.QUANTITY_BARRIERS; x++) {
+            int counter = 0;
 
             Point2D newBarrierPosition = generateBarrierPosition();
 
             barrierCenters.add(newBarrierPosition);
 
             // If a "new point" has a spatial conflict with an existing point, generate a new "new point" and check again
+            // If after a certain amount of tries (50) no fitting new point is found, stop adding more points -> break
             while (isConflicting(barrierCenters, newBarrierPosition)) {
+                if (counter > 50) {
+                    break outer_loop;
+                }
                 barrierCenters.remove(newBarrierPosition);
                 newBarrierPosition = generateBarrierPosition();
                 barrierCenters.add(newBarrierPosition);
+                counter++;
             }
 
             barriers.addAll(addBarrier(newBarrierPosition.getX(), newBarrierPosition.getY()));
         }
 
-        for (Point2D point : barrierCenters) {
-            System.out.println(point.getX() + " " + point.getY());
-
-        }
         return barriers;
     }
 
@@ -87,7 +90,7 @@ public class Level {
     private boolean isConflicting(List<Point2D> points, Point2D newPoint) {
         for (Point2D point : points) {
             if (!point.equals(newPoint)) {
-                if (point.dst(newPoint) < 4f) {
+                if (point.dst(newPoint) < Config.DISTANCE_BETWEEN_BARRIERS) {
                     return true;
                 }
             }
