@@ -3,6 +3,8 @@ package de.adesso.brainysnake.Gamelogic.Level;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
@@ -112,13 +114,61 @@ public class Level {
     public boolean checkCollision(Point2D point2D) {
         return levelObject.getPositions().contains(point2D) || barriers.getPositions().contains(point2D);
     }
-
+    /*
     public Snake createStartingGameObject(Orientation orientation, int initialLength) {
         LinkedList<Point2D> head = new LinkedList<Point2D>();
         LinkedList<Point2D> body = new LinkedList<Point2D>();
-
+        Orientation randomOrientation = getRandomOrientation();
         int centerX = (int) Math.floor(this.width / 2D);
         int centerY = (int) Math.floor(this.height / 2D);
+        for (int i = 1; i <= initialLength; i++) {
+            Point2D positionIn = getPositionIn(randomOrientation, centerX, centerY, i);
+            if (i == initialLength) {
+                head.addFirst(positionIn);
+            } else {
+                body.addFirst(positionIn);
+            }
+        }
+      **/
+    public Snake createStartingGameObject(int initialLength) {
+        LinkedList<Point2D> head = new LinkedList<Point2D>();
+        LinkedList<Point2D> body = new LinkedList<Point2D>();
+        Point2D start = getRandomStart(initialLength);
+        Orientation orientation = getRandomOrientation();
+        int centerX = start.getX();
+        int centerY = start.getY();
+        for (int i = 1; i <= initialLength; i++) {
+            Point2D positionIn = getPositionIn(orientation, centerX, centerY, i);
+            if (i == initialLength) {
+                head.addFirst(positionIn);
+            } else {
+                body.addFirst(positionIn);
+            }
+        }
+
+        return new Snake(new GameObject(head), new GameObject(body), orientation);
+    }
+
+    //get random orientation
+    public Orientation getRandomOrientation()
+    {
+        int min = 1;
+        int max = 100;
+        int randomNum = ThreadLocalRandom.current().nextInt(min, max + 1);
+        if(randomNum <26) {System.out.println("UP"); return Orientation.UP;}
+        else if(randomNum <51){System.out.println("DOWN"); return Orientation.DOWN;}
+        else if(randomNum <76){System.out.println("LEFT"); return Orientation.LEFT;}
+        else if(randomNum <101){System.out.println("RIGHT");return Orientation.RIGHT;}
+        else System.out.println("Kritischer Fehler!");
+        return Orientation.RIGHT;
+    }
+
+    /*
+    public Snake createStartingGameObject(Orientation orientation, int initialLength, boolean random) {
+        LinkedList<Point2D> head = new LinkedList<Point2D>();
+        LinkedList<Point2D> body = new LinkedList<Point2D>();
+        head.addFirst(getRandomStart(initialLength));
+
 
         for (int i = 1; i <= initialLength; i++) {
             Point2D positionIn = getPositionIn(orientation, centerX, centerY, i);
@@ -130,6 +180,7 @@ public class Level {
         }
         return new Snake(new GameObject(head), new GameObject(body));
     }
+    **/
 
     private Point2D getPositionIn(Orientation orientation, int centerX, int centerY, int length) {
         int offset = 5;
@@ -186,4 +237,34 @@ public class Level {
     public boolean levelContainsPosition(Point2D point2D) {
         return point2D.x >= 0 && point2D.y >= 0 && point2D.x < width && point2D.y < height;
     }
+
+    //to test if there is enough space for a snake
+    private boolean isEnoughSpace(Point2D position, int length){
+
+        int centerx = position.getX();
+        int centery = position.getY();
+        length++;
+        try {
+            for (int x = 0 - length; x < length; x++) {
+                for (int y = length; y < length; y++) {
+                    if (checkCollision(new Point2D(centerx + x, centery + y))) return false;
+                }
+            }
+        }catch(IndexOutOfBoundsException e){return false;}
+
+        return true;
+    }
+
+    //to get a random start point for a snake
+    private Point2D getRandomStart(int length){
+        Point2D randomPoint;
+        do{
+            randomPoint = getRandomLevelPosition();
+        }
+        while(!isEnoughSpace(randomPoint, length));
+        System.out.println("x:"+randomPoint.getX()+"y:"+randomPoint.getY());
+        return randomPoint;
+    }
+
+
 }

@@ -1,12 +1,8 @@
 package de.adesso.brainysnake.Gamelogic;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
@@ -18,11 +14,9 @@ import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
-import de.adesso.brainysnake.sampleplayer.SamplePlayer2;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 import de.adesso.brainysnake.sampleplayer.YourPlayer;
 
-import static de.adesso.brainysnake.playercommon.Orientation.*;
 import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 
 public class GameMaster {
@@ -71,12 +65,17 @@ public class GameMaster {
         //brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
-        Map<Orientation, Snake> brainySnakePlayersUiModel = new HashMap<Orientation, Snake>();
+        LinkedList<Snake> brainySnakePlayersUiModel = new LinkedList<>();
+        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        /*
         brainySnakePlayersUiModel.put(UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH));
         brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
         brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
         brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
-
+        **/
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
         playerController = new PlayerController(brainySnakePlayers, brainySnakePlayersUiModel);
