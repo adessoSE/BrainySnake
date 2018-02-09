@@ -1,17 +1,16 @@
 package de.adesso.brainysnake.Gamelogic.Level;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
-
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Level {
 
@@ -114,6 +113,7 @@ public class Level {
     public boolean checkCollision(Point2D point2D) {
         return levelObject.getPositions().contains(point2D) || barriers.getPositions().contains(point2D);
     }
+
     /*
     public Snake createStartingGameObject(Orientation orientation, int initialLength) {
         LinkedList<Point2D> head = new LinkedList<Point2D>();
@@ -150,16 +150,23 @@ public class Level {
     }
 
     //get random orientation
-    public Orientation getRandomOrientation()
-    {
+    public Orientation getRandomOrientation() {
         int min = 1;
         int max = 100;
         int randomNum = ThreadLocalRandom.current().nextInt(min, max + 1);
-        if(randomNum <26) {System.out.println("UP"); return Orientation.UP;}
-        else if(randomNum <51){System.out.println("DOWN"); return Orientation.DOWN;}
-        else if(randomNum <76){System.out.println("LEFT"); return Orientation.LEFT;}
-        else if(randomNum <101){System.out.println("RIGHT");return Orientation.RIGHT;}
-        else System.out.println("Kritischer Fehler!");
+        if (randomNum < 26) {
+            System.out.println("UP");
+            return Orientation.UP;
+        } else if (randomNum < 51) {
+            System.out.println("DOWN");
+            return Orientation.DOWN;
+        } else if (randomNum < 76) {
+            System.out.println("LEFT");
+            return Orientation.LEFT;
+        } else if (randomNum < 101) {
+            System.out.println("RIGHT");
+            return Orientation.RIGHT;
+        } else System.out.println("Kritischer Fehler!");
         return Orientation.RIGHT;
     }
 
@@ -239,30 +246,32 @@ public class Level {
     }
 
     //to test if there is enough space for a snake
-    private boolean isEnoughSpace(Point2D position, int length){
+    private boolean isEnoughSpace(Point2D position, int length) {
 
         int centerx = position.getX();
         int centery = position.getY();
         length++;
         try {
-            for (int x = 0 - length; x < length; x++) {
-                for (int y = length; y < length; y++) {
-                    if (checkCollision(new Point2D(centerx + x, centery + y))) return false;
+            for (int x = centerx - length; x < centerx + length; x++) {
+                for (int y = centery - length; y < centery + length; y++) {
+                    if (checkCollision(new Point2D(x, y))) return false;
                 }
             }
-        }catch(IndexOutOfBoundsException e){return false;}
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
 
         return true;
     }
 
     //to get a random start point for a snake
-    private Point2D getRandomStart(int length){
+    private Point2D getRandomStart(int length) {
         Point2D randomPoint;
-        do{
+        do {
             randomPoint = getRandomLevelPosition();
         }
-        while(!isEnoughSpace(randomPoint, length));
-        System.out.println("x:"+randomPoint.getX()+"y:"+randomPoint.getY());
+        while (!isEnoughSpace(randomPoint, length));
+        System.out.println("x:" + randomPoint.getX() + "y:" + randomPoint.getY());
         return randomPoint;
     }
 
