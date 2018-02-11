@@ -1,6 +1,7 @@
 package de.adesso.brainysnake.desktop;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
@@ -35,6 +36,7 @@ public class DesktopLauncher {
         config.samples = 4;
         config.width = Config.APPLICATION_WIDTH;
         config.height = Config.APPLICATION_HEIGHT;
+        config.addIcon("./core/src/img/icon.png", Files.FileType.Internal);
 
         new LwjglApplication(new BrainySnake(), config);
         Gdx.app.setLogLevel(Application.LOG_INFO);
