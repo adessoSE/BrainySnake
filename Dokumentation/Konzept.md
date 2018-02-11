@@ -79,13 +79,13 @@ Der Agent erhält ein zweidimensionales Sichtfeld(viewWidth und viewRange), welc
 |    Name / Methode             |Beschreibung                       |Datentyp                       |
 |----------------               |-------------------------------    |:-----------------------------:|
 |currentOrientation/ getCurrentOrientation()| Aktuelle Orientierung der Schlange.|Orientation
-|viewWidth / getViewWidth()|Feldbreite in Feldern aus Sicht der Schlange. Das Feld beginnt vor dem Kopf der Schlange. Die Aufteilung findet in gleichen Anteilen nach rechts & links der Schlange statt.|int
+|viewWidth / getViewWidth()|Feldbreite in Feldern aus Sicht der Schlange. Das Feld beginnt vor dem Kopf der Schlange. Die Aufteilung findet in gleichen Anteilen rechts und links der Schlange statt.|int
 |viewRange / getViewRange()|Feldhöhe in Feldern aus Sicht der Schlange. Beginnend einen Punkt vor dem Kopf der Schlange.|int
 |visibleFields / getVisibleFields()|Liste mit allen sichtbaren Feldern für die Schlange. Der erste Eintrag in der Liste mit dem Index 0 ist aus Sicht der Schlange der Punkt links oben.|List of Fields
 
 ### Objekt: RoundEvent
 
-Jede Runde werden für die jeweiligen Schlangen verschiedene RoundEvents berechnet. Diese RoundEvents können in dem PlayerState ausgelesen werden.
+Jede Runde werden für die jeweiligen Schlangen verschiedene RoundEvents berechnet. Diese RoundEvents können im PlayerState ausgelesen werden.
 
 Übersicht der vorhandenen Events:
 
@@ -153,7 +153,6 @@ Denkbar sind auch **Reflections** mit der Private Methoden aufgerufen werden.
 
  - Die Simulation verwendet **keine öffentlichen Interfaces**, die Agenten werden von der Simulation aufgerufen.
  - Jeder Agent bekommt ein eigenes Paket
- - **TODO:** Gibt es weitere Möglichkeiten Code zu isolieren?
 
  ## Glossar
  - Ghostmode: Im Ghostmode kann der Agent keine Aktionen ausfürhen außer sich zu bewegen
