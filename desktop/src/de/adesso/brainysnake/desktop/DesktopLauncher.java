@@ -36,7 +36,7 @@ public class DesktopLauncher {
         config.samples = 4;
         config.width = Config.APPLICATION_WIDTH;
         config.height = Config.APPLICATION_HEIGHT;
-        config.addIcon("./core/src/img/icon.png", Files.FileType.Internal);
+        config.addIcon("icon.png", Files.FileType.Internal);
 
         new LwjglApplication(new BrainySnake(), config);
         Gdx.app.setLogLevel(Application.LOG_INFO);
