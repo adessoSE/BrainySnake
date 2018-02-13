@@ -220,7 +220,15 @@ public class Level {
         int randomYPosition = 0 + (int) (Math.random() * height);
         return new Point2D(randomXPosition, randomYPosition);
     }
+    /*
+    private Point2D getRandomLevelPositionOn(){
+        Point2D randomPointOn;
+        do{randomPointOn = getRandomLevelPosition();}
+        while(!isPointOn(randomPointOn));
+        return randomPointOn;
+    }**/
 
+    /**trys to consume and remove the a point at the given position*/
     public boolean tryConsumePoint(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
             if (point2D.x == position.x && point2D.y == position.y) {
@@ -231,6 +239,7 @@ public class Level {
         return false;
     }
 
+    /**returns true if the given position is on the same position as a point*/
     public boolean isPointOn(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
             if (point2D.x == position.x && point2D.y == position.y) {
@@ -245,7 +254,7 @@ public class Level {
         return point2D.x >= 0 && point2D.y >= 0 && point2D.x < width && point2D.y < height;
     }
 
-    //to test if there is enough space for a snake
+    /**to test if there is enough space for a snake*/
     private boolean isEnoughSpace(Point2D position, int length) {
 
         int centerx = position.getX();
@@ -258,6 +267,7 @@ public class Level {
                 }
             }
         } catch (IndexOutOfBoundsException e) {
+            System.out.println("IndexOutOfBoundsException");
             return false;
         }
 
@@ -268,8 +278,9 @@ public class Level {
     private Point2D getRandomStart(int length) {
         Point2D randomPoint;
         do {
-            randomPoint = getRandomLevelPosition();
+                randomPoint = getRandomLevelPosition();
         }
+        //while there is not enough space
         while (!isEnoughSpace(randomPoint, length));
         System.out.println("x:" + randomPoint.getX() + "y:" + randomPoint.getY());
         return randomPoint;
