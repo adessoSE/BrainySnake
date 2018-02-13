@@ -10,6 +10,7 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Level {
@@ -216,8 +217,9 @@ public class Level {
     }
 
     private Point2D getRandomLevelPosition() {
-        int randomXPosition = 0 + (int) (Math.random() * width);
-        int randomYPosition = 0 + (int) (Math.random() * height);
+        Random random = new Random();
+        int randomXPosition = random.nextInt(width);
+        int randomYPosition = random.nextInt(height);
         return new Point2D(randomXPosition, randomYPosition);
     }
     /*
