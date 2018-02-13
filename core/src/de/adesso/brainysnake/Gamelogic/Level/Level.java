@@ -36,7 +36,7 @@ public class Level {
         List<Point2D> barrierCenters = new ArrayList<>();
 
         // Number of barriers to be created, defined in config file
-        outerloop:
+        outer_loop:
         for (int x = 0; x < Config.QUANTITY_BARRIERS; x++) {
             int counter = 0;
 
@@ -48,7 +48,7 @@ public class Level {
             // If after a certain amount of tries (50) no fitting new point is found, stop adding more points -> break
             while (isConflicting(barrierCenters, newBarrierPosition)) {
                 if (counter > 50) {
-                    break outerloop;
+                    break outer_loop;
                 }
                 barrierCenters.remove(newBarrierPosition);
                 newBarrierPosition = generateBarrierPosition();
