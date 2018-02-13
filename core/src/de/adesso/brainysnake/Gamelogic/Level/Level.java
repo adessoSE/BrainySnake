@@ -219,7 +219,7 @@ public class Level {
 
     public boolean tryConsumePoint(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
-            if (point2D.x == position.x && point2D.y == position.y) {
+            if (point2D.equals(position)) {
                 return points.getPositions().remove(point2D);
             }
         }
