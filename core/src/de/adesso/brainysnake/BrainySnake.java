@@ -1,12 +1,13 @@
 package de.adesso.brainysnake;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -16,12 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class BrainySnake extends ApplicationAdapter {
 
@@ -34,6 +35,7 @@ public class BrainySnake extends ApplicationAdapter {
     private Pixmap pixmap;
 
     private Stage mainStage;
+    private InputMultiplexer inputMultiplexer;
     private Skin skin;
 
     private final int BUTTON_OFFSET = 25;
@@ -42,8 +44,6 @@ public class BrainySnake extends ApplicationAdapter {
     private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SIZE;
     private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
     private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
 
     private OrthographicCamera mainCamera;
     private OrthographicCamera fontCamera;
@@ -80,7 +80,10 @@ public class BrainySnake extends ApplicationAdapter {
         game = new Game();
         game.init(HEIGHT, WIDTH);
 
-        Gdx.input.setInputProcessor(mainStage);
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(mainStage);
+        inputMultiplexer.addProcessor(new KeyBoardControl(game));
+        Gdx.input.setInputProcessor(inputMultiplexer);
 
         gameSpriteBatch = new SpriteBatch();
         gameSpriteBatch.setProjectionMatrix(mainCamera.combined);
@@ -174,9 +177,6 @@ public class BrainySnake extends ApplicationAdapter {
     }
 
     public void drawGameLoop() {
-
-        Gdx.input.setInputProcessor(new KeyBoardControl(game));
-
         // Redraw the head.
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
