@@ -11,10 +11,7 @@ import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -63,15 +60,15 @@ public class PlayerControllerMixTest {
         brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
-        Map<Orientation, Snake> brainySnakePlayersUiModel = new HashMap<Orientation, Snake>();
-        brainySnakePlayersUiModel.put(UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(RIGHT,level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(LEFT,level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
+        LinkedList<Snake> snakes = new LinkedList<>();
+        snakes.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        snakes.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        snakes.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        snakes.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
 
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
-        playerController = new PlayerController(brainySnakePlayers, brainySnakePlayersUiModel);
+        playerController = new PlayerController(brainySnakePlayers, snakes);
     }
 
     @Test
