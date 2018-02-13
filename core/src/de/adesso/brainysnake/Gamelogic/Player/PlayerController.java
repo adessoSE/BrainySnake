@@ -29,7 +29,7 @@ public class PlayerController {
 
     private ExecutorService playerUpdateCallableExecutor;
 
-    public PlayerController(List<BrainySnakePlayer> playerList, Map<Orientation, Snake> playerGameObjects) {
+    public PlayerController(List<BrainySnakePlayer> playerList, LinkedList<Snake> playerGameObjects) {
 
         // Shuffle Colors
         List<Color> gameColors = Utils.getShuffledGameColors();
@@ -39,8 +39,8 @@ public class PlayerController {
         }
 
         // Shuffle Starting Positions
-        List<Orientation> startOrientations = new ArrayList<Orientation>();
-        startOrientations.addAll(playerGameObjects.keySet());
+        LinkedList<Snake> snakeList = new LinkedList<Snake>();
+        snakeList.addAll(playerGameObjects);;
         // Collections.shuffle(startOrientations);
 
         // Add player to handler
@@ -49,12 +49,10 @@ public class PlayerController {
 
             // Build the PlayerHandler
             Color color = gameColors.remove(gameColors.size() - 1);
-            Orientation startOrientation = startOrientations.remove(startOrientations.size() - 1);
+            Snake currentSnake = snakeList.removeFirst();
+            currentSnake.setColor(color);
 
-            Snake snake = playerGameObjects.remove(startOrientation);
-            snake.setColor(color);
-
-            this.playerHandlerList.add(new PlayerHandler(player, startOrientation, snake));
+            this.playerHandlerList.add(new PlayerHandler(player, currentSnake.getStartOrientation(), currentSnake));
         }
 
         // We need a Thread for every player
