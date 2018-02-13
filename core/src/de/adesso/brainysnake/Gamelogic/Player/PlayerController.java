@@ -23,7 +23,7 @@ public class PlayerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
 
-    private List<PlayerHandler> playerHandlerList;
+    private ArrayList<PlayerHandler> playerHandlerList = new ArrayList<PlayerHandler>();
 
     private ExecutorService playerStatePushExecutor;
 
@@ -44,7 +44,6 @@ public class PlayerController {
         // Collections.shuffle(startOrientations);
 
         // Add player to handler
-        this.playerHandlerList = new ArrayList<PlayerHandler>();
         for (BrainySnakePlayer player : playerList) {
 
             // Build the PlayerHandler

@@ -6,32 +6,58 @@ import java.util.List;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Game;
+import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BrainySnake extends ApplicationAdapter {
 
     private Texture texture;
+    private Texture logoTexture;
+    private Image logoBrainySnake;
     private SpriteBatch gameSpriteBatch;
     private SpriteBatch fontSpriteBatch;
     private Sprite sprite;
     private Pixmap pixmap;
 
-    private static int DOT_SITZE = 10;
-    private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SITZE;
-    private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SITZE;
+    private Stage stage;
+    private Skin skin;
+
+    private GameMaster gameMaster;
+
+    private final int NAME_OFFSET = 75;
+    private static int DOT_SIZE = 10;
+    private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SIZE;
+    private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SIZE;
     private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
     private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
+
     private OrthographicCamera mainCamera;
     private OrthographicCamera fontCamera;
+
+    private TextButton returnButton;
+    private TextButton newGameButton;
+    private TextButton startGameButton;
+    private TextButton exitButton;
 
     private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
     private float timeSinceLastRender = 0;
@@ -39,11 +65,24 @@ public class BrainySnake extends ApplicationAdapter {
     private BitmapFont font;
     private List<GameObject> gameObjects;
     private Game game;
-    private boolean gameStarted;
+    private boolean menuShowing = true;
+    private boolean matchMenuShowing = false;
 
     @Override
     public void create() {
         pixmap = new Pixmap(WIDTH, HEIGHT, Pixmap.Format.RGBA8888);
+        stage = new Stage();
+        createBasicSkin();
+
+        try {
+            logoTexture = new Texture(Gdx.files.internal("./core/src/de/adesso/brainysnake/img/BrainySnake_Headline.png"));
+            TextureRegion region = new TextureRegion(logoTexture, 0, 0, 629, 180);
+            logoBrainySnake = new Image(region);
+            logoBrainySnake.setPosition(Config.APPLICATION_WIDTH / 4, Config.APPLICATION_HEIGHT - 250);
+        } catch (Exception e){
+            LOGGER.error(e.toString());
+        }
+
 
         texture = new Texture(pixmap);
 
@@ -55,8 +94,9 @@ public class BrainySnake extends ApplicationAdapter {
         initializeCamera();
 
         game = new Game();
-        game.init(HEIGHT, WIDTH);
-        Gdx.input.setInputProcessor(new KeyBoardControl(game));
+        gameMaster = game.init(HEIGHT, WIDTH);
+
+        Gdx.input.setInputProcessor(stage);
 
         gameSpriteBatch = new SpriteBatch();
         gameSpriteBatch.setProjectionMatrix(mainCamera.combined);
@@ -68,15 +108,15 @@ public class BrainySnake extends ApplicationAdapter {
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if (KeyBoardControl.SPACE) {
-            gameStarted = true;
+        if (menuShowing) {
+            drawStartScreen();
+            return;
         }
 
-        if (!gameStarted) {
-            drawStartScreen();
+        if (matchMenuShowing) {
+            drawMatchScreen();
             return;
         }
 
@@ -101,23 +141,124 @@ public class BrainySnake extends ApplicationAdapter {
         fontCamera.setToOrtho(false, APPLICATION_WIDTH, APPLICATION_HEIGHT);
     }
 
-    public void drawStartScreen() {
-        pixmap.setColor(Color.BLACK);
+    public void drawMatchScreen(){
+        pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
-        texture.draw(pixmap, 0, 0);
-        gameSpriteBatch.begin();
-        sprite.draw(gameSpriteBatch);
-        gameSpriteBatch.end();
+        newGameButton = new TextButton("Start Game", skin);
+        newGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - 250f, Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4);
+        newGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                    matchMenuShowing = false;
+            }
+        });
+        newGameButton.setWidth(500f);
+        stage.addActor(newGameButton);
 
-        fontSpriteBatch.begin();
-        font.getData().setScale(7f);
-        font.setColor(Color.WHITE);
-        font.draw(fontSpriteBatch, "BrainySnake", 20, APPLICATION_HEIGHT - 20);
-        font.draw(fontSpriteBatch, "Press (Space) to start", 20, APPLICATION_HEIGHT - 150);
-        fontSpriteBatch.end();
+        this.stage.getBatch().begin();
+        font.getData().setScale(3,3);
+        font.setColor(0,0,0,1);
+
+        font.draw(this.stage.getBatch(), "Amount of rounds: " +   Config.MAX_ROUNDS, Config.APPLICATION_WIDTH/2 - 225f , newGameButton.getY() + NAME_OFFSET*2);
+
+        if (!gameMaster.getPlayerController().getPlayerHandlerList().isEmpty()){
+            int i = 1;
+            for (PlayerHandler playerHandler : gameMaster.getPlayerController().getPlayerHandlerList()) {
+                font.setColor(playerHandler.getSnake().getHeadColor());
+                font.draw(this.stage.getBatch(), playerHandler.getPlayerName() , Config.APPLICATION_WIDTH/2 - 200f , newGameButton.getY() - NAME_OFFSET*i);
+                i++;
+            }
+        }
+        this.stage.getBatch().end();
+
+        returnButton = new TextButton("Back To Menu", skin);
+        returnButton.setPosition(Config.APPLICATION_WIDTH / 2 - 125f, Config.APPLICATION_HEIGHT / 6);
+        returnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                for(Actor actor : stage.getActors()){
+                    actor.setVisible(false);
+                }
+
+                menuShowing = true;
+                matchMenuShowing = false;
+            }
+        });
+        returnButton.setWidth(250f);
+        stage.addActor(returnButton);
+
+        stage.act();
+        stage.draw();
     }
 
+    public void drawStartScreen() {
+
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+
+
+        startGameButton = new TextButton("Start Game", skin);
+        startGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2);
+        startGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                for(Actor actor : stage.getActors()){
+                    actor.setVisible(false);
+                }
+
+                matchMenuShowing = true;
+                menuShowing = false;
+            }
+        });
+        stage.addActor(startGameButton);
+
+        // Settings Button for version 1.1
+//        TextButton settingsButton = new TextButton("Settings", skin);
+//        settingsButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2 - (newGameButton.getHeight() + BUTTON_OFFSET));
+//        settingsButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//
+//            }
+//        });
+//        stage.addActor(settingsButton);
+
+        exitButton = new TextButton("Exit", skin);
+        exitButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2 - 2 * (startGameButton.getHeight() + 25));
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+        stage.addActor(exitButton);
+
+        stage.act();
+        stage.draw();
+    }
+
+    private void createBasicSkin() {
+        //Create a font
+        BitmapFont font = new BitmapFont();
+        skin = new Skin();
+        skin.add("default", font);
+
+        //Create a texture
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        skin.add("background", new Texture(pixmap));
+
+        //Create a button style
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.up = skin.newDrawable("background", Color.GRAY);
+        textButtonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
+        textButtonStyle.checked = skin.newDrawable("background", Color.DARK_GRAY);
+        textButtonStyle.over = skin.newDrawable("background", Color.LIGHT_GRAY);
+        textButtonStyle.font = skin.getFont("default");
+        skin.add("default", textButtonStyle);
+
+    }
     public void drawGameLoop() {
         // Redraw the head.
         pixmap.setColor(Color.BLACK);
@@ -189,9 +330,14 @@ public class BrainySnake extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        texture.dispose();
-        pixmap.dispose();
-        gameSpriteBatch.dispose();
+        try {
+            texture.dispose();
+            gameSpriteBatch.dispose();
+            pixmap.dispose();
+        } catch (Exception e){
+            LOGGER.error(e.toString());
+        }
+
     }
 
 }
