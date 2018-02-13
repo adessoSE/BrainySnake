@@ -62,7 +62,7 @@ public class BrainySnake extends ApplicationAdapter {
         mainStage = new Stage();
         createBasicSkin();
 
-        logoTexture = new Texture("./core/assets/BrainySnake_Headline.png");
+        logoTexture = new Texture("BrainySnake_Headline.png");
         TextureRegion region = new TextureRegion(logoTexture, 0, 0, 629, 180);
         logoBrainySnake = new Image(region);
         logoBrainySnake.setPosition(Config.APPLICATION_WIDTH / 4, Config.APPLICATION_HEIGHT - 250);
