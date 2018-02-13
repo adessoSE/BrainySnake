@@ -6,18 +6,22 @@ import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
 
 public class Level {
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Level.class.getName());
+
 
     private int width, height;
 
-    private GameObject levelObject;
+    private GameObject levelWalls;
 
     private GameObject barriers;
 
@@ -28,7 +32,7 @@ public class Level {
     public Level(int height, int width, Color color) {
         this.height = height;
         this.width = width;
-        levelObject = new GameObject(buildOuterWalls(), Config.LEVEL_COLOR);
+        levelWalls = new GameObject(buildOuterWalls(), Config.LEVEL_COLOR);
         barriers = new GameObject(buildBarriers(), Config.BARRIER_COLOR);
         points = new GameObject(null, Config.POINT_COLLOR);
     }
@@ -67,9 +71,9 @@ public class Level {
     private LinkedList<Point2D> buildOuterWalls() {
         LinkedList<Point2D> positionts = new LinkedList<Point2D>();
         for (int x = 0; x < width; x++) {
-            // wall bottom
-            positionts.add(new Point2D(x, 0));
             // wall top
+            positionts.add(new Point2D(x, 0));
+            // wall bottom
             positionts.add(new Point2D(x, height - 1));
         }
 
@@ -100,7 +104,7 @@ public class Level {
     }
 
     public GameObject getLevel() {
-        return levelObject;
+        return levelWalls;
     }
 
     public GameObject getBarriers() {
@@ -112,7 +116,10 @@ public class Level {
     }
 
     public boolean checkCollision(Point2D point2D) {
-        return levelObject.getPositions().contains(point2D) || barriers.getPositions().contains(point2D);
+        if (levelWalls.getPositions().contains(point2D) || barriers.getPositions().contains(point2D)) {
+            LOGGER.error("Colision at - Point2D X" + point2D.getX() + " Point2D Y" + point2D.getY());
+        }
+        return levelWalls.getPositions().contains(point2D) || barriers.getPositions().contains(point2D);
     }
 
     /*
@@ -146,7 +153,7 @@ public class Level {
                 body.addFirst(positionIn);
             }
         }
-
+        LOGGER.info("SnakeHead X:"+start.getX()+" Y:"+start.getY()+" Orientation:"+orientation);
         return new Snake(new GameObject(head), new GameObject(body), orientation);
     }
 
@@ -156,16 +163,16 @@ public class Level {
         int max = 100;
         int randomNum = ThreadLocalRandom.current().nextInt(min, max + 1);
         if (randomNum < 26) {
-            System.out.println("UP");
+            //System.out.println("UP");
             return Orientation.UP;
         } else if (randomNum < 51) {
-            System.out.println("DOWN");
+            //System.out.println("DOWN");
             return Orientation.DOWN;
         } else if (randomNum < 76) {
-            System.out.println("LEFT");
+            //System.out.println("LEFT");
             return Orientation.LEFT;
         } else if (randomNum < 101) {
-            System.out.println("RIGHT");
+            //System.out.println("RIGHT");
             return Orientation.RIGHT;
         } else System.out.println("Kritischer Fehler!");
         return Orientation.RIGHT;
@@ -216,21 +223,19 @@ public class Level {
         }
     }
 
+    /**
+     * creates a random level position
+     */
     private Point2D getRandomLevelPosition() {
         Random random = new Random();
         int randomXPosition = random.nextInt(width);
         int randomYPosition = random.nextInt(height);
         return new Point2D(randomXPosition, randomYPosition);
     }
-    /*
-    private Point2D getRandomLevelPositionOn(){
-        Point2D randomPointOn;
-        do{randomPointOn = getRandomLevelPosition();}
-        while(!isPointOn(randomPointOn));
-        return randomPointOn;
-    }**/
 
-    /**trys to consume and remove the a point at the given position*/
+    /**
+     * trys to consume and remove the a point at the given position
+     */
     public boolean tryConsumePoint(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
             if (point2D.x == position.x && point2D.y == position.y) {
@@ -241,7 +246,9 @@ public class Level {
         return false;
     }
 
-    /**returns true if the given position is on the same position as a point*/
+    /**
+     * returns true if the given position is on the same position as a point
+     */
     public boolean isPointOn(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
             if (point2D.x == position.x && point2D.y == position.y) {
@@ -256,35 +263,41 @@ public class Level {
         return point2D.x >= 0 && point2D.y >= 0 && point2D.x < width && point2D.y < height;
     }
 
-    /**to test if there is enough space for a snake*/
-    private boolean isEnoughSpace(Point2D position, int length) {
+    /**
+     * to test if there is enough space for a snake
+     * checks if theres nothing in a radius of length + 1 around the snake
+     */
+    private boolean isEnoughSpace(Point2D position, int snakeLength) {
 
-        int centerx = position.getX();
-        int centery = position.getY();
-        length++;
+        int snakeHeadx = position.getX();
+        int snakeHeady = position.getY();
+        snakeLength++;
         try {
-            for (int x = centerx - length; x < centerx + length; x++) {
-                for (int y = centery - length; y < centery + length; y++) {
-                    if (checkCollision(new Point2D(x, y))) return false;
+            for (int x = snakeHeadx - snakeLength; x < snakeHeadx + snakeLength; x++) {
+                for (int y = snakeHeady - snakeLength; y < snakeHeady + snakeLength; y++) {
+                    if (checkCollision(new Point2D(x, y))) {
+                        return false;
+                    }
                 }
             }
         } catch (IndexOutOfBoundsException e) {
             System.out.println("IndexOutOfBoundsException");
             return false;
         }
-
         return true;
     }
 
-    //to get a random start point for a snake
+    /**
+     * to get a random start point for a snake with enough space
+     */
     private Point2D getRandomStart(int length) {
         Point2D randomPoint;
         do {
-                randomPoint = getRandomLevelPosition();
+            randomPoint = getRandomLevelPosition();
         }
         //while there is not enough space
         while (!isEnoughSpace(randomPoint, length));
-        System.out.println("x:" + randomPoint.getX() + "y:" + randomPoint.getY());
+        //System.out.println("x:" + randomPoint.getX() + "y:" + randomPoint.getY());
         return randomPoint;
     }
 
