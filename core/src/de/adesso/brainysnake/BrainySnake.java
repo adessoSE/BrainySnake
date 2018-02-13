@@ -54,11 +54,8 @@ public class BrainySnake extends ApplicationAdapter {
 
         texture = new Texture(pixmap);
 
-        try {
-            backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("./core/src/de/adesso/brainysnake/sound/track.mp3"));
-        } catch (Exception e){
-            LOGGER.error(e.toString());
-        }
+        backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("./core/src/de/adesso/brainysnake/sound/track.mp3"));
+        startPlayingMusic(backgroundSound);
 
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
@@ -114,11 +111,14 @@ public class BrainySnake extends ApplicationAdapter {
         fontCamera.setToOrtho(false, APPLICATION_WIDTH, APPLICATION_HEIGHT);
     }
 
-    public void drawStartScreen() {
-        if(!backgroundSound.isPlaying()){
-            backgroundSound.setLooping(true);
-            backgroundSound.play();
+    private void startPlayingMusic(Music sound){
+        if(!sound.isPlaying()){
+            sound.setLooping(true);
+            sound.play();
         }
+    }
+
+    public void drawStartScreen() {
 
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
@@ -210,6 +210,7 @@ public class BrainySnake extends ApplicationAdapter {
         texture.dispose();
         pixmap.dispose();
         gameSpriteBatch.dispose();
+        backgroundSound.dispose();
     }
 
 }
