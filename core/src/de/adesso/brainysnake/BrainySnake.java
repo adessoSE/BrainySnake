@@ -33,7 +33,7 @@ public class BrainySnake extends ApplicationAdapter {
     private Sprite sprite;
     private Pixmap pixmap;
 
-    private Stage stage;
+    private Stage mainStage;
     private Skin skin;
 
     private final int BUTTON_OFFSET = 25;
@@ -59,17 +59,13 @@ public class BrainySnake extends ApplicationAdapter {
     @Override
     public void create() {
         pixmap = new Pixmap(WIDTH, HEIGHT, Pixmap.Format.RGBA8888);
-        stage = new Stage();
+        mainStage = new Stage();
         createBasicSkin();
-        
-        try {
-            logoTexture = new Texture(Gdx.files.internal("./core/src/de/adesso/brainysnake/img/BrainySnake_Headline.png"));
-            TextureRegion region = new TextureRegion(logoTexture, 0, 0, 629, 180);
-            logoBrainySnake = new Image(region);
-            logoBrainySnake.setPosition(Config.APPLICATION_WIDTH / 4, Config.APPLICATION_HEIGHT - 250);
-        } catch (Exception e){
-            LOGGER.error(e.toString());
-        }
+
+        logoTexture = new Texture("./core/assets/BrainySnake_Headline.png");
+        TextureRegion region = new TextureRegion(logoTexture, 0, 0, 629, 180);
+        logoBrainySnake = new Image(region);
+        logoBrainySnake.setPosition(Config.APPLICATION_WIDTH / 4, Config.APPLICATION_HEIGHT - 250);
 
 
         texture = new Texture(pixmap);
@@ -84,7 +80,7 @@ public class BrainySnake extends ApplicationAdapter {
         game = new Game();
         game.init(HEIGHT, WIDTH);
 
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(mainStage);
 
         gameSpriteBatch = new SpriteBatch();
         gameSpriteBatch.setProjectionMatrix(mainCamera.combined);
@@ -129,7 +125,7 @@ public class BrainySnake extends ApplicationAdapter {
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
-        stage.addActor(logoBrainySnake);
+        mainStage.addActor(logoBrainySnake);
 
         TextButton newGameButton = new TextButton("Start Game", skin);
         newGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2);
@@ -139,18 +135,7 @@ public class BrainySnake extends ApplicationAdapter {
                 gameStarted = true;
             }
         });
-        stage.addActor(newGameButton);
-
-        // Settings Button for version 1.1
-//        TextButton settingsButton = new TextButton("Settings", skin);
-//        settingsButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2 - (newGameButton.getHeight() + BUTTON_OFFSET));
-//        settingsButton.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//
-//            }
-//        });
-//        stage.addActor(settingsButton);
+        mainStage.addActor(newGameButton);
 
         TextButton exitButton = new TextButton("Exit", skin);
         exitButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2 - 2 * (newGameButton.getHeight() + BUTTON_OFFSET));
@@ -160,10 +145,10 @@ public class BrainySnake extends ApplicationAdapter {
                 Gdx.app.exit();
             }
         });
-        stage.addActor(exitButton);
+        mainStage.addActor(exitButton);
 
-        stage.act();
-        stage.draw();
+        mainStage.act();
+        mainStage.draw();
     }
 
     private void createBasicSkin() {
@@ -187,7 +172,11 @@ public class BrainySnake extends ApplicationAdapter {
         skin.add("default", textButtonStyle);
 
     }
+
     public void drawGameLoop() {
+
+        Gdx.input.setInputProcessor(new KeyBoardControl(game));
+
         // Redraw the head.
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
@@ -212,8 +201,8 @@ public class BrainySnake extends ApplicationAdapter {
         font.getData().setScale(1f);
 
         font.setColor(Color.WHITE);
-        font.draw(fontSpriteBatch, "Rounds remaining: ", 20, APPLICATION_HEIGHT - 20 );
-        font.draw(fontSpriteBatch, UiState.getINSTANCE().getRoundsRemaining(), 165, APPLICATION_HEIGHT - 20 );
+        font.draw(fontSpriteBatch, "Rounds remaining: ", 20, APPLICATION_HEIGHT - 20);
+        font.draw(fontSpriteBatch, UiState.getINSTANCE().getRoundsRemaining(), 165, APPLICATION_HEIGHT - 20);
 
         HashMap<String, UIPlayerInformation> playerMap = UiState.getINSTANCE().getPlayerMap();
         int offset = 20;
@@ -258,14 +247,9 @@ public class BrainySnake extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        try {
-            texture.dispose();
-            gameSpriteBatch.dispose();
-            pixmap.dispose();
-        } catch (Exception e){
-            LOGGER.error(e.toString());
-        }
-
+        texture.dispose();
+        gameSpriteBatch.dispose();
+        pixmap.dispose();
     }
 
 }
