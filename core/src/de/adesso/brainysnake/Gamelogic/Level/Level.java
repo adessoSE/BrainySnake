@@ -39,7 +39,7 @@ public class Level {
     }
 
     /**
-     * returns a LinkedList with all Positions all Barriers
+     * @return a LinkedList with all Positions all Barriers
      */
     private LinkedList<Point2D> buildBarriers() {
         LinkedList<Point2D> barriers = new LinkedList<Point2D>();
@@ -56,7 +56,7 @@ public class Level {
     }
 
     /**
-     * returns a LinkedList with the positions of the generated Barrier
+     * @return a LinkedList with the positions of the generated Barrier
      */
     private List<Point2D> addBarrier(int x, int y) {
         List<Point2D> barrierDots = new ArrayList<Point2D>();
@@ -76,7 +76,7 @@ public class Level {
     }
 
     /**
-     * returns a LinkedList with the positions of the generated LevelWalls
+     * @return a LinkedList with the positions of the generated LevelWalls
      */
     private LinkedList<Point2D> buildOuterWalls() {
         LinkedList<Point2D> positionts = new LinkedList<Point2D>();
@@ -126,14 +126,16 @@ public class Level {
     }
 
     /**
-     * checks if the given point collides with an already existing point
+     * Checks if the given point collides with an already existing point
+     * @return a boolean if the given Point collides with a Barrier or a Wall
      */
     public boolean checkCollision(Point2D point2D) {
         return levelWalls.getPositions().contains(point2D) || barriers.getPositions().contains(point2D);
     }
 
     /**
-     * creates a new Snake and returns the new Snake
+     * Creates a new Snake.
+     * @return new snake
      */
     public Snake createStartingGameObject(int initialLength) {
         LinkedList<Point2D> head = new LinkedList<Point2D>();
@@ -154,7 +156,8 @@ public class Level {
     }
 
     /**
-     * returns a rendom Orientation
+     * Generates a new random Orientation.
+     * @return a new random Orientation
      */
     public Orientation getRandomOrientation() {
         Random random = new Random();
@@ -174,7 +177,8 @@ public class Level {
     }
 
     /**
-     * returns the position behind the given position depending on the Orientation and the given length
+     * Generates a position behind the given position depending on the Orientation and the given length.
+     * @return new Point
      */
     private Point2D getPositionIn(Orientation orientation, int centerX, int centerY, int length) {
         switch (orientation) {
@@ -206,6 +210,7 @@ public class Level {
 
     /**
      * creates a random level position
+     * @return random Point2D
      */
     private Point2D getRandomLevelPosition() {
         Random random = new Random();
@@ -215,7 +220,8 @@ public class Level {
     }
 
     /**
-     * tries to consume and remove the a point at the given position
+     * tries to consume and remove the point at the given position
+     * @return true if the point is consumable
      */
     public boolean tryConsumePoint(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
@@ -229,6 +235,7 @@ public class Level {
 
     /**
      * returns true if the given position is on the same position as a consumablePoint
+     * @return boolean
      */
     public boolean isPointOn(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
@@ -242,6 +249,7 @@ public class Level {
 
     /**
      * checks if the given point is within the level
+     * @return true is given point is within the level
      */
     public boolean levelContainsPosition(Point2D point2D) {
         return point2D.x >= 0 && point2D.y >= 0 && point2D.x < width && point2D.y < height;
@@ -249,7 +257,8 @@ public class Level {
 
     /**
      * to test if there is enough space for a snake
-     * checks if there's nothing in a radius of length + 1 around the snake
+     * checks if there's nothing in a radius of length around the snake
+     * @return true if there's enough space
      */
     private boolean isEnoughSpace(Point2D position, int snakeLength) {
 
@@ -275,6 +284,7 @@ public class Level {
 
     /**
      * to get a random start point for a snake with enough space
+     * @return random Start with enough space for a snake
      */
     private Point2D getRandomStart(int length) {
         Point2D randomPoint;
