@@ -199,6 +199,7 @@ public class BrainySnake extends ApplicationAdapter {
         pixmap.fill();
 
         mainStage.addActor(logoBrainySnake);
+        logoBrainySnake.setVisible(true);
 
         startGameButton = new TextButton("Start Game", skin);
         startGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2);
