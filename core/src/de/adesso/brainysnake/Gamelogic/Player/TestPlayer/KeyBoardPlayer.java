@@ -8,8 +8,7 @@ import de.adesso.brainysnake.playercommon.PlayerUpdate;
 
 public class KeyBoardPlayer implements BrainySnakePlayer {
 
-    PlayerState playerState;
-    private boolean left, right, up, down;
+    private Orientation lastOrientation;
 
     @Override
     public String getPlayerName() {
@@ -19,43 +18,25 @@ public class KeyBoardPlayer implements BrainySnakePlayer {
     @Override
     public PlayerUpdate tellPlayerUpdate() {
 
-        if (KeyBoardControl.LEFT && !right) {
-            left = true;
-            right = up = down = false;
+        if (KeyBoardControl.LEFT && !Orientation.RIGHT.equals(lastOrientation)) {
+            lastOrientation = Orientation.LEFT;
         }
-        if (KeyBoardControl.RIGHT && !left) {
-            right = true;
-            left = up = down = false;
+        if (KeyBoardControl.RIGHT && !Orientation.LEFT.equals(lastOrientation)) {
+            lastOrientation = Orientation.RIGHT;
         }
-        if (KeyBoardControl.UP && !down) {
-            up = true;
-            left = right = down = false;
+        if (KeyBoardControl.UP && !Orientation.DOWN.equals(lastOrientation)) {
+            lastOrientation = Orientation.UP;
         }
-        if (KeyBoardControl.DOWN && !up) {
-            down = true;
-            left = right = up = false;
+        if (KeyBoardControl.DOWN && !Orientation.UP.equals(lastOrientation)) {
+            lastOrientation = Orientation.DOWN;
         }
 
-        if (left) {
-            return new PlayerUpdate(Orientation.LEFT);
-        }
-        if (right) {
-            return new PlayerUpdate(Orientation.RIGHT);
-        }
-        if (up) {
-            return new PlayerUpdate(Orientation.UP);
-        }
-        if (down) {
-            return new PlayerUpdate(Orientation.DOWN);
-        }
-
-        return null;
+        return new PlayerUpdate(lastOrientation);
     }
 
     @Override
     public boolean handlePlayerStatusUpdate(PlayerState playerState) {
-            /* The SamplePlayer is very lazy, it just stores the last data */
-        this.playerState = playerState;
+        /* The SamplePlayer is very lazy, it just stores the last data */
         return true;
     }
 }
