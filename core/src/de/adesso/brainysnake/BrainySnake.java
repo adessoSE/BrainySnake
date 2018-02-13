@@ -52,7 +52,7 @@ public class BrainySnake extends ApplicationAdapter {
 
         texture = new Texture(pixmap);
 
-        backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("./core/src/de/adesso/brainysnake/sound/track.mp3"));
+        backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.mp3"));
         startPlayingMusic(backgroundSound);
 
         pixmap.setColor(Color.BLACK);
