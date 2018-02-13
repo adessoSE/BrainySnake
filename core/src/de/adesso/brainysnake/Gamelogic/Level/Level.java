@@ -32,21 +32,75 @@ public class Level {
     }
 
     private LinkedList<Point2D> buildBarriers() {
-        LinkedList<Point2D> barriers = new LinkedList<Point2D>();
-        int gapBarriersX = width / 4;
-        int gapBarriersY = height / 3;
+        LinkedList<Point2D> barriers = new LinkedList<>();
+        List<Point2D> barrierCenters = new ArrayList<>();
 
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 2; y++) {
-                barriers.addAll(addBarrier((x + 1) * gapBarriersX, (y + 1) * gapBarriersY));
+        // Number of barriers to be created, defined in config file
+        outer_loop:
+        for (int x = 0; x < Config.QUANTITY_BARRIERS; x++) {
+            int counter = 0;
+
+            Point2D newBarrierPosition = generateBarrierPosition();
+
+            barrierCenters.add(newBarrierPosition);
+
+            // If a "new point" has a spatial conflict with an existing point, generate a new "new point" and check again
+            // If after a certain amount of tries (50) no fitting new point is found, stop adding more points -> break
+            while (isConflicting(barrierCenters, newBarrierPosition)) {
+                if (counter > 50) {
+                    break outer_loop;
+                }
+                barrierCenters.remove(newBarrierPosition);
+                newBarrierPosition = generateBarrierPosition();
+                barrierCenters.add(newBarrierPosition);
+                counter++;
             }
+
+            barriers.addAll(addBarrier(newBarrierPosition.getX(), newBarrierPosition.getY()));
         }
 
         return barriers;
     }
 
+    // Generate a random position for the center of a barrier
+    private Point2D generateBarrierPosition() {
+        double xRandom = Math.random();
+        double yRandom = Math.random();
+
+        int xCenter = (int) (xRandom * width);
+        int yCenter = (int) (yRandom * height);
+
+        // Make sure barriers don't overlap with level borders
+        if (xCenter > (width - 3)) {
+            xCenter = xCenter - 3;
+        } else if (xCenter < 2) {
+            xCenter = xCenter + 2;
+        }
+        if (yCenter > (height - 3)) {
+            yCenter = yCenter - 3;
+        } else if (yCenter < 2) {
+            yCenter = yCenter + 2;
+        }
+
+
+        return new Point2D(xCenter, yCenter);
+    }
+
+    // See if new barrier position is too close to existing barrier
+    private boolean isConflicting(List<Point2D> points, Point2D newPoint) {
+        for (Point2D point : points) {
+            if (!point.equals(newPoint)) {
+                if (point.dst(newPoint) < Config.DISTANCE_BETWEEN_BARRIERS) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
     private List<Point2D> addBarrier(int x, int y) {
-        List<Point2D> barrierDots = new ArrayList<Point2D>();
+        List<Point2D> barrierDots = new ArrayList<>();
 
         barrierDots.add(new Point2D(x, y + 1));
         barrierDots.add(new Point2D(x, y));
@@ -165,7 +219,7 @@ public class Level {
 
     public boolean tryConsumePoint(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
-            if (point2D.x == position.x && point2D.y == position.y) {
+            if (point2D.equals(position)) {
                 return points.getPositions().remove(point2D);
             }
         }
