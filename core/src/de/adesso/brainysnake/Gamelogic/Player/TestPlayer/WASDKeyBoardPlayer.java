@@ -8,12 +8,12 @@ import de.adesso.brainysnake.playercommon.PlayerUpdate;
 
 public class KeyBoardPlayerTwo implements BrainySnakePlayer {
 
-    PlayerState playerState;
+    private PlayerState playerState;
     private boolean w, a, s, d;
 
     @Override
     public String getPlayerName() {
-        return "KeyBoardPlayerTwo";
+        return "WASDKeyBoardPlayer";
     }
 
     @Override
