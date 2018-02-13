@@ -132,7 +132,7 @@ public class PlayerHandler {
      * @return PlayerUpdate (this can be null
      */
     PlayerUpdate requestPlayerUpdate() {
-        return this.brainySnakePlayer.tellPlayerUpdate();
+        return brainySnakePlayer.tellPlayerUpdate();
     }
 
     public void kill() {

@@ -28,7 +28,7 @@ public class SamplePlayer implements BrainySnakePlayer {
     @Override
     public PlayerUpdate tellPlayerUpdate() {
         // Storing of the current orientation of the snake. Declaration of the new orientation, if the value doesn't get changed the current orientation should be keeped up.
-        Orientation currentOrientation = this.playerView.getCurrentOrientation();
+        Orientation currentOrientation = playerView.getCurrentOrientation();
         Orientation nextStep = currentOrientation;
 
         if (isLevelAhead()) {

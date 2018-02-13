@@ -5,18 +5,18 @@ import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
-import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import static de.adesso.brainysnake.playercommon.Orientation.*;
 
 public class PlayerControllerFailTest {
 
@@ -34,11 +34,11 @@ public class PlayerControllerFailTest {
         brainySnakePlayers.add(playerOne);
 
         // Build UI Models for the agents
-        LinkedList<Snake> snakes = new LinkedList<>();
-        snakes.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
-        snakes.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
-        snakes.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
-        snakes.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        LinkedList<Snake> brainySnakePlayersUiModel = new LinkedList<>();
+        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
+        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
 
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
@@ -112,6 +112,7 @@ public class PlayerControllerFailTest {
 
     @Test
     public void shutdown() throws Exception {
+        //TODO
     }
 
 }
