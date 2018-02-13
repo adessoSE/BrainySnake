@@ -10,10 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -42,7 +39,7 @@ public class PlayerControllerFailTest {
 
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
-        playerController = new PlayerController(brainySnakePlayers, snakes);
+        playerController = new PlayerController(brainySnakePlayers, brainySnakePlayersUiModel);
     }
 
     @Test

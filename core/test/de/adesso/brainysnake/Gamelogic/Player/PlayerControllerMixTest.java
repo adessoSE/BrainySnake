@@ -67,7 +67,7 @@ public class PlayerControllerMixTest {
 
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
-        playerController = new PlayerController(brainySnakePlayers, snakes);
+        playerController = new PlayerController(brainySnakePlayers, brainySnakePlayersUiModel);
     }
 
     @Test
