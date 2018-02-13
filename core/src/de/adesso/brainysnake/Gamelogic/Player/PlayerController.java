@@ -70,10 +70,13 @@ public class PlayerController {
             } catch (InterruptedException e) {
                 LOGGER.error("PlayerController",
                         "Player: " + playerHandler.getPlayerName() + " got Timeout after " + Config.MAX_AGENT_PROCESSING_TIME_MS + " ms", e);
+                        e.printStackTrace();
             } catch (ExecutionException e) {
                 LOGGER.error("PlayerController: ", "ExecutionException - " + e.getMessage());
+                e.printStackTrace();
             } catch (TimeoutException e) {
-                LOGGER.error("PlayerController: ", "Waiting for Player " + playerHandler.getPlayerName() + " aborted. Timeout");
+                LOGGER.error("PlayerController: ", "Waiting for Player " + playerHandler.getPlayerName() + " aborted. Timeout" );
+                e.printStackTrace();
             }
         }
     }
@@ -116,6 +119,7 @@ public class PlayerController {
                 LOGGER.error("PlayerController: Future Operation was interrupted ", e.getMessage());
             } catch (ExecutionException e) {
                 LOGGER.error("PlayerController: ExecutionException ", e.getMessage());
+                e.printStackTrace();
             } catch (TimeoutException e) {
                 agentChoiceMap.put(playerHandler, PlayerChoice.createNoChoice());
                 playerHandler.kill();
