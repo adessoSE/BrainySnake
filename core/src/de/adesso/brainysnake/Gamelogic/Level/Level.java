@@ -16,8 +16,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 public class Level {
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Level.class.getName());
-
 
     private int width, height;
 
@@ -116,9 +114,6 @@ public class Level {
     }
 
     public boolean checkCollision(Point2D point2D) {
-        if (levelWalls.getPositions().contains(point2D) || barriers.getPositions().contains(point2D)) {
-            LOGGER.error("Colision at - Point2D X" + point2D.getX() + " Point2D Y" + point2D.getY());
-        }
         return levelWalls.getPositions().contains(point2D) || barriers.getPositions().contains(point2D);
     }
 
@@ -153,29 +148,45 @@ public class Level {
                 body.addFirst(positionIn);
             }
         }
-        LOGGER.info("SnakeHead X:"+start.getX()+" Y:"+start.getY()+" Orientation:"+orientation);
         return new Snake(new GameObject(head), new GameObject(body), orientation);
     }
 
     //get random orientation
+//    public Orientation getRandomOrientation() {
+//        int min = 1;
+//        int max = 100;
+//        int randomNum = ThreadLocalRandom.current().nextInt(min, max + 1);
+//        if (randomNum < 26) {
+//            //System.out.println("UP");
+//            return Orientation.UP;
+//        } else if (randomNum < 51) {
+//            //System.out.println("DOWN");
+//            return Orientation.DOWN;
+//        } else if (randomNum < 76) {
+//            //System.out.println("LEFT");
+//            return Orientation.LEFT;
+//        } else if (randomNum < 101) {
+//            //System.out.println("RIGHT");
+//            return Orientation.RIGHT;
+//        } else System.out.println("Kritischer Fehler!");
+//        return Orientation.RIGHT;
+//    }
+
     public Orientation getRandomOrientation() {
-        int min = 1;
-        int max = 100;
-        int randomNum = ThreadLocalRandom.current().nextInt(min, max + 1);
-        if (randomNum < 26) {
-            //System.out.println("UP");
-            return Orientation.UP;
-        } else if (randomNum < 51) {
-            //System.out.println("DOWN");
-            return Orientation.DOWN;
-        } else if (randomNum < 76) {
-            //System.out.println("LEFT");
-            return Orientation.LEFT;
-        } else if (randomNum < 101) {
-            //System.out.println("RIGHT");
-            return Orientation.RIGHT;
-        } else System.out.println("Kritischer Fehler!");
-        return Orientation.RIGHT;
+        Random random = new Random();
+        int randomNumber = random.nextInt(4);
+        switch(randomNumber){
+            case 0 :
+                return Orientation.UP;
+            case 1 :
+                return Orientation.DOWN;
+            case 2 :
+                return Orientation.LEFT;
+            case 3 :
+                return Orientation.RIGHT;
+            default:
+                return Orientation.RIGHT;
+        }
     }
 
     /*
@@ -201,13 +212,13 @@ public class Level {
         int offset = 5;
         switch (orientation) {
             case UP:
-                return new Point2D(centerX + offset, centerY + length + Config.STARTING_POSITION_SPACE);
+                return new Point2D(centerX + offset, centerY + length - Config.STARTING_POSITION_SPACE);
             case DOWN:
-                return new Point2D(centerX - offset, centerY - length - Config.STARTING_POSITION_SPACE);
+                return new Point2D(centerX - offset, centerY - length + Config.STARTING_POSITION_SPACE);
             case RIGHT:
-                return new Point2D(centerX + length + Config.STARTING_POSITION_SPACE, centerY + offset);
+                return new Point2D(centerX + length - Config.STARTING_POSITION_SPACE, centerY + offset);
             case LEFT:
-                return new Point2D(centerX - length - Config.STARTING_POSITION_SPACE, centerY - offset);
+                return new Point2D(centerX - length + Config.STARTING_POSITION_SPACE, centerY - offset);
             default:
                 return null;
         }
