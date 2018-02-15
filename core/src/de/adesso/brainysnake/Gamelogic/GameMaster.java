@@ -68,7 +68,7 @@ public class GameMaster {
         brainySnakePlayers.add(playerOne);
         brainySnakePlayers.add(playerTwo);
         brainySnakePlayers.add(yourPlayer);
-        //brainySnakePlayers.add(playerFour);
+        brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
         Map<Orientation, Snake> brainySnakePlayersUiModel = new HashMap<Orientation, Snake>();
@@ -84,6 +84,10 @@ public class GameMaster {
 
     public void update(float delta) {
         gameLoop();
+    }
+
+    public PlayerController getPlayerController() {
+        return playerController;
     }
 
     public void gameLoop() {
@@ -127,10 +131,15 @@ public class GameMaster {
                         collectedPoints--;
                         break;
                     case BIT_AGENT:
-                        collectedPoints++;
+                        if (!playerHandler.isGhostMode()) {
+                            collectedPoints++;
+                        }
                         break;
                     case BIT_BY_PLAYER:
-                        collectedPoints--;
+                        // agent was Hit by another agent
+                        if (!playerHandler.isGhostMode()) {
+                            collectedPoints--;
+                        }
                         break;
                     case CONSUMED_POINT:
                         collectedPoints++;
@@ -158,7 +167,6 @@ public class GameMaster {
         level.spreadPoints();
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
-
             //update view of player
             updateRoundForPlayer(playerHandler);
 
@@ -204,7 +212,7 @@ public class GameMaster {
         List<PlayerHandler> winner = new ArrayList<PlayerHandler>();
         if (GlobalGameState.movesRemaining() <= 0) {
 
-            int maxPoints = -1;
+            int maxPoints =-1;
             for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
                 maxPoints = Math.max(maxPoints, playerHandler.getSnake().countPoints());
             }
