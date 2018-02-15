@@ -28,6 +28,8 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.soap.Text;
+
 public class BrainySnake extends ApplicationAdapter {
 
     private Texture texture;
@@ -143,6 +145,9 @@ public class BrainySnake extends ApplicationAdapter {
         fontCamera.setToOrtho(false, APPLICATION_WIDTH, APPLICATION_HEIGHT);
     }
 
+    /**
+     * Drawing the MatchScreen. Contains the button "Start Game" and "Back to Menu", also displays the number of rounds and the names of the player.
+     */
     public void drawMatchScreen(){
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
@@ -159,19 +164,8 @@ public class BrainySnake extends ApplicationAdapter {
         mainStage.addActor(newGameButton);
 
         this.mainStage.getBatch().begin();
-        font.getData().setScale(3,3);
-        font.setColor(0,0,0,1);
-
-        font.draw(this.mainStage.getBatch(), "Amount of rounds: " +   Config.MAX_ROUNDS, Config.APPLICATION_WIDTH/2 - 225f , newGameButton.getY() + NAME_OFFSET*2);
-
-        if (!gameMaster.getPlayerController().getPlayerHandlerList().isEmpty()){
-            int i = 1;
-            for (PlayerHandler playerHandler : gameMaster.getPlayerController().getPlayerHandlerList()) {
-                font.setColor(playerHandler.getSnake().getHeadColor());
-                font.draw(this.mainStage.getBatch(), playerHandler.getPlayerName() , Config.APPLICATION_WIDTH/2 - 200f , newGameButton.getY() - NAME_OFFSET*i);
-                i++;
-            }
-        }
+        drawTitle("Amount of rounds: " +   Config.MAX_ROUNDS,this.mainStage,this.newGameButton.getY());
+        drawAllPlayerNames(this.gameMaster.getPlayerController().getPlayerHandlerList(),this.mainStage,this.newGameButton.getY());
         this.mainStage.getBatch().end();
 
         returnButton = new TextButton("Back To Menu", skin);
@@ -179,10 +173,7 @@ public class BrainySnake extends ApplicationAdapter {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                for(Actor actor : mainStage.getActors()){
-                    actor.setVisible(false);
-                }
-
+               hideAllActors(mainStage);
                 menuShowing = true;
                 matchMenuShowing = false;
             }
@@ -194,6 +185,47 @@ public class BrainySnake extends ApplicationAdapter {
         mainStage.draw();
     }
 
+    /**
+     * Drawing a title specified in text on a given stage on top of a given button
+     * @param stage The stage where the title should be drawn
+     * @param positionY The position where the title should be drawn
+     * @param text The text which should be drawn in the title
+     */
+    public void drawTitle(String text,Stage stage, Float positionY){
+        font.getData().setScale(3,3);
+        font.setColor(0,0,0,1);
+
+        font.draw(stage.getBatch(), text, Config.APPLICATION_WIDTH/2 - 225f , positionY + NAME_OFFSET*2);
+    }
+
+    /**
+     * Drawing all PlayerNames from the GameMaster under the given button on the given stage
+     * @param playerHandlerList The list of PlayerHandlers to extract the detailed information of the players
+     * @param stage The stage where the PlayerNames should be drawn
+     * @param positionY The position where the names should be drawn
+     */
+    public void drawAllPlayerNames(List<PlayerHandler> playerHandlerList, Stage stage, Float positionY){
+        if (!playerHandlerList.isEmpty()){
+            int i = 1;
+            for (PlayerHandler playerHandler : playerHandlerList) {
+                font.setColor(playerHandler.getSnake().getHeadColor());
+                font.draw(stage.getBatch(), playerHandler.getPlayerName() , Config.APPLICATION_WIDTH/2 - 200f , positionY - NAME_OFFSET*i++);
+            }
+        }
+    }
+    /**
+     * Hiding all the actors in the given stage.
+     * @param stage The stage to set all actors on invisible.
+     */
+    public void hideAllActors(Stage stage){
+        for(Actor actor : stage.getActors()){
+            actor.setVisible(false);
+        }
+    }
+
+    /**
+     * Drawing the StartScreen. Contains the button "New Game" and "Exit" and the logo of BrainySnake.
+     */
     public void drawStartScreen() {
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
@@ -201,14 +233,12 @@ public class BrainySnake extends ApplicationAdapter {
         mainStage.addActor(logoBrainySnake);
         logoBrainySnake.setVisible(true);
 
-        startGameButton = new TextButton("Start Game", skin);
+        startGameButton = new TextButton("New Game", skin);
         startGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2);
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                for(Actor actor : mainStage.getActors()){
-                    actor.setVisible(false);
-                }
+                hideAllActors(mainStage);
                 menuShowing = false;
                 matchMenuShowing = true;
             }
@@ -229,6 +259,9 @@ public class BrainySnake extends ApplicationAdapter {
         mainStage.draw();
     }
 
+    /**
+     * Creates the basic visual appearance of the stage. Styling of the TextButton.
+     */
     private void createBasicSkin() {
         //Create a font
         BitmapFont font = new BitmapFont();
