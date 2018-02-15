@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -17,8 +18,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Game;
+import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
@@ -39,10 +43,13 @@ public class BrainySnake extends ApplicationAdapter {
     private Pixmap pixmap;
     private Music backgroundSound;
 
-    private Stage mainStage;
     private InputMultiplexer inputMultiplexer;
+    private Stage mainStage;
     private Skin skin;
 
+    private GameMaster gameMaster;
+
+    private final int NAME_OFFSET = 75;
     private final int BUTTON_OFFSET = 25;
     private static int DOT_SIZE = 10;
     private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SIZE;
@@ -50,8 +57,15 @@ public class BrainySnake extends ApplicationAdapter {
     private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
     private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
+
     private OrthographicCamera mainCamera;
     private OrthographicCamera fontCamera;
+
+    private TextButton returnButton;
+    private TextButton newGameButton;
+    private TextButton startGameButton;
+    private TextButton exitButton;
 
     private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
     private float timeSinceLastRender = 0;
@@ -59,7 +73,8 @@ public class BrainySnake extends ApplicationAdapter {
     private BitmapFont font;
     private List<GameObject> gameObjects;
     private Game game;
-    private boolean gameStarted;
+    private boolean menuShowing = true;
+    private boolean matchMenuShowing = false;
 
     @Override
     public void create() {
@@ -86,7 +101,7 @@ public class BrainySnake extends ApplicationAdapter {
         initializeCamera();
 
         game = new Game();
-        game.init(HEIGHT, WIDTH);
+        gameMaster = game.init(HEIGHT, WIDTH);
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(mainStage);
@@ -105,9 +120,13 @@ public class BrainySnake extends ApplicationAdapter {
     public void render() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if (!gameStarted) {
+        if (menuShowing) {
             drawStartScreen();
+            return;
+        }
+
+        if (matchMenuShowing) {
+            drawMatchScreen();
             return;
         }
 
@@ -132,6 +151,87 @@ public class BrainySnake extends ApplicationAdapter {
         fontCamera.setToOrtho(false, APPLICATION_WIDTH, APPLICATION_HEIGHT);
     }
 
+    /**
+     * Drawing the MatchScreen. Contains the button "Start Game" and "Back to Menu", also displays the number of rounds and the names of the player.
+     */
+    public void drawMatchScreen(){
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+
+        newGameButton = new TextButton("Start Game", skin);
+        newGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - 250f, Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4);
+        newGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                    matchMenuShowing = false;
+            }
+        });
+        newGameButton.setWidth(500f);
+        mainStage.addActor(newGameButton);
+
+        this.mainStage.getBatch().begin();
+        drawTitle("Amount of rounds: " +   Config.MAX_ROUNDS,this.mainStage,this.newGameButton.getY());
+        drawAllPlayerNames(this.gameMaster.getPlayerController().getPlayerHandlerList(),this.mainStage,this.newGameButton.getY());
+        this.mainStage.getBatch().end();
+
+        returnButton = new TextButton("Back To Menu", skin);
+        returnButton.setPosition(Config.APPLICATION_WIDTH / 2 - 125f, Config.APPLICATION_HEIGHT / 6);
+        returnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+               hideAllActors(mainStage);
+                menuShowing = true;
+                matchMenuShowing = false;
+            }
+        });
+        returnButton.setWidth(250f);
+        mainStage.addActor(returnButton);
+
+        mainStage.act();
+        mainStage.draw();
+    }
+
+    /**
+     * Drawing a title specified in text on a given stage on top of a given button
+     * @param stage The stage where the title should be drawn
+     * @param positionY The position where the title should be drawn
+     * @param text The text which should be drawn in the title
+     */
+    public void drawTitle(String text,Stage stage, Float positionY){
+        font.getData().setScale(3,3);
+        font.setColor(0,0,0,1);
+
+        font.draw(stage.getBatch(), text, Config.APPLICATION_WIDTH/2 - 225f , positionY + NAME_OFFSET*2);
+    }
+
+    /**
+     * Drawing all PlayerNames from the GameMaster under the given button on the given stage
+     * @param playerHandlerList The list of PlayerHandlers to extract the detailed information of the players
+     * @param stage The stage where the PlayerNames should be drawn
+     * @param positionY The position where the names should be drawn
+     */
+    public void drawAllPlayerNames(List<PlayerHandler> playerHandlerList, Stage stage, Float positionY){
+        if (!playerHandlerList.isEmpty()){
+            int i = 1;
+            for (PlayerHandler playerHandler : playerHandlerList) {
+                font.setColor(playerHandler.getSnake().getHeadColor());
+                font.draw(stage.getBatch(), playerHandler.getPlayerName() , Config.APPLICATION_WIDTH/2 - 200f , positionY - NAME_OFFSET*i++);
+            }
+        }
+    }
+    /**
+     * Hiding all the actors in the given stage.
+     * @param stage The stage to set all actors on invisible.
+     */
+    public void hideAllActors(Stage stage){
+        for(Actor actor : stage.getActors()){
+            actor.setVisible(false);
+        }
+    }
+
+    /**
+     * Drawing the StartScreen. Contains the button "New Game" and "Exit" and the logo of BrainySnake.
+     */
     private void startPlayingMusic(Music sound){
         if(!sound.isPlaying()){
             sound.setLooping(true);
@@ -144,19 +244,22 @@ public class BrainySnake extends ApplicationAdapter {
         pixmap.fill();
 
         mainStage.addActor(logoBrainySnake);
+        logoBrainySnake.setVisible(true);
 
-        TextButton newGameButton = new TextButton("Start Game", skin);
-        newGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2);
-        newGameButton.addListener(new ClickListener() {
+        startGameButton = new TextButton("New Game", skin);
+        startGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2);
+        startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                gameStarted = true;
+                hideAllActors(mainStage);
+                menuShowing = false;
+                matchMenuShowing = true;
             }
         });
-        mainStage.addActor(newGameButton);
+        mainStage.addActor(startGameButton);
 
-        TextButton exitButton = new TextButton("Exit", skin);
-        exitButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2 - 2 * (newGameButton.getHeight() + BUTTON_OFFSET));
+        exitButton = new TextButton("Exit", skin);
+        exitButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2 - 2 * (startGameButton.getHeight() + BUTTON_OFFSET));
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

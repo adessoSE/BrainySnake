@@ -21,9 +21,10 @@ public class Game {
 
     List<GameObject> gameObjects = new ArrayList<GameObject>();
 
-    public void init(int levelHeight, int levelWidth) {
+    public GameMaster init(int levelHeight, int levelWidth) {
         level = new Level(levelHeight, levelWidth, Color.WHITE);
         gameMaster = new GameMaster(level);
+        return gameMaster;
     }
 
     public void update(float delta) {
