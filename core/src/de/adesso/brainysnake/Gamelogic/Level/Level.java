@@ -112,23 +112,6 @@ public class Level {
         return (point.getX() > (width - 3) || point.getX() < 2 || point.getY() > (height - 3) || point.getY() < 2);
     }
 
-//    private List<Point2D> addBarrier(int x, int y) {
-//        List<Point2D> barrierDots = new ArrayList<>();
-//
-//        barrierDots.add(new Point2D(x, y + 1));
-//        barrierDots.add(new Point2D(x, y));
-//        barrierDots.add(new Point2D(x, y - 1));
-//
-//        barrierDots.add(new Point2D(x + 1, y + 1));
-//        barrierDots.add(new Point2D(x + 1, y));
-//        barrierDots.add(new Point2D(x + 1, y - 1));
-//
-//        barrierDots.add(new Point2D(x - 1, y + 1));
-//        barrierDots.add(new Point2D(x - 1, y));
-//        barrierDots.add(new Point2D(x - 1, y - 1));
-//        return barrierDots;
-//    }
-
     private LinkedList<Point2D> buildOuterWalls() {
         LinkedList<Point2D> positionts = new LinkedList<Point2D>();
         for (int x = 0; x < width; x++) {
