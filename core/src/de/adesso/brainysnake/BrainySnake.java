@@ -68,9 +68,15 @@ public class BrainySnake extends ApplicationAdapter {
     private List<GameObject> gameObjects;
     private Game game;
 
+    private GlyphLayout layout = new GlyphLayout();
+
     private boolean menuShowing = true;
     private boolean matchMenuShowing = false;
     private boolean gameOver = false;
+
+    private int newLine = 0;
+    private boolean isWinner = true;
+    private boolean isSecond = false;
 
     @Override
     public void create() {
@@ -123,15 +129,16 @@ public class BrainySnake extends ApplicationAdapter {
             return;
         }
 
+        if (gameOver) {
+            drawGameOverScreen();
+            return;
+        }
+
         timeSinceLastRender += Gdx.graphics.getDeltaTime();
         if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
             // Do the actual rendering, pass timeSinceLastRender as delta time.
             timeSinceLastRender = 0f;
             game.update(Gdx.graphics.getDeltaTime());
-        }
-        if (gameOver) {
-            drawGameOverScreen();
-            return;
         }
 
         drawGameLoop();
@@ -144,7 +151,7 @@ public class BrainySnake extends ApplicationAdapter {
         fontCamera.setToOrtho(false, APPLICATION_WIDTH, APPLICATION_HEIGHT);
     }
 
-    public void drawMatchScreen(){
+    public void drawMatchScreen() {
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
@@ -153,7 +160,7 @@ public class BrainySnake extends ApplicationAdapter {
         newGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                for(Actor actor : mainStage.getActors()){
+                for (Actor actor : mainStage.getActors()) {
                     actor.setVisible(false);
                 }
                 matchMenuShowing = false;
@@ -164,16 +171,16 @@ public class BrainySnake extends ApplicationAdapter {
         mainStage.addActor(newGameButton);
 
         this.mainStage.getBatch().begin();
-        font.getData().setScale(3,3);
-        font.setColor(0,0,0,1);
+        font.getData().setScale(3, 3);
+        font.setColor(0, 0, 0, 1);
 
-        font.draw(this.mainStage.getBatch(), "Amount of rounds: " +   Config.MAX_ROUNDS, Config.APPLICATION_WIDTH/2 - 225f , newGameButton.getY() + NAME_OFFSET*2);
+        font.draw(this.mainStage.getBatch(), "Amount of rounds: " + Config.MAX_ROUNDS, Config.APPLICATION_WIDTH / 2 - 225f, newGameButton.getY() + NAME_OFFSET * 2);
 
-        if (!gameMaster.getPlayerController().getPlayerHandlerList().isEmpty()){
+        if (!gameMaster.getPlayerController().getPlayerHandlerList().isEmpty()) {
             int i = 1;
             for (PlayerHandler playerHandler : gameMaster.getPlayerController().getPlayerHandlerList()) {
                 font.setColor(playerHandler.getSnake().getHeadColor());
-                font.draw(this.mainStage.getBatch(), playerHandler.getPlayerName() , Config.APPLICATION_WIDTH/2 - 200f , newGameButton.getY() - NAME_OFFSET*i);
+                font.draw(this.mainStage.getBatch(), playerHandler.getPlayerName(), Config.APPLICATION_WIDTH / 2 - 200f, newGameButton.getY() - NAME_OFFSET * i);
                 i++;
             }
         }
@@ -184,7 +191,7 @@ public class BrainySnake extends ApplicationAdapter {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                for(Actor actor : mainStage.getActors()){
+                for (Actor actor : mainStage.getActors()) {
                     actor.setVisible(false);
                 }
 
@@ -211,7 +218,7 @@ public class BrainySnake extends ApplicationAdapter {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                for(Actor actor : mainStage.getActors()){
+                for (Actor actor : mainStage.getActors()) {
                     actor.setVisible(false);
                 }
                 menuShowing = false;
@@ -255,6 +262,7 @@ public class BrainySnake extends ApplicationAdapter {
         skin.add("default", textButtonStyle);
 
     }
+
     public void drawGameLoop() {
         // Redraw the head.
         pixmap.setColor(Color.BLACK);
@@ -280,8 +288,8 @@ public class BrainySnake extends ApplicationAdapter {
         font.getData().setScale(1f);
 
         font.setColor(Color.WHITE);
-        font.draw(fontSpriteBatch, "Rounds remaining: ", 20, APPLICATION_HEIGHT - 20 );
-        font.draw(fontSpriteBatch, UiState.getINSTANCE().getRoundsRemaining(), 165, APPLICATION_HEIGHT - 20 );
+        font.draw(fontSpriteBatch, "Rounds remaining: ", 20, APPLICATION_HEIGHT - 20);
+        font.draw(fontSpriteBatch, UiState.getINSTANCE().getRoundsRemaining(), 165, APPLICATION_HEIGHT - 20);
 
         HashMap<String, UIPlayerInformation> playerMap = UiState.getINSTANCE().getPlayerMap();
         int offset = 20;
@@ -295,39 +303,87 @@ public class BrainySnake extends ApplicationAdapter {
         fontSpriteBatch.end();
     }
 
+    /**
+     * Creates a sorted Map of the players according to the points
+     * @return Keys are the score as Integer and the value is a ArrayList with the PlayerHandlers with this score
+     */
+    public SortedMap<Integer, ArrayList<PlayerHandler>> createSortedWinnerMap() {
+        SortedMap<Integer, ArrayList<PlayerHandler>> sortedMap = new TreeMap<>();
+        for (PlayerHandler playerHandler : gameMaster.getPlayerController().getPlayerHandlerList()) {
+            if (sortedMap.containsKey(playerHandler.getSnake().getAllSnakePositions().size())) {
+                sortedMap.get(playerHandler.getSnake().getAllSnakePositions().size()).add(playerHandler);
+            } else {
+                ArrayList<PlayerHandler> playerHandlers = new ArrayList<PlayerHandler>() {{
+                    add(playerHandler);
+                }};
+                sortedMap.put(playerHandler.getSnake().getAllSnakePositions().size(), playerHandlers);
+            }
+        }
+        return sortedMap;
+    }
+
+    /**
+     * Draws the player name and points on the mainStage. Information gets extracted from PlayerHandler.
+     * @param playerHandler PlayerHandler provides all the needed information about the player
+     */
+    public void drawWinnerScreenPlayerDetails(PlayerHandler playerHandler) {
+        font.setColor(playerHandler.getSnake().getHeadColor());
+        layout.setText(font, playerHandler.getSnake().getAllSnakePositions().size() + "");
+        font.draw(this.mainStage.getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 + 250, newGameButton.getY() - NAME_OFFSET * newLine);
+        layout.setText(font, playerHandler.getPlayerName());
+        font.draw(this.mainStage.getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 - 50, newGameButton.getY() - NAME_OFFSET * newLine++);
+    }
+
+    /**
+     * Checks the players position. The winner gets highlighted.
+     */
+    public void checkPositioningPlayer() {
+        if (this.isWinner) {
+            this.isWinner = false;
+            this.isSecond = true;
+            font.getData().setScale(4, 4);
+        } else if (this.isSecond) {
+            this.isSecond = false;
+            font.getData().setScale(3, 3);
+            newLine++;
+        }
+    }
+
+    /**
+     * Drawing the Game Over Screen. Contain the list of players sorted by the points and an button linking to the starting menu.
+     */
     public void drawGameOverScreen() {
 
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
         this.mainStage.getBatch().begin();
-        font.getData().setScale(4,4);
-        font.setColor(0,0,0,1);
+        font.getData().setScale(4, 4);
+        font.setColor(0, 0, 0, 1);
 
-        font.draw(this.mainStage.getBatch(), "Result of the round:", Config.APPLICATION_WIDTH/2 - 275f , newGameButton.getY() + NAME_OFFSET*2);
+        layout.setText(font, "Result of the round:");
+        font.draw(this.mainStage.getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2, newGameButton.getY() + NAME_OFFSET * 2);
 
-        font.getData().setScale(3,3);
+        font.getData().setScale(3, 3);
 
-        if (!gameMaster.getPlayerController().getPlayerHandlerList().isEmpty()){
-            SortedMap<Integer, ArrayList<String>> sortedMap = new TreeMap<>();
-            int i = 1;
-            for (PlayerHandler playerHandler : gameMaster.getPlayerController().getPlayerHandlerList()) {
-                if(sortedMap.containsKey(playerHandler.getSnake().getAllSnakePositions().size())){
-                    sortedMap.get(playerHandler.getSnake().getAllSnakePositions().size()).add(playerHandler.getPlayerName());
-                } else {
-                    ArrayList<String> playerNames = new ArrayList<String>() {{add(playerHandler.getPlayerName());}};
-                    sortedMap.put(playerHandler.getSnake().getAllSnakePositions().size(), playerNames);
+        SortedMap<Integer, ArrayList<PlayerHandler>> sortedMap = createSortedWinnerMap();
+
+        this.isWinner = true;
+        this.isSecond = false;
+        newLine = 0;
+        for (int i = sortedMap.size() - 1; i >= 0; i--) {
+            ArrayList<PlayerHandler> sortedMapValue = sortedMap.get(sortedMap.keySet().toArray()[i]);
+            if (sortedMapValue.size() > 1) {
+                for (PlayerHandler playerHandler : sortedMapValue) {
+                    checkPositioningPlayer();
+                    drawWinnerScreenPlayerDetails(playerHandler);
                 }
-
+            } else {
+                checkPositioningPlayer();
+                drawWinnerScreenPlayerDetails(sortedMapValue.get(0));
             }
-
-            for (Map.Entry<Integer, ArrayList<String>> entry : sortedMap.entrySet()) {
-                System.out.println(entry.getKey() + " => " + entry.getValue().toString());
-            }
-//            font.setColor(playerHandler.getSnake().getHeadColor());
-//            font.draw(this.mainStage.getBatch(), playerHandler.getPlayerName() , Config.APPLICATION_WIDTH/2 - 200f , newGameButton.getY() - NAME_OFFSET*i);
-//            i++;
         }
+
         this.mainStage.getBatch().end();
 
         returnButton = new TextButton("Back To Menu", skin);
@@ -335,7 +391,7 @@ public class BrainySnake extends ApplicationAdapter {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                for(Actor actor : mainStage.getActors()){
+                for (Actor actor : mainStage.getActors()) {
                     actor.setVisible(false);
                 }
 
@@ -348,44 +404,13 @@ public class BrainySnake extends ApplicationAdapter {
 
         mainStage.act();
         mainStage.draw();
-
-//        pixmap.setColor(Color.BLACK);
-//        pixmap.fill();
-//
-//        texture.draw(pixmap, 0, 0);
-//        gameSpriteBatch.begin();
-//        sprite.draw(gameSpriteBatch);
-//        gameSpriteBatch.end();
-//
-//        fontSpriteBatch.begin();
-//        font.getData().setScale(7f);
-//        font.setColor(Color.WHITE);
-//        font.draw(fontSpriteBatch, "Game Over", 20, APPLICATION_HEIGHT - 20);
-//
-//        int offset = 150;
-//
-//        font.getData().setScale(5f);
-//        HashMap<String, UIPlayerInformation> playerMap = UiState.getINSTANCE().getPlayerMap();
-//        for (String winnerName : playerMap.keySet()) {
-//            font.setColor(playerMap.get(winnerName).getColor());
-//            font.draw(fontSpriteBatch, winnerName, 20, APPLICATION_HEIGHT - offset);
-//            font.draw(fontSpriteBatch, playerMap.get(winnerName).getPoints(), 750, APPLICATION_HEIGHT - offset);
-//            offset += 120;
-//        }
-//
-//        fontSpriteBatch.end();
     }
 
     @Override
     public void dispose() {
-        try {
-            texture.dispose();
-            gameSpriteBatch.dispose();
-            pixmap.dispose();
-        } catch (Exception e){
-            LOGGER.error(e.toString());
-        }
-
+        texture.dispose();
+        gameSpriteBatch.dispose();
+        pixmap.dispose();
     }
 
 }
