@@ -27,6 +27,8 @@ import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 
 public class GameMaster {
 
+    public ArrayList<PlayerHandler> deadPlayer = new ArrayList<>();
+
     // Create players
     private BrainySnakePlayer playerOne = new KeyBoardPlayer();
     private BrainySnakePlayer yourPlayer = new YourPlayer();
@@ -108,13 +110,13 @@ public class GameMaster {
         playerStatus.clear();
 
         // check reaction to game events of agents
-        List<PlayerHandler> deadPlayer = new ArrayList<PlayerHandler>();
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             List<RoundEvent> roundEvents = playerHandler.getRoundEvents();
             int collectedPoints = 0;
             for (RoundEvent roundEvent : roundEvents) {
                 switch (roundEvent) {
                     case DIED:
+                        playerHandler.getSnake().removeHead();
                         deadPlayer.add(playerHandler);
                         break;
                     case MOVED:

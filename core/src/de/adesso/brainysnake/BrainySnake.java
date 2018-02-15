@@ -129,7 +129,7 @@ public class BrainySnake extends ApplicationAdapter {
             return;
         }
 
-        if (gameOver) {
+        if (game.isGameOver()) {
             drawGameOverScreen();
             return;
         }
@@ -164,7 +164,6 @@ public class BrainySnake extends ApplicationAdapter {
                     actor.setVisible(false);
                 }
                 matchMenuShowing = false;
-                gameOver = true;
             }
         });
         newGameButton.setWidth(500f);
@@ -318,6 +317,9 @@ public class BrainySnake extends ApplicationAdapter {
                 }};
                 sortedMap.put(playerHandler.getSnake().getAllSnakePositions().size(), playerHandlers);
             }
+        }
+        if(!gameMaster.deadPlayer.isEmpty()){
+            sortedMap.put(0,gameMaster.deadPlayer);
         }
         return sortedMap;
     }
