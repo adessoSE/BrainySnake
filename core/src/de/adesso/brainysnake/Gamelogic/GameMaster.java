@@ -21,6 +21,8 @@ import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 
 public class GameMaster {
 
+    public ArrayList<PlayerHandler> deadPlayer = new ArrayList<>();
+
     // Create players
     private BrainySnakePlayer playerOne = new KeyBoardPlayer();
     private BrainySnakePlayer yourPlayer = new YourPlayer();
@@ -107,13 +109,13 @@ public class GameMaster {
         playerStatus.clear();
 
         // check reaction to game events of agents
-        List<PlayerHandler> deadPlayer = new ArrayList<PlayerHandler>();
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             List<RoundEvent> roundEvents = playerHandler.getRoundEvents();
             int collectedPoints = 0;
             for (RoundEvent roundEvent : roundEvents) {
                 switch (roundEvent) {
                     case DIED:
+                        playerHandler.getSnake().removeHead();
                         deadPlayer.add(playerHandler);
                         break;
                     case MOVED:
@@ -130,10 +132,15 @@ public class GameMaster {
                         collectedPoints--;
                         break;
                     case BIT_AGENT:
-                        collectedPoints++;
+                        if (!playerHandler.isGhostMode()) {
+                            collectedPoints++;
+                        }
                         break;
                     case BIT_BY_PLAYER:
-                        collectedPoints--;
+                        // agent was Hit by another agent
+                        if (!playerHandler.isGhostMode()) {
+                            collectedPoints--;
+                        }
                         break;
                     case CONSUMED_POINT:
                         collectedPoints++;
@@ -161,7 +168,6 @@ public class GameMaster {
         level.spreadPoints();
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
-
             //update view of player
             updateRoundForPlayer(playerHandler);
 
@@ -207,7 +213,7 @@ public class GameMaster {
         List<PlayerHandler> winner = new ArrayList<PlayerHandler>();
         if (GlobalGameState.movesRemaining() <= 0) {
 
-            int maxPoints = -1;
+            int maxPoints =-1;
             for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
                 maxPoints = Math.max(maxPoints, playerHandler.getSnake().countPoints());
             }

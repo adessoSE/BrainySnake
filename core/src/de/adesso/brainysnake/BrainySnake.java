@@ -2,13 +2,10 @@ package de.adesso.brainysnake;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,7 +18,6 @@ import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
@@ -29,11 +25,19 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class BrainySnake extends ApplicationAdapter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
+    private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
+    private static int DOT_SIZE = 10;
+    private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SIZE;
+    private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SIZE;
+    private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
+    private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
+    private final int NAME_OFFSET = 75;
+    private final int BUTTON_OFFSET = 25;
     private Texture texture;
     private Texture logoTexture;
     private Image logoBrainySnake;
@@ -42,39 +46,31 @@ public class BrainySnake extends ApplicationAdapter {
     private Sprite sprite;
     private Pixmap pixmap;
     private Music backgroundSound;
-
     private InputMultiplexer inputMultiplexer;
     private Stage mainStage;
     private Skin skin;
-
     private GameMaster gameMaster;
-
-    private final int NAME_OFFSET = 75;
-    private final int BUTTON_OFFSET = 25;
-    private static int DOT_SIZE = 10;
-    private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SIZE;
-    private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SIZE;
-    private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
-    private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
-
     private OrthographicCamera mainCamera;
     private OrthographicCamera fontCamera;
-
     private TextButton returnButton;
     private TextButton newGameButton;
     private TextButton startGameButton;
     private TextButton exitButton;
-
-    private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
     private float timeSinceLastRender = 0;
 
     private BitmapFont font;
     private List<GameObject> gameObjects;
     private Game game;
+
+    private GlyphLayout layout = new GlyphLayout();
+
     private boolean menuShowing = true;
     private boolean matchMenuShowing = false;
+    private boolean gameOver = false;
+
+    private int newLine = 0;
+    private boolean isWinner = true;
+    private boolean isSecond = false;
 
     @Override
     public void create() {
@@ -116,10 +112,21 @@ public class BrainySnake extends ApplicationAdapter {
         font = new BitmapFont();
     }
 
+    /**
+     * Drawing the StartScreen. Contains the button "New Game" and "Exit" and the logo of BrainySnake.
+     */
+    private void startPlayingMusic(Music sound) {
+        if (!sound.isPlaying()) {
+            sound.setLooping(true);
+            sound.play();
+        }
+    }
+
     @Override
     public void render() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         if (menuShowing) {
             drawStartScreen();
             return;
@@ -130,15 +137,16 @@ public class BrainySnake extends ApplicationAdapter {
             return;
         }
 
+        if (game.isGameOver()) {
+            drawGameOverScreen();
+            return;
+        }
+
         timeSinceLastRender += Gdx.graphics.getDeltaTime();
         if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
             // Do the actual rendering, pass timeSinceLastRender as delta time.
             timeSinceLastRender = 0f;
             game.update(Gdx.graphics.getDeltaTime());
-        }
-        if (game.isGameOver()) {
-            drawGameOverScreen();
-            return;
         }
 
         drawGameLoop();
@@ -154,7 +162,7 @@ public class BrainySnake extends ApplicationAdapter {
     /**
      * Drawing the MatchScreen. Contains the button "Start Game" and "Back to Menu", also displays the number of rounds and the names of the player.
      */
-    public void drawMatchScreen(){
+    public void drawMatchScreen() {
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
@@ -163,7 +171,7 @@ public class BrainySnake extends ApplicationAdapter {
         newGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                    matchMenuShowing = false;
+                matchMenuShowing = false;
             }
         });
         newGameButton.setWidth(500f);
@@ -179,7 +187,7 @@ public class BrainySnake extends ApplicationAdapter {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-               hideAllActors(mainStage);
+                hideAllActors(mainStage);
                 menuShowing = true;
                 matchMenuShowing = false;
             }
@@ -193,49 +201,43 @@ public class BrainySnake extends ApplicationAdapter {
 
     /**
      * Drawing a title specified in text on a given stage on top of a given button
-     * @param stage The stage where the title should be drawn
+     *
+     * @param stage     The stage where the title should be drawn
      * @param positionY The position where the title should be drawn
-     * @param text The text which should be drawn in the title
+     * @param text      The text which should be drawn in the title
      */
-    public void drawTitle(String text,Stage stage, Float positionY){
-        font.getData().setScale(3,3);
-        font.setColor(0,0,0,1);
+    public void drawTitle(String text, Stage stage, Float positionY) {
+        font.getData().setScale(3, 3);
+        font.setColor(0, 0, 0, 1);
 
-        font.draw(stage.getBatch(), text, Config.APPLICATION_WIDTH/2 - 225f , positionY + NAME_OFFSET*2);
+        font.draw(stage.getBatch(), text, Config.APPLICATION_WIDTH / 2 - 225f, positionY + NAME_OFFSET * 2);
     }
 
     /**
      * Drawing all PlayerNames from the GameMaster under the given button on the given stage
+     *
      * @param playerHandlerList The list of PlayerHandlers to extract the detailed information of the players
-     * @param stage The stage where the PlayerNames should be drawn
-     * @param positionY The position where the names should be drawn
+     * @param stage             The stage where the PlayerNames should be drawn
+     * @param positionY         The position where the names should be drawn
      */
-    public void drawAllPlayerNames(List<PlayerHandler> playerHandlerList, Stage stage, Float positionY){
-        if (!playerHandlerList.isEmpty()){
+    public void drawAllPlayerNames(List<PlayerHandler> playerHandlerList, Stage stage, Float positionY) {
+        if (!playerHandlerList.isEmpty()) {
             int i = 1;
             for (PlayerHandler playerHandler : playerHandlerList) {
                 font.setColor(playerHandler.getSnake().getHeadColor());
-                font.draw(stage.getBatch(), playerHandler.getPlayerName() , Config.APPLICATION_WIDTH/2 - 200f , positionY - NAME_OFFSET*i++);
+                font.draw(stage.getBatch(), playerHandler.getPlayerName(), Config.APPLICATION_WIDTH / 2 - 200f, positionY - NAME_OFFSET * i++);
             }
-        }
-    }
-    /**
-     * Hiding all the actors in the given stage.
-     * @param stage The stage to set all actors on invisible.
-     */
-    public void hideAllActors(Stage stage){
-        for(Actor actor : stage.getActors()){
-            actor.setVisible(false);
         }
     }
 
     /**
-     * Drawing the StartScreen. Contains the button "New Game" and "Exit" and the logo of BrainySnake.
+     * Hiding all the actors in the given stage.
+     *
+     * @param stage The stage to set all actors on invisible.
      */
-    private void startPlayingMusic(Music sound){
-        if(!sound.isPlaying()){
-            sound.setLooping(true);
-            sound.play();
+    public void hideAllActors(Stage stage) {
+        for (Actor actor : stage.getActors()) {
+            actor.setVisible(false);
         }
     }
 
@@ -334,33 +336,110 @@ public class BrainySnake extends ApplicationAdapter {
         fontSpriteBatch.end();
     }
 
+    /**
+     * Creates a sorted Map of the players according to the points
+     *
+     * @return Keys are the score as Integer and the value is a ArrayList with the PlayerHandlers with this score
+     */
+    public SortedMap<Integer, ArrayList<PlayerHandler>> createSortedWinnerMap() {
+        SortedMap<Integer, ArrayList<PlayerHandler>> sortedMap = new TreeMap<>();
+        for (PlayerHandler playerHandler : gameMaster.getPlayerController().getPlayerHandlerList()) {
+            if (sortedMap.containsKey(playerHandler.getSnake().getAllSnakePositions().size())) {
+                sortedMap.get(playerHandler.getSnake().getAllSnakePositions().size()).add(playerHandler);
+            } else {
+                ArrayList<PlayerHandler> playerHandlers = new ArrayList<PlayerHandler>() {{
+                    add(playerHandler);
+                }};
+                sortedMap.put(playerHandler.getSnake().getAllSnakePositions().size(), playerHandlers);
+            }
+        }
+        if (!gameMaster.deadPlayer.isEmpty()) {
+            sortedMap.put(0, gameMaster.deadPlayer);
+        }
+        return sortedMap;
+    }
+
+    /**
+     * Draws the player name and points on the mainStage. Information gets extracted from PlayerHandler.
+     *
+     * @param playerHandler PlayerHandler provides all the needed information about the player
+     */
+    public void drawWinnerScreenPlayerDetails(PlayerHandler playerHandler) {
+        font.setColor(playerHandler.getSnake().getHeadColor());
+        layout.setText(font, playerHandler.getSnake().getAllSnakePositions().size() + "");
+        font.draw(this.mainStage.getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 + 250, newGameButton.getY() - NAME_OFFSET * newLine);
+        layout.setText(font, playerHandler.getPlayerName());
+        font.draw(this.mainStage.getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 - 50, newGameButton.getY() - NAME_OFFSET * newLine++);
+    }
+
+    /**
+     * Checks the players position. The winner gets highlighted.
+     */
+    public void checkPositioningPlayer() {
+        if (this.isWinner) {
+            this.isWinner = false;
+            this.isSecond = true;
+            font.getData().setScale(4, 4);
+        } else if (this.isSecond) {
+            this.isSecond = false;
+            font.getData().setScale(3, 3);
+            newLine++;
+        }
+    }
+
+    /**
+     * Drawing the Game Over Screen. Contain the list of players sorted by the points and an button linking to the starting menu.
+     */
     public void drawGameOverScreen() {
 
-        pixmap.setColor(Color.BLACK);
+
+        pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
-        texture.draw(pixmap, 0, 0);
-        gameSpriteBatch.begin();
-        sprite.draw(gameSpriteBatch);
-        gameSpriteBatch.end();
+        this.mainStage.getBatch().begin();
+        font.getData().setScale(4, 4);
+        font.setColor(0, 0, 0, 1);
 
-        fontSpriteBatch.begin();
-        font.getData().setScale(7f);
-        font.setColor(Color.WHITE);
-        font.draw(fontSpriteBatch, "Game Over", 20, APPLICATION_HEIGHT - 20);
+        layout.setText(font, "Result of the round:");
+        font.draw(this.mainStage.getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2, newGameButton.getY() + NAME_OFFSET * 2);
 
-        int offset = 150;
+        font.getData().setScale(3, 3);
 
-        font.getData().setScale(5f);
-        HashMap<String, UIPlayerInformation> playerMap = UiState.getINSTANCE().getPlayerMap();
-        for (String winnerName : playerMap.keySet()) {
-            font.setColor(playerMap.get(winnerName).getColor());
-            font.draw(fontSpriteBatch, winnerName, 20, APPLICATION_HEIGHT - offset);
-            font.draw(fontSpriteBatch, playerMap.get(winnerName).getPoints(), 750, APPLICATION_HEIGHT - offset);
-            offset += 120;
+        SortedMap<Integer, ArrayList<PlayerHandler>> sortedMap = createSortedWinnerMap();
+
+        this.isWinner = true;
+        this.isSecond = false;
+        newLine = 0;
+        for (int i = sortedMap.size() - 1; i >= 0; i--) {
+            ArrayList<PlayerHandler> sortedMapValue = sortedMap.get(sortedMap.keySet().toArray()[i]);
+            if (sortedMapValue.size() > 1) {
+                for (PlayerHandler playerHandler : sortedMapValue) {
+                    checkPositioningPlayer();
+                    drawWinnerScreenPlayerDetails(playerHandler);
+                }
+            } else {
+                checkPositioningPlayer();
+                drawWinnerScreenPlayerDetails(sortedMapValue.get(0));
+            }
         }
 
-        fontSpriteBatch.end();
+        this.mainStage.getBatch().end();
+
+        returnButton = new TextButton("Back To Menu", skin);
+        returnButton.setPosition(Config.APPLICATION_WIDTH / 2 - 125f, Config.APPLICATION_HEIGHT / 6);
+        returnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideAllActors(mainStage);
+                menuShowing = true;
+                matchMenuShowing = false;
+            }
+        });
+        returnButton.setWidth(250f);
+        mainStage.addActor(returnButton);
+
+        mainStage.act();
+        mainStage.draw();
     }
 
     @Override
