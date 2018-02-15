@@ -89,10 +89,7 @@ public class Level {
     // See if new barrier position is too close to existing barrier
     private boolean isConflicting(List<Point2D> points, Point2D newPoint) {
         for (Point2D point : points) {
-            if (!point.equals(newPoint)) {
-                if (point.dst(newPoint) < Config.DISTANCE_BETWEEN_BARRIERS) {
-                    return true;
-                }
+            if (!point.equals(newPoint) && point.dst(newPoint) < Config.DISTANCE_BETWEEN_BARRIERS) {
             }
         }
         return false;
