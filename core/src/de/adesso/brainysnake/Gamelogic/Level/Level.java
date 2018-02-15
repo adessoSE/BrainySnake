@@ -1,6 +1,5 @@
 package de.adesso.brainysnake.Gamelogic.Level;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -11,7 +10,6 @@ import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.math.Point2D;
-import sun.awt.image.ImageWatched;
 
 public class Level {
 
