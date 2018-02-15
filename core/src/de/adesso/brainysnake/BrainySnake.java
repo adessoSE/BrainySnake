@@ -51,8 +51,6 @@ public class BrainySnake extends ApplicationAdapter {
     private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
     private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
-
     private OrthographicCamera mainCamera;
     private OrthographicCamera fontCamera;
 
