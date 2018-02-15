@@ -265,7 +265,6 @@ public class BrainySnake extends ApplicationAdapter {
         texture.dispose();
         gameSpriteBatch.dispose();
         pixmap.dispose();
-        gameSpriteBatch.dispose();
         backgroundSound.dispose();
     }
 
