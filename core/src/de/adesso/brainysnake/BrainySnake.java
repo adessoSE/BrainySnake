@@ -1,17 +1,16 @@
 package de.adesso.brainysnake;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,6 +20,7 @@ import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
@@ -28,7 +28,8 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.soap.Text;
+import java.util.HashMap;
+import java.util.List;
 
 public class BrainySnake extends ApplicationAdapter {
 
@@ -39,6 +40,7 @@ public class BrainySnake extends ApplicationAdapter {
     private SpriteBatch fontSpriteBatch;
     private Sprite sprite;
     private Pixmap pixmap;
+    private Music backgroundSound;
 
     private InputMultiplexer inputMultiplexer;
     private Stage mainStage;
@@ -86,6 +88,9 @@ public class BrainySnake extends ApplicationAdapter {
 
 
         texture = new Texture(pixmap);
+
+        backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.mp3"));
+        startPlayingMusic(backgroundSound);
 
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
@@ -226,6 +231,13 @@ public class BrainySnake extends ApplicationAdapter {
     /**
      * Drawing the StartScreen. Contains the button "New Game" and "Exit" and the logo of BrainySnake.
      */
+    private void startPlayingMusic(Music sound){
+        if(!sound.isPlaying()){
+            sound.setLooping(true);
+            sound.play();
+        }
+    }
+
     public void drawStartScreen() {
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
@@ -259,30 +271,6 @@ public class BrainySnake extends ApplicationAdapter {
         mainStage.draw();
     }
 
-    /**
-     * Creates the basic visual appearance of the stage. Styling of the TextButton.
-     */
-    private void createBasicSkin() {
-        //Create a font
-        BitmapFont font = new BitmapFont();
-        skin = new Skin();
-        skin.add("default", font);
-
-        //Create a texture
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        skin.add("background", new Texture(pixmap));
-
-        //Create a button style
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.newDrawable("background", Color.GRAY);
-        textButtonStyle.down = skin.newDrawable("background", Color.DARK_GRAY);
-        textButtonStyle.checked = skin.newDrawable("background", Color.DARK_GRAY);
-        textButtonStyle.over = skin.newDrawable("background", Color.LIGHT_GRAY);
-        textButtonStyle.font = skin.getFont("default");
-        skin.add("default", textButtonStyle);
-
-    }
     public void drawGameLoop() {
         // Redraw the head.
         pixmap.setColor(Color.BLACK);
@@ -308,8 +296,8 @@ public class BrainySnake extends ApplicationAdapter {
         font.getData().setScale(1f);
 
         font.setColor(Color.WHITE);
-        font.draw(fontSpriteBatch, "Rounds remaining: ", 20, APPLICATION_HEIGHT - 20 );
-        font.draw(fontSpriteBatch, UiState.getINSTANCE().getRoundsRemaining(), 165, APPLICATION_HEIGHT - 20 );
+        font.draw(fontSpriteBatch, "Rounds remaining: ", 20, APPLICATION_HEIGHT - 20);
+        font.draw(fontSpriteBatch, UiState.getINSTANCE().getRoundsRemaining(), 165, APPLICATION_HEIGHT - 20);
 
         HashMap<String, UIPlayerInformation> playerMap = UiState.getINSTANCE().getPlayerMap();
         int offset = 20;
@@ -354,14 +342,10 @@ public class BrainySnake extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        try {
-            texture.dispose();
-            gameSpriteBatch.dispose();
-            pixmap.dispose();
-        } catch (Exception e){
-            LOGGER.error(e.toString());
-        }
-
+        texture.dispose();
+        gameSpriteBatch.dispose();
+        pixmap.dispose();
+        backgroundSound.dispose();
     }
 
 }

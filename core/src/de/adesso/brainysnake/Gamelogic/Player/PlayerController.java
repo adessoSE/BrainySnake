@@ -29,31 +29,27 @@ public class PlayerController {
 
     private ExecutorService playerUpdateCallableExecutor;
 
-    public PlayerController(List<BrainySnakePlayer> playerList, Map<Orientation, Snake> playerGameObjects) {
+    public PlayerController(List<BrainySnakePlayer> playerList, LinkedList<Snake> playerGameObjects) {
 
-        // Shuffle Colors
-        List<Color> gameColors = Utils.getShuffledGameColors();
+        // Shuffle Player Colors
+        List<Color> playerColors = Utils.getShuffledGameColors();
 
-        if (playerList.size() > gameColors.size() || playerList.size() > playerGameObjects.size()) {
+        if (playerList.size() > playerColors.size() || playerList.size() > playerGameObjects.size()) {
             throw new IllegalArgumentException("Too many players");
         }
 
         // Shuffle Starting Positions
-        List<Orientation> startOrientations = new ArrayList<Orientation>();
-        startOrientations.addAll(playerGameObjects.keySet());
-        // Collections.shuffle(startOrientations);
+        LinkedList<Snake> snakeList = new LinkedList<>(playerGameObjects);
 
         // Add player to handler
         for (BrainySnakePlayer player : playerList) {
 
             // Build the PlayerHandler
-            Color color = gameColors.remove(gameColors.size() - 1);
-            Orientation startOrientation = startOrientations.remove(startOrientations.size() - 1);
+            Color color = playerColors.remove(playerColors.size() - 1);
+            Snake currentSnake = snakeList.removeFirst();
+            currentSnake.setColor(color);
 
-            Snake snake = playerGameObjects.remove(startOrientation);
-            snake.setColor(color);
-
-            this.playerHandlerList.add(new PlayerHandler(player, startOrientation, snake));
+            playerHandlerList.add(new PlayerHandler(player, currentSnake.getStartOrientation(), currentSnake));
         }
 
         // We need a Thread for every player
@@ -67,14 +63,15 @@ public class PlayerController {
         for (PlayerHandler playerHandler : playerHandlerFutureMap.keySet()) {
             Future<Boolean> hasProcessedFuture = playerHandlerFutureMap.get(playerHandler);
             try {
-                Boolean aBoolean = hasProcessedFuture.get(Config.MAX_AGENT_PROCESSING_TIME_MS, TimeUnit.MILLISECONDS);
+                hasProcessedFuture.get(Config.MAX_AGENT_PROCESSING_TIME_MS, TimeUnit.MILLISECONDS);
             } catch (InterruptedException e) {
-                LOGGER.error("PlayerController",
-                        "Player: " + playerHandler.getPlayerName() + " got Timeout after " + Config.MAX_AGENT_PROCESSING_TIME_MS + " ms", e);
+                LOGGER.error("Player: {} got Timeout after  {} ms {}", playerHandler.getPlayerName(), Config.MAX_AGENT_PROCESSING_TIME_MS, e );
+                        e.printStackTrace();
             } catch (ExecutionException e) {
-                LOGGER.error("PlayerController: ", "ExecutionException - " + e.getMessage());
+                LOGGER.error("ExecutionException {}" + e);
+                e.printStackTrace();
             } catch (TimeoutException e) {
-                LOGGER.error("PlayerController: ", "Waiting for Player " + playerHandler.getPlayerName() + " aborted. Timeout");
+                LOGGER.error("Waiting for Player {} aborted cause of Timeout", playerHandler.getPlayerName());
             }
         }
     }
@@ -117,6 +114,7 @@ public class PlayerController {
                 LOGGER.error("PlayerController: Future Operation was interrupted ", e.getMessage());
             } catch (ExecutionException e) {
                 LOGGER.error("PlayerController: ExecutionException ", e.getMessage());
+                e.printStackTrace();
             } catch (TimeoutException e) {
                 agentChoiceMap.put(playerHandler, PlayerChoice.createNoChoice());
                 playerHandler.kill();
