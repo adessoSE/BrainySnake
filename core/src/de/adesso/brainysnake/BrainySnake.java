@@ -2,6 +2,7 @@ package de.adesso.brainysnake;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,9 +18,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +37,7 @@ public class BrainySnake extends ApplicationAdapter {
     private SpriteBatch fontSpriteBatch;
     private Sprite sprite;
     private Pixmap pixmap;
+    private Music backgroundSound;
 
     private Stage mainStage;
     private InputMultiplexer inputMultiplexer;
@@ -69,6 +74,9 @@ public class BrainySnake extends ApplicationAdapter {
 
 
         texture = new Texture(pixmap);
+
+        backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.mp3"));
+        startPlayingMusic(backgroundSound);
 
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
@@ -122,6 +130,13 @@ public class BrainySnake extends ApplicationAdapter {
         mainCamera.setToOrtho(true, WIDTH, HEIGHT);
         fontCamera = new OrthographicCamera();
         fontCamera.setToOrtho(false, APPLICATION_WIDTH, APPLICATION_HEIGHT);
+    }
+
+    private void startPlayingMusic(Music sound){
+        if(!sound.isPlaying()){
+            sound.setLooping(true);
+            sound.play();
+        }
     }
 
     public void drawStartScreen() {
@@ -250,6 +265,8 @@ public class BrainySnake extends ApplicationAdapter {
         texture.dispose();
         gameSpriteBatch.dispose();
         pixmap.dispose();
+        gameSpriteBatch.dispose();
+        backgroundSound.dispose();
     }
 
 }
