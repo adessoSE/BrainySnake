@@ -142,14 +142,14 @@ public class BrainySnake extends ApplicationAdapter {
             return;
         }
 
-        drawGameLoop();
-
         timeSinceLastRender += Gdx.graphics.getDeltaTime();
         if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
             // Do the actual rendering, pass timeSinceLastRender as delta time.
             timeSinceLastRender = 0f;
             game.update(Gdx.graphics.getDeltaTime());
         }
+
+        drawGameLoop();
     }
 
     private void initializeCamera() {
@@ -178,8 +178,8 @@ public class BrainySnake extends ApplicationAdapter {
         mainStage.addActor(newGameButton);
 
         this.mainStage.getBatch().begin();
-        drawTitle("Amount of rounds: " + Config.MAX_ROUNDS, this.mainStage, this.newGameButton.getY());
-        drawAllPlayerNames(this.gameMaster.getPlayerController().getPlayerHandlerList(), this.mainStage, this.newGameButton.getY());
+        drawTitle("Amount of rounds: " +   Config.MAX_ROUNDS,this.mainStage,this.newGameButton.getY());
+        drawAllPlayerNames(this.gameMaster.getPlayerController().getPlayerHandlerList(),this.mainStage,this.newGameButton.getY());
         this.mainStage.getBatch().end();
 
         returnButton = new TextButton("Back To Menu", skin);
@@ -392,6 +392,7 @@ public class BrainySnake extends ApplicationAdapter {
      */
     public void drawGameOverScreen() {
 
+
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
 
@@ -429,10 +430,7 @@ public class BrainySnake extends ApplicationAdapter {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                for (Actor actor : mainStage.getActors()) {
-                    actor.setVisible(false);
-                }
-
+                hideAllActors(mainStage);
                 menuShowing = true;
                 matchMenuShowing = false;
             }
