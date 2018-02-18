@@ -15,6 +15,7 @@ import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
+import de.adesso.brainysnake.sampleplayer.SuperKI;
 import de.adesso.brainysnake.sampleplayer.YourPlayer;
 
 import static de.adesso.brainysnake.playercommon.RoundEvent.*;
@@ -23,7 +24,7 @@ public class GameMaster {
 
     // Create players
     private BrainySnakePlayer playerOne = new KeyBoardPlayer();
-    private BrainySnakePlayer yourPlayer = new YourPlayer();
+    private BrainySnakePlayer superKI = new SuperKI();
     private BrainySnakePlayer playerTwo = new SamplePlayer() {
 
         @Override
@@ -61,7 +62,7 @@ public class GameMaster {
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
         brainySnakePlayers.add(playerTwo);
-        brainySnakePlayers.add(yourPlayer);
+        brainySnakePlayers.add(superKI);
         //brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents

@@ -8,4 +8,5 @@ public enum Orientation {
     RIGHT,
     DOWN,
     LEFT,
+    AHEAD,
 }
