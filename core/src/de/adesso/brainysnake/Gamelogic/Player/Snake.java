@@ -45,6 +45,10 @@ public class Snake {
         setHead(nextPosition);
     }
 
+    public void removeHead(){
+        head.getPositions().removeLast();
+    }
+
     public void removeTail() {
         body.getPositions().removeLast();
     }
