@@ -1,10 +1,6 @@
 package de.adesso.brainysnake.Gamelogic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Color;
-
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
@@ -12,6 +8,10 @@ import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.playercommon.Field;
 import de.adesso.brainysnake.playercommon.PlayerView;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
 
@@ -23,7 +23,13 @@ public class Game {
 
     public GameMaster init(int levelHeight, int levelWidth) {
         level = new Level(levelHeight, levelWidth, Color.WHITE);
-        gameMaster = new GameMaster(level);
+        try {
+            gameMaster = new GameMaster(level);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return gameMaster;
     }
 

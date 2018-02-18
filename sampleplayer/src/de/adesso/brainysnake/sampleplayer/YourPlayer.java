@@ -12,6 +12,9 @@ public class YourPlayer implements BrainySnakePlayer {
 
     private PlayerState playerState;
 
+    public YourPlayer() {
+    }
+
     @Override
     public String getPlayerName() {
         return "YourName";

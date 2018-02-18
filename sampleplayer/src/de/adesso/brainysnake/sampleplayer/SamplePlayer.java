@@ -10,6 +10,9 @@ public class SamplePlayer implements BrainySnakePlayer {
     private PlayerState playerState;
     private PlayerView playerView;
 
+    public SamplePlayer() {
+    }
+
     @Override
     public String getPlayerName() {
         return "SamplePlayer";

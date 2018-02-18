@@ -1,7 +1,5 @@
 package de.adesso.brainysnake.Gamelogic;
 
-import java.util.*;
-
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
@@ -10,43 +8,25 @@ import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
-import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
-import de.adesso.brainysnake.sampleplayer.SamplePlayer;
-import de.adesso.brainysnake.sampleplayer.YourPlayer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 
 public class GameMaster {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameMaster.class.getName());
 
     public ArrayList<PlayerHandler> deadPlayer = new ArrayList<>();
-
-    // Create players
-    private BrainySnakePlayer playerOne = new KeyBoardPlayer();
-    private BrainySnakePlayer yourPlayer = new YourPlayer();
-    private BrainySnakePlayer playerTwo = new SamplePlayer() {
-
-        @Override
-        public String getPlayerName() {
-            return "SamplePlayer Two";
-        }
-    };
-    private BrainySnakePlayer playerThree = new SamplePlayer() {
-
-        @Override
-        public String getPlayerName() {
-            return "SamplePlayer Three";
-        }
-    };
-    private BrainySnakePlayer playerFour = new SamplePlayer() {
-
-        @Override
-        public String getPlayerName() {
-            return "SamplePlayer Four";
-        }
-    };
 
     // Add all Agents here
     private List<BrainySnakePlayer> brainySnakePlayers = new ArrayList<BrainySnakePlayer>();
@@ -56,15 +36,38 @@ public class GameMaster {
     private Level level;
     private boolean gameOver;
 
-    public GameMaster(Level level) {
+    public GameMaster(Level level) throws ClassNotFoundException, IOException {
         // Create UI ?
         this.level = level;
 
-        // Add agents to the game
-        brainySnakePlayers.add(playerOne);
-        brainySnakePlayers.add(playerTwo);
-        brainySnakePlayers.add(yourPlayer);
-        brainySnakePlayers.add(playerFour);
+            String pathToJar = "E:\\Directory42\\Adesso\\BrainySnake\\sampleplayer\\build\\libs\\sampleplayer-1.0.jar";
+            JarFile jarFile = new JarFile(pathToJar);
+            Enumeration<JarEntry> e = jarFile.entries();
+
+            URL[] urls = { new URL("jar:file:" + pathToJar+"!/") };
+            URLClassLoader cl = URLClassLoader.newInstance(urls);
+
+            while (e.hasMoreElements()) {
+                JarEntry je = e.nextElement();
+                if(je.isDirectory() || !je.getName().endsWith(".class")){
+                    continue;
+                }
+                // -6 because of .class
+                String className = je.getName().substring(0,je.getName().length()-6);
+                className = className.replace('/', '.');
+                Class c = cl.loadClass(className);
+                LOGGER.warn(c.getName());
+                Object obj = null;
+                try {
+                    obj = c.newInstance();
+                } catch (InstantiationException e1) {
+                    e1.printStackTrace();
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                }
+                BrainySnakePlayer actionObj = (BrainySnakePlayer) obj;
+                brainySnakePlayers.add(actionObj);
+            }
 
         // Build UI Models for the agents
         LinkedList<Snake> brainySnakePlayersUiModel = new LinkedList<>();

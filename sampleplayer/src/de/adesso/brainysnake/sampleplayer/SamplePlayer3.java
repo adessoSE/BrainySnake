@@ -1,7 +1,6 @@
 package de.adesso.brainysnake.sampleplayer;
 
 import de.adesso.brainysnake.playercommon.*;
-import de.adesso.brainysnake.playercommon.math.Point2D;
 
 
 /**
@@ -10,6 +9,9 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 public class SamplePlayer3 implements BrainySnakePlayer {
 
     private PlayerState playerState;
+
+    public SamplePlayer3() {
+    }
 
     @Override
     public String getPlayerName() {
