@@ -45,6 +45,11 @@ public class BrainySnake extends ApplicationAdapter {
     private SpriteBatch fontSpriteBatch;
     private Sprite sprite;
     private Pixmap pixmap;
+    private static int DOT_SITZE = Config.DOT_SIZE;
+    private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SITZE;
+    private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SITZE;
+    private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
+    private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
     private Music backgroundSound;
     private InputMultiplexer inputMultiplexer;
     private Stage mainStage;

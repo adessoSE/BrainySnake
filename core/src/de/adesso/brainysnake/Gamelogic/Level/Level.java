@@ -1,5 +1,9 @@
 package de.adesso.brainysnake.Gamelogic.Level;
 
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
@@ -30,6 +34,8 @@ public class Level {
 
     private int maxPointsInLevel = Config.MAX_POINTS_IN_LEVEL;
 
+    private LinkedList<Point2D> freeFields;
+
     public Level(int height, int width, Color color) {
         this.height = height;
         this.width = width;
@@ -42,37 +48,80 @@ public class Level {
      * @return a LinkedList with all Positions all Barriers
      */
     private LinkedList<Point2D> buildBarriers() {
-        LinkedList<Point2D> barriers = new LinkedList<Point2D>();
-        int gapBarriersX = width / 4;
-        int gapBarriersY = height / 3;
-
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 2; y++) {
-                barriers.addAll(addBarrier((x + 1) * gapBarriersX, (y + 1) * gapBarriersY));
+        // Create a list that contains every unoccupied field in the game
+        freeFields = new LinkedList<>();
+        for (int i = 0; i < Config.APPLICATION_WIDTH / Config.DOT_SIZE; i++) {
+            for (int j = 0; j < Config.APPLICATION_HEIGHT / Config.DOT_SIZE; j++) {
+                freeFields.add(new Point2D(i, j));
             }
         }
+        // Remove outer walls from list of free fields
+        freeFields.removeAll(buildOuterWalls());
 
+        return generateBarriers();
+    }
+
+    /**
+     * @return a list with all the barriers the level contains
+     */
+    private LinkedList<Point2D> generateBarriers() {
+
+        LinkedList<Point2D> barriers = new LinkedList<>();
+
+        LinkedList<Point2D> duplicate = (LinkedList) freeFields.clone();
+
+        // Number of barriers to be created, defined in config file.
+        for (int x = 0; x < Config.QUANTITY_BARRIERS; x++) {
+
+            Point2D newBarrierPosition = pickBarrierPosition();
+            /*
+            Make sure barriers don't overlap with level borders or other barriers.
+            Remove every conflicting point from duplicate list. If list is empty (i.e. no point fits in the level) stop checking.
+            Duplicate list is used so freeFields can still be used to place different level objects.
+             */
+            while (duplicate.size() > 0 && (isConflictingBarrier(barriers, newBarrierPosition) || isConflictingBorder(newBarrierPosition))) {
+                duplicate.removeAll(new Barrier(newBarrierPosition.getX(), newBarrierPosition.getY()).getBarrierDots());
+                newBarrierPosition = pickBarrierPosition();
+            }
+            if (duplicate.size() <= 0) {
+                return barriers;
+            }
+            duplicate.remove(newBarrierPosition);
+
+            freeFields.removeAll((new Barrier(newBarrierPosition.getX(), newBarrierPosition.getY()).getBarrierDots()));
+            barriers.addAll((new Barrier(newBarrierPosition.getX(), newBarrierPosition.getY()).getBarrierDots()));
+        }
         return barriers;
     }
 
     /**
-     * @return a LinkedList with the positions of the generated Barrier
+     * Generate a random position for the center of a barrier
+     *
+     * @return returns a random entry from the list of free fields
      */
-    private List<Point2D> addBarrier(int x, int y) {
-        List<Point2D> barrierDots = new ArrayList<Point2D>();
+    private Point2D pickBarrierPosition() {
+        int random = ThreadLocalRandom.current().nextInt(0, freeFields.size());
+        return freeFields.get(random);
+    }
 
-        barrierDots.add(new Point2D(x, y + 1));
-        barrierDots.add(new Point2D(x, y));
-        barrierDots.add(new Point2D(x, y - 1));
+    /**
+     * See if new barrier position is too close to existing barrier
+     *
+     * @param points   the list of existing points in the level
+     * @param newPoint the new point that has to be checked against the existing points
+     * @return true when there is a conflict between the new point and one of the existing points
+     */
+    private boolean isConflictingBarrier(List<Point2D> points, Point2D newPoint) {
+        for (Point2D point : points) {
+            if (!point.equals(newPoint) && point.dst(newPoint) < Config.DISTANCE_BETWEEN_BARRIERS) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-        barrierDots.add(new Point2D(x + 1, y + 1));
-        barrierDots.add(new Point2D(x + 1, y));
-        barrierDots.add(new Point2D(x + 1, y - 1));
-
-        barrierDots.add(new Point2D(x - 1, y + 1));
-        barrierDots.add(new Point2D(x - 1, y));
-        barrierDots.add(new Point2D(x - 1, y - 1));
-        return barrierDots;
+    private boolean isConflictingBorder(Point2D point) {
+        return (point.getX() > (width - 3) || point.getX() < 2 || point.getY() > (height - 3) || point.getY() < 2);
     }
 
     /**
@@ -225,7 +274,7 @@ public class Level {
      */
     public boolean tryConsumePoint(Point2D position) {
         for (Point2D point2D : points.getPositions()) {
-            if (point2D.x == position.x && point2D.y == position.y) {
+            if (point2D.equals(position)) {
                 return points.getPositions().remove(point2D);
             }
         }
