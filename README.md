@@ -11,8 +11,8 @@ During a game, multiple autonomous Snakes are loaded simultaneously and start ba
 ## Build Project for IntelliJ
 1. checkout project
 1. run **_gradlew idea_** or for reinit **_gradlew cleanidea idea_** in your favorite console
-(On Unix **:/gradlew cleanidea idea**)
-1. open the generated **.ipr** file or **gradlew desktop:run**
+(On Unix **./gradlew cleanidea idea**)
+1. open the generated **.ipr** file or **gradlew desktop:run** (On Unix **./gradlew run**)
 
 ## Create Desktop Run-Configuration in IntelliJ
 1. create a new Application Configuration

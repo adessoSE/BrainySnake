@@ -18,6 +18,14 @@ public class KeyBoardControl extends InputAdapter {
 
     public static boolean SPACE;
 
+    public static boolean A;
+
+    public static boolean D;
+
+    public static boolean W;
+
+    public static boolean S;
+
     public KeyBoardControl(Game game){
         this.game = game;
     }
@@ -42,6 +50,22 @@ public class KeyBoardControl extends InputAdapter {
         if (k == Input.Keys.SPACE ){
             SPACE = true;
         }
+        if (k == Input.Keys.A){
+            A = true;
+            W = S = D = false;
+        }
+        if (k == Input.Keys.D){
+            D = true;
+            W = A = S = false;
+        }
+        if (k == Input.Keys.W){
+            W = true;
+            A = S = D = false;
+        }
+        if (k == Input.Keys.S){
+            S = true;
+            A = W = D = false;
+        }
         return true;
     }
 
@@ -60,6 +84,18 @@ public class KeyBoardControl extends InputAdapter {
         }
         if (k == Input.Keys.SPACE){
             SPACE = false;
+        }
+        if (k == Input.Keys.S){
+            S = false;
+        }
+        if (k == Input.Keys.W){
+            W = false;
+        }
+        if (k == Input.Keys.A){
+            A = false;
+        }
+        if (k == Input.Keys.D){
+            D = false;
         }
         return true;
     }
