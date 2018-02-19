@@ -1,13 +1,12 @@
-package de.adesso.brainysnake.screens;
+package de.adesso.brainysnake.screenmanagement.screens;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
-import de.adesso.brainysnake.screens.AbstractScreen;
-import de.adesso.brainysnake.screens.ScreenManager;
-import de.adesso.brainysnake.screens.ScreenType;
+import de.adesso.brainysnake.screenmanagement.ScreenManager;
+import de.adesso.brainysnake.screenmanagement.ScreenType;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class MatchPreviewScreen extends AbstractScreen {
 
     private List<PlayerHandler> playerHandlerList;
 
-    MatchPreviewScreen(List<PlayerHandler> playerHandlerList) {
+    public MatchPreviewScreen(List<PlayerHandler> playerHandlerList) {
         this.playerHandlerList = playerHandlerList;
     }
 

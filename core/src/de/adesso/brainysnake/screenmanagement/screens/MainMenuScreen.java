@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.screens;
+package de.adesso.brainysnake.screenmanagement.screens;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,9 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.screens.AbstractScreen;
-import de.adesso.brainysnake.screens.ScreenManager;
-import de.adesso.brainysnake.screens.ScreenType;
+import de.adesso.brainysnake.screenmanagement.ScreenManager;
+import de.adesso.brainysnake.screenmanagement.ScreenType;
 
 //TODO rukl doc
 public class MainMenuScreen extends AbstractScreen {
@@ -22,7 +21,7 @@ public class MainMenuScreen extends AbstractScreen {
 
     private Image logoBrainySnake;
 
-    MainMenuScreen() {
+    public MainMenuScreen() {
 
     }
 

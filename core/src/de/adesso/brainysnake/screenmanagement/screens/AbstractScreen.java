@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.screens;
+package de.adesso.brainysnake.screenmanagement.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

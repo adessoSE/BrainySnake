@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.screens;
+package de.adesso.brainysnake.screenmanagement.screens;
 
 
 import de.adesso.brainysnake.BrainySnake;
@@ -8,7 +8,7 @@ public class GameScreen extends AbstractScreen {
 
     private BrainySnake brainySnake;
 
-    GameScreen(GameMaster gameMaster) {
+    public GameScreen(GameMaster gameMaster) {
         brainySnake = new BrainySnake(gameMaster);
     }
 
