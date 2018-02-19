@@ -63,7 +63,6 @@ public class GameMaster {
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
         brainySnakePlayers.add(playerTwo);
-        brainySnakePlayers.add(yourPlayer);
         brainySnakePlayers.add(playerFour);
 
         // Build UI Models for the agents
