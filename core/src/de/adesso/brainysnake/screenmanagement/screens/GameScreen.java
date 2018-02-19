@@ -1,9 +1,8 @@
-package de.adesso.brainysnake;
+package de.adesso.brainysnake.screens;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
+
+import de.adesso.brainysnake.BrainySnake;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
-import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 
 public class GameScreen extends AbstractScreen {
 

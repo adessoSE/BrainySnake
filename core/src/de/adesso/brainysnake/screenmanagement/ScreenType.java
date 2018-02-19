@@ -1,7 +1,7 @@
-package de.adesso.brainysnake;
+package de.adesso.brainysnake.screenmanagement;
 
 /**
- * Enum of existing Screens
+ * Enum of existing screenmanagement
  */
 public enum ScreenType {
     MAIN_MENU,

@@ -1,12 +1,16 @@
-package de.adesso.brainysnake;
+package de.adesso.brainysnake.screenmanagement;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import de.adesso.brainysnake.Gamelogic.GameController;
+import de.adesso.brainysnake.*;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
+import de.adesso.brainysnake.screenmanagement.screens.GameOverScreen;
+import de.adesso.brainysnake.screenmanagement.screens.GameScreen;
+import de.adesso.brainysnake.screenmanagement.screens.MainMenuScreen;
+import de.adesso.brainysnake.screenmanagement.screens.MatchPreviewScreen;
 
 //TODO rukl doc
 public class ScreenManager {

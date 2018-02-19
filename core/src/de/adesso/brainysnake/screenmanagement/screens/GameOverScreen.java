@@ -1,11 +1,15 @@
-package de.adesso.brainysnake;
+package de.adesso.brainysnake.screens;
 
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
+import de.adesso.brainysnake.screens.AbstractScreen;
+import de.adesso.brainysnake.screens.ScreenManager;
+import de.adesso.brainysnake.screens.ScreenType;
 
 import java.util.ArrayList;
 import java.util.List;

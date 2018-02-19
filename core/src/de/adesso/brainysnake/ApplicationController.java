@@ -1,6 +1,8 @@
 package de.adesso.brainysnake;
 
 import com.badlogic.gdx.Game;
+import de.adesso.brainysnake.screenmanagement.ScreenManager;
+import de.adesso.brainysnake.screenmanagement.ScreenType;
 
 //TODO rukl
 public class ApplicationController extends Game {

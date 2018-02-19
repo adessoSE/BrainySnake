@@ -43,7 +43,7 @@ public class BrainySnake extends ApplicationAdapter {
     private List<GameObject> gameObjects;
     private GameController gameController = new GameController();
 
-    BrainySnake(GameMaster gameMaster){
+    public BrainySnake(GameMaster gameMaster){
         gameController.init(gameMaster);
     }
 

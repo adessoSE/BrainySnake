@@ -1,4 +1,4 @@
-package de.adesso.brainysnake;
+package de.adesso.brainysnake.screens;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -6,6 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import de.adesso.brainysnake.Config;
+import de.adesso.brainysnake.screens.AbstractScreen;
+import de.adesso.brainysnake.screens.ScreenManager;
+import de.adesso.brainysnake.screens.ScreenType;
 
 //TODO rukl doc
 public class MainMenuScreen extends AbstractScreen {
