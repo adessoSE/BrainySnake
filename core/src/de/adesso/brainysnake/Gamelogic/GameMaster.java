@@ -90,6 +90,10 @@ public class GameMaster {
         return playerController;
     }
 
+    public void setGameOver(boolean gameState){
+        gameOver = gameState;
+    }
+
     public void gameLoop() {
 
         GlobalGameState.countMoves++;
