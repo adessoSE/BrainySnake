@@ -64,13 +64,8 @@ public class GameMaster {
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
         brainySnakePlayers.add(playerTwo);
-<<<<<<< HEAD
-        brainySnakePlayers.add(superKI);
-        //brainySnakePlayers.add(playerFour);
-=======
         brainySnakePlayers.add(yourPlayer);
         brainySnakePlayers.add(playerFour);
->>>>>>> master
 
         // Build UI Models for the agents
         LinkedList<Snake> brainySnakePlayersUiModel = new LinkedList<>();
