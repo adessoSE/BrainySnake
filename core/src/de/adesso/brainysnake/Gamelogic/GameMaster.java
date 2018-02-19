@@ -27,6 +27,7 @@ public class GameMaster {
     // Create players
     private BrainySnakePlayer playerOne = new KeyBoardPlayer();
     private BrainySnakePlayer superKI = new SuperKI();
+    private BrainySnakePlayer yourPlayer = new YourPlayer();
     private BrainySnakePlayer playerTwo = new SamplePlayer() {
 
         @Override
