@@ -23,7 +23,7 @@ public class PlayerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
 
-    private ArrayList<PlayerHandler> playerHandlerList = new ArrayList<PlayerHandler>();
+    private ArrayList<PlayerHandler> playerHandlerList = new ArrayList<>();
 
     private ExecutorService playerStatePushExecutor;
 
