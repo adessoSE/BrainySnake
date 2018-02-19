@@ -33,10 +33,6 @@ public class BrainySnake extends ApplicationAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(PlayerController.class.getName());
     private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
     private static int DOT_SIZE = 10;
-    private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SIZE;
-    private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SIZE;
-    private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
-    private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
     private final int NAME_OFFSET = 75;
     private final int BUTTON_OFFSET = 25;
     private Texture texture;
@@ -46,6 +42,11 @@ public class BrainySnake extends ApplicationAdapter {
     private SpriteBatch fontSpriteBatch;
     private Sprite sprite;
     private Pixmap pixmap;
+    private static int DOT_SITZE = Config.DOT_SIZE;
+    private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SITZE;
+    private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SITZE;
+    private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
+    private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
     private Music backgroundSound;
     private InputMultiplexer inputMultiplexer;
     private Stage mainStage;
