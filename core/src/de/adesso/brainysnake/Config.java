@@ -28,7 +28,7 @@ public class Config {
 
     public static Color DEAD_COLOR = Color.VIOLET;
     public static int BLINKING_SPEED = 5; // Blink length in Update-Calls
-    public static int QUANTITY_BARRIERS = 50;
+    public static int QUANTITY_BARRIERS = 5;
     // If there's not enough space to create each barrier with enough distance to the next barriers, not all barriers are created
     public static int DISTANCE_BETWEEN_BARRIERS = 10;
     public static final int INITIAL_PLAYER_LENGTH = 10;
