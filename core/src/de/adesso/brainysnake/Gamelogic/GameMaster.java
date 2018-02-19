@@ -1,7 +1,12 @@
 package de.adesso.brainysnake.Gamelogic;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 
+import com.sun.java.util.jar.pack.Package;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
@@ -22,6 +27,10 @@ import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 public class GameMaster {
 
     public ArrayList<PlayerHandler> deadPlayer = new ArrayList<>();
+
+    // Create a File object on the root of the directory
+    // containing the class file
+    File file = new File("C:\\Directory42\\SamplePlayers");
 
     // Create players
     private BrainySnakePlayer playerOne = new KeyBoardPlayer();
@@ -59,6 +68,21 @@ public class GameMaster {
     public GameMaster(Level level) {
         // Create UI ?
         this.level = level;
+        try {
+            // Convert File to a URL
+            URL url = file.toURL();          // file:/c:/class/
+            URL[] urls = new URL[]{url};
+
+            // Create a new class loader with the directory
+            ClassLoader loader = new URLClassLoader(urls);
+
+            // Load in the class; Class.childclass should be located in
+            // the directory file:/c:/class/user/information
+            Class cls = loader.loadClass("user.informatin.Class");
+            //brainySnakePlayers.add(cls);
+        } catch (MalformedURLException e) {
+        } catch (ClassNotFoundException e) {
+        }
 
         // Add agents to the game
         brainySnakePlayers.add(playerOne);
