@@ -13,7 +13,9 @@ import de.adesso.brainysnake.screenmanagement.screens.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO rukl doc
+/**
+ * Manage the current shown Screens in Game
+ */
 public class ScreenManager {
 
     private static ScreenManager INSTANCE = new ScreenManager();
