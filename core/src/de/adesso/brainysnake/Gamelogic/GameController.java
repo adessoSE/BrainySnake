@@ -1,10 +1,6 @@
 package de.adesso.brainysnake.Gamelogic;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Color;
-
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
@@ -13,18 +9,17 @@ import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.playercommon.Field;
 import de.adesso.brainysnake.playercommon.PlayerView;
 
-public class Game {
+import java.util.ArrayList;
+import java.util.List;
 
-    private Level level;
+public class GameController {
+
+    List<GameObject> gameObjects = new ArrayList<>();
 
     private GameMaster gameMaster;
 
-    List<GameObject> gameObjects = new ArrayList<GameObject>();
-
-    public GameMaster init(int levelHeight, int levelWidth) {
-        level = new Level(levelHeight, levelWidth, Color.WHITE);
-        gameMaster = new GameMaster(level);
-        return gameMaster;
+    public void init(GameMaster gameMaster) {
+        this.gameMaster = gameMaster;
     }
 
     public void update(float delta) {
@@ -32,6 +27,7 @@ public class Game {
     }
 
     public List<GameObject> draw(float delta) {
+        Level level = gameMaster.getLevel();
         gameObjects.add(level.getLevel());
         gameObjects.add(level.getBarriers());
         gameObjects.add(level.getPoints());
@@ -67,8 +63,8 @@ public class Game {
                 case POINT:
                     temp.setColor(Color.ORANGE);
                     break;
-              default:
-                  temp.setColor(Color.PINK);
+                default:
+                    temp.setColor(Color.PINK);
             }
 
             gameObject.add(temp);
