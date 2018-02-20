@@ -149,15 +149,11 @@ public class GameMaster {
                         collectedPoints--;
                         break;
                     case BIT_AGENT:
-                        if (!playerHandler.isGhostMode()) {
-                            collectedPoints++;
-                        }
+                        collectedPoints++;
                         break;
                     case BIT_BY_PLAYER:
                         // agent was Hit by another agent
-                        if (!playerHandler.isGhostMode()) {
-                            collectedPoints--;
-                        }
+                        collectedPoints--;
                         break;
                     case CONSUMED_POINT:
                         collectedPoints++;
