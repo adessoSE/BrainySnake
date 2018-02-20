@@ -100,6 +100,14 @@ public class GameMaster {
             return;
         }
 
+        for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
+            //update view of player
+            updateRoundForPlayer(playerHandler);
+
+            // calculates the playerState and updates the playercontroller via call
+            this.playerController.updatePlayerState(new GlobalGameState());
+        }
+
         Map<PlayerHandler, PlayerChoice> playerStatus = this.playerController.getPlayerStatus();
         for (PlayerHandler playerHandler : playerStatus.keySet()) {
             PlayerChoice playerChoice = playerStatus.get(playerHandler);
@@ -165,14 +173,6 @@ public class GameMaster {
 
         // spread new points in level
         level.spreadPoints();
-
-        for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
-            //update view of player
-            updateRoundForPlayer(playerHandler);
-
-            // calculates the playerState and updates the playercontroller via call
-            this.playerController.updatePlayerState(new GlobalGameState());
-        }
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             // reset data of player

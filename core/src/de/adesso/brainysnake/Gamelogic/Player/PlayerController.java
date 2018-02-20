@@ -3,14 +3,12 @@ package de.adesso.brainysnake.Gamelogic.Player;
 import java.util.*;
 import java.util.concurrent.*;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Utils;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
-import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import org.slf4j.Logger;
@@ -25,9 +23,9 @@ public class PlayerController {
 
     private ArrayList<PlayerHandler> playerHandlerList = new ArrayList<PlayerHandler>();
 
-    private ExecutorService playerStatePushExecutor;
+    private PlayerStatePushExecutorService playerStatePushExecutorService;
 
-    private ExecutorService playerUpdateCallableExecutor;
+    private PlayerUpdateGetExecutorService playerUpdateGetExecutorService;
 
     public PlayerController(List<BrainySnakePlayer> playerList, LinkedList<Snake> playerGameObjects) {
 
@@ -52,43 +50,20 @@ public class PlayerController {
             playerHandlerList.add(new PlayerHandler(player, currentSnake.getStartOrientation(), currentSnake));
         }
 
-        // We need a Thread for every player
-        playerStatePushExecutor = Executors.newFixedThreadPool(this.playerHandlerList.size());
-        playerUpdateCallableExecutor = Executors.newFixedThreadPool(this.playerHandlerList.size());
+        // create Thread handlers
+        this.playerStatePushExecutorService = new PlayerStatePushExecutorService(this.playerHandlerList, Config.MAX_AGENT_PROCESSING_TIME_MS);
+        this.playerUpdateGetExecutorService = new PlayerUpdateGetExecutorService(this.playerHandlerList, Config.MAX_AGENT_PROCESSING_TIME_MS);
     }
 
     public void updatePlayerState(GlobalGameState gameState) {
-        Map<PlayerHandler, Future<Boolean>> playerHandlerFutureMap = this.pushPlayerState(gameState);
-
-        for (PlayerHandler playerHandler : playerHandlerFutureMap.keySet()) {
-            Future<Boolean> hasProcessedFuture = playerHandlerFutureMap.get(playerHandler);
-            try {
-                hasProcessedFuture.get(Config.MAX_AGENT_PROCESSING_TIME_MS, TimeUnit.MILLISECONDS);
-            } catch (InterruptedException e) {
-                LOGGER.error("Player: {} got Timeout after  {} ms {}", playerHandler.getPlayerName(), Config.MAX_AGENT_PROCESSING_TIME_MS, e );
-                        e.printStackTrace();
-            } catch (ExecutionException e) {
-                LOGGER.error("ExecutionException {}" + e);
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                LOGGER.error("Waiting for Player {} aborted cause of Timeout", playerHandler.getPlayerName());
-            }
-        }
-    }
-
-    Map<PlayerHandler, Future<Boolean>> pushPlayerState(GlobalGameState gameState) {
-        Map<PlayerHandler, Future<Boolean>> playerPushes = new HashMap<PlayerHandler, Future<Boolean>>();
 
         for (PlayerHandler player : this.playerHandlerList) {
             player.calculatePlayerState(gameState);
-
-            Callable pushWorker = new PlayerStatePush(player);
-            Future pushProcessed = playerStatePushExecutor.submit(pushWorker);
-
-            playerPushes.put(player, pushProcessed);
         }
-        return playerPushes;
+
+        this.playerStatePushExecutorService.process();
     }
+
 
     /**
      * Returns the choice for every agent
@@ -98,51 +73,19 @@ public class PlayerController {
     public Map<PlayerHandler, PlayerChoice> getPlayerStatus() {
         Map<PlayerHandler, PlayerChoice> agentChoiceMap = new HashMap<PlayerHandler, PlayerChoice>();
 
-        // Updates from agents
-        Map<PlayerHandler, Future<PlayerUpdate>> playerHandlerFutureMap = this.requestPlayerUpdate();
+        Map<PlayerHandler, Optional<PlayerUpdate>> updates = this.playerUpdateGetExecutorService.process();
 
-        // Players choice
-        PlayerUpdate playerUpdate;
+        updates.forEach((playerHandler, playerUpdate) -> {
+            agentChoiceMap.put(playerHandler, handlePlayerUpdate(playerUpdate, playerHandler));
+        });
 
-        for (PlayerHandler playerHandler : playerHandlerFutureMap.keySet()) {
-
-            Future<PlayerUpdate> playerUpdateFuture = playerHandlerFutureMap.get(playerHandler);
-            try {
-                playerUpdate = playerUpdateFuture.get(Config.MAX_AGENT_PROCESSING_TIME_MS, TimeUnit.MILLISECONDS);
-                agentChoiceMap.put(playerHandler, handlePlayerUpdate(playerUpdate, playerHandler));
-            } catch (InterruptedException e) {
-                LOGGER.error("PlayerController: Future Operation was interrupted ", e.getMessage());
-            } catch (ExecutionException e) {
-                LOGGER.error("PlayerController: ExecutionException ", e.getMessage());
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                agentChoiceMap.put(playerHandler, PlayerChoice.createNoChoice());
-                playerHandler.kill();
-                LOGGER.error("PlayerController",
-                        "Player: " + playerHandler.getPlayerName() + " got Timeout after " + Config.MAX_AGENT_PROCESSING_TIME_MS + " ms and got killed ", e);
-                continue;
-            }
-
-        }
         return agentChoiceMap;
-    }
-
-    Map<PlayerHandler, Future<PlayerUpdate>> requestPlayerUpdate() {
-        Map<PlayerHandler, Future<PlayerUpdate>> playerUpdates = new HashMap<PlayerHandler, Future<PlayerUpdate>>();
-
-        for (PlayerHandler player : this.playerHandlerList) {
-            Callable<PlayerUpdate> request = new PlayerUpdateRequestCallable(player);
-            Future<PlayerUpdate> updateFuture = playerUpdateCallableExecutor.submit(request);
-            playerUpdates.put(player, updateFuture);
-        }
-        return playerUpdates;
     }
 
     public void shutdown() {
         // This will make the executor accept no new threads
         // and finish all existing threads in the queue
-        playerStatePushExecutor.shutdownNow();
-        playerUpdateCallableExecutor.shutdownNow();
+
 
         // Wait until all threads are finish
         // playerStatePushExecutor.awaitTermination();
@@ -182,12 +125,12 @@ public class PlayerController {
 
     }
 
-    private PlayerChoice handlePlayerUpdate(PlayerUpdate playerUpdate, PlayerHandler playerHandler) {
-        if (playerUpdate == null || playerUpdate.getNextStep() == null) {
+    private PlayerChoice handlePlayerUpdate(Optional<PlayerUpdate> playerUpdate, PlayerHandler playerHandler) {
+        if(!playerUpdate.isPresent() || playerUpdate.get().getNextStep() == null) {
             LOGGER.error("PlayerController", "Player: " + playerHandler.getPlayerName() + " returns invalid PlayerUpdate");
             return PlayerChoice.createNoChoice();
         }
-        return new PlayerChoice(playerUpdate.getNextStep());
+        return new PlayerChoice(playerUpdate.get().getNextStep());
     }
 
     public LinkedList<Point2D> getPlayerPositions() {
