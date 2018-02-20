@@ -31,11 +31,18 @@ public class PlayerHandler {
 
     private String playerName;
 
+    /**
+     * leave nothing to chance
+     * This id will identify the player and add its processing
+     */
+    private UUID playerIdentifier;
+
     public PlayerHandler(BrainySnakePlayer brainySnakePlayer, Orientation orientation, Snake snake) {
         this.brainySnakePlayer = brainySnakePlayer;
         this.currentOrientation = orientation;
         this.snake = snake;
-        this.playerName = (brainySnakePlayer.getPlayerName() == null || brainySnakePlayer.getPlayerName().isEmpty()) ? UUID.randomUUID().toString()
+        this.playerIdentifier = UUID.randomUUID();
+        this.playerName = (brainySnakePlayer.getPlayerName() == null || brainySnakePlayer.getPlayerName().isEmpty()) ? this.playerIdentifier.toString()
                 : this.brainySnakePlayer.getPlayerName().trim();
 
     }
@@ -247,5 +254,9 @@ public class PlayerHandler {
 
     public PlayerView getPlayerView() {
         return playerView;
+    }
+
+    public UUID getPlayerIdentifier() {
+        return playerIdentifier;
     }
 }
