@@ -15,11 +15,11 @@ import java.util.List;
 public class GameController {
 
     List<GameObject> gameObjects = new ArrayList<>();
+
     private GameMaster gameMaster;
 
-    public GameMaster init(GameMaster gameMaster) {
+    public void init(GameMaster gameMaster) {
         this.gameMaster = gameMaster;
-        return gameMaster;
     }
 
     public void update(float delta) {

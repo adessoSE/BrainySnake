@@ -24,6 +24,7 @@ public class MatchPreviewScreen extends AbstractScreen {
     private List<PlayerHandler> playerHandlerList;
 
     public MatchPreviewScreen(List<PlayerHandler> playerHandlerList) {
+        super();
         this.playerHandlerList = playerHandlerList;
     }
 
@@ -34,22 +35,16 @@ public class MatchPreviewScreen extends AbstractScreen {
 
     @Override
     public void initialize() {
-
         newGameButton = new TextButton("Start Game", defaultSkin);
         newGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - 250f, Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4);
         newGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ScreenManager.getINSTANCE().startGame();
+                ScreenManager.getINSTANCE().showScreen(ScreenType.GAME_SCREEN);
             }
         });
         newGameButton.setWidth(500f);
         addActor(newGameButton);
-
-        getBatch().begin();
-        drawTitle("Amount of rounds: " + Config.MAX_ROUNDS, this.newGameButton.getY());
-        drawAllPlayerNames(this.newGameButton.getY());
-        getBatch().end();
 
         returnButton = new TextButton("Back To Menu", defaultSkin);
         returnButton.setPosition(Config.APPLICATION_WIDTH / 2 - 125f, Config.APPLICATION_HEIGHT / 6);
@@ -95,6 +90,11 @@ public class MatchPreviewScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
+
+        getBatch().begin();
+        drawTitle("Amount of rounds: " + Config.MAX_ROUNDS, newGameButton.getY());
+        drawAllPlayerNames(newGameButton.getY());
+        getBatch().end();
     }
 
     @Override

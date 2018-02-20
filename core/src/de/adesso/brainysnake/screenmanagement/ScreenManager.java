@@ -7,10 +7,11 @@ import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.*;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
-import de.adesso.brainysnake.screenmanagement.screens.GameOverScreen;
-import de.adesso.brainysnake.screenmanagement.screens.GameScreen;
-import de.adesso.brainysnake.screenmanagement.screens.MainMenuScreen;
-import de.adesso.brainysnake.screenmanagement.screens.MatchPreviewScreen;
+import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
+import de.adesso.brainysnake.screenmanagement.screens.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //TODO rukl doc
 public class ScreenManager {
@@ -23,6 +24,10 @@ public class ScreenManager {
 
     private GameMaster gameMaster;
 
+    private ArrayList<PlayerDTO> playerDTOS;
+
+    private ArrayList<PlayerDTO> deadPlayerDTOS;
+
     private ScreenManager() {
 
     }
@@ -34,6 +39,7 @@ public class ScreenManager {
     // Initialization with the game class
     public void initialize(Game game) {
         this.game = game;
+        gameMaster = new GameMaster(new Level(HEIGHT, WIDTH, Color.WHITE));
     }
 
     public Screen showScreen(ScreenType screenType) {
@@ -50,31 +56,19 @@ public class ScreenManager {
                 break;
 
             case MATCHPREVIEW_SCREEN:
-                if (gameMaster == null) {
-                    throw new IllegalStateException("GameMaster is not initialized");
-                }
-
                 MatchPreviewScreen matchScreen = new MatchPreviewScreen(gameMaster.getPlayerHandler());
                 matchScreen.initialize();
                 setGameScreen(matchScreen);
                 break;
 
             case GAME_SCREEN:
-                if (gameMaster == null) {
-                    throw new IllegalStateException("GameMaster is not initialized");
-                }
-
                 GameScreen gameScreen = new GameScreen(gameMaster);
                 gameScreen.initialize();
                 setGameScreen(gameScreen);
                 break;
 
             case WINNER_SCREEN:
-                if (gameMaster == null) {
-                    throw new IllegalStateException("GameMaster is not initialized");
-                }
-
-                GameOverScreen gameOverScreen = new GameOverScreen(gameMaster.getPlayerHandler(), gameMaster.getDeadPlayer());
+                GameOverScreen gameOverScreen = new GameOverScreen(playerDTOS, deadPlayerDTOS);
                 gameOverScreen.initialize();
                 setGameScreen(gameOverScreen);
                 break;
@@ -95,17 +89,10 @@ public class ScreenManager {
         return newScreen;
     }
 
-    private void preLoadGame() {
-        gameMaster = new GameMaster(new Level(HEIGHT, WIDTH, Color.WHITE));
-    }
-
-    public void startGame() {
-        preLoadGame();
-        showScreen(ScreenType.GAME_SCREEN);
-    }
-
-    public void restartGame() {
-        showScreen(ScreenType.GAME_SCREEN);
+    public void finishGame(ArrayList<PlayerDTO>  player, ArrayList<PlayerDTO>  deadPlayer){
+        this.playerDTOS = player;
+        this.deadPlayerDTOS = deadPlayer;
+        showScreen(ScreenType.WINNER_SCREEN);
     }
 
     private void setGameScreen(Screen screen) {

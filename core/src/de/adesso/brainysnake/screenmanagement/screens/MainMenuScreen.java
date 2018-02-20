@@ -22,7 +22,7 @@ public class MainMenuScreen extends AbstractScreen {
     private Image logoBrainySnake;
 
     public MainMenuScreen() {
-
+        super();
     }
 
     @Override
@@ -32,6 +32,9 @@ public class MainMenuScreen extends AbstractScreen {
 
     @Override
     public void initialize() {
+
+
+
         TextureRegion region = new TextureRegion(new Texture("BrainySnake_Headline.png"), 0, 0, 629, 180);
         logoBrainySnake = new Image(region);
 
@@ -44,7 +47,7 @@ public class MainMenuScreen extends AbstractScreen {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ScreenManager.getINSTANCE().startGame();
+                ScreenManager.getINSTANCE().showScreen(ScreenType.MATCHPREVIEW_SCREEN);
             }
         });
         addActor(startGameButton);

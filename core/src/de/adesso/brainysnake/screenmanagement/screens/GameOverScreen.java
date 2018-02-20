@@ -2,7 +2,6 @@ package de.adesso.brainysnake.screenmanagement.screens;
 
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
@@ -22,13 +21,9 @@ public class GameOverScreen extends AbstractScreen {
 
     private static final int PLAYERNAMES_YOFFSET = 75;
 
-    private static final int BUTTON_OFFSET = 25;
-
-    private TextButton newGameButton, returnButton;
-
-    private Image logoBrainySnake;
-
     private GlyphLayout layout = new GlyphLayout();
+
+    private TextButton returnButton;
 
     private int newLine = 0;
 
@@ -36,12 +31,13 @@ public class GameOverScreen extends AbstractScreen {
 
     private boolean isSecond = !isWinner;
 
-    private List<PlayerHandler> playerHandlerList;
+    private List<PlayerDTO> player;
 
-    private ArrayList<PlayerHandler> deadPlayer;
+    private ArrayList<PlayerDTO> deadPlayer;
 
-    public GameOverScreen(List<PlayerHandler> playerHandlerList, ArrayList<PlayerHandler> deadPlayer) {
-        this.playerHandlerList = playerHandlerList;
+    public GameOverScreen(List<PlayerDTO> player, ArrayList<PlayerDTO> deadPlayer) {
+        super();
+        this.player = player;
         this.deadPlayer = deadPlayer;
     }
 
@@ -52,48 +48,6 @@ public class GameOverScreen extends AbstractScreen {
 
     @Override
     public void initialize() {
-
-        getBatch().begin();
-        defaultFont.getData().setScale(4, 4);
-        defaultFont.setColor(0, 0, 0, 1);
-
-
-        newGameButton = new TextButton("Restart Game", defaultSkin);
-        newGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - 250f, Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4);
-        newGameButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ScreenManager.getINSTANCE().restartGame();
-            }
-        });
-        newGameButton.setWidth(500f);
-        addActor(newGameButton);
-
-        layout.setText(defaultFont, "Result of the round:");
-        defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2, newGameButton.getY() + PLAYERNAMES_YOFFSET * 2);
-
-        defaultFont.getData().setScale(3, 3);
-
-        SortedMap<Integer, ArrayList<PlayerHandler>> sortedMap = createSortedWinnerMap();
-
-        this.isWinner = true;
-        this.isSecond = false;
-        newLine = 0;
-        for (int i = sortedMap.size() - 1; i >= 0; i--) {
-            ArrayList<PlayerHandler> sortedMapValue = sortedMap.get(sortedMap.keySet().toArray()[i]);
-            if (sortedMapValue.size() > 1) {
-                for (PlayerHandler playerHandler : sortedMapValue) {
-                    checkPositioningPlayer();
-                    drawWinnerScreenPlayerDetails(playerHandler);
-                }
-            } else {
-                checkPositioningPlayer();
-                drawWinnerScreenPlayerDetails(sortedMapValue.get(0));
-            }
-        }
-
-        getBatch().end();
-
         returnButton = new TextButton("Back To Menu", defaultSkin);
         returnButton.setPosition(Config.APPLICATION_WIDTH / 2 - 125f, Config.APPLICATION_HEIGHT / 6);
         returnButton.addListener(new ClickListener() {
@@ -111,20 +65,20 @@ public class GameOverScreen extends AbstractScreen {
      *
      * @return Keys are the score as Integer and the value is a ArrayList with the PlayerHandlers with this score
      */
-    public SortedMap<Integer, ArrayList<PlayerHandler>> createSortedWinnerMap() {
-        SortedMap<Integer, ArrayList<PlayerHandler>> sortedMap = new TreeMap<>();
-        for (PlayerHandler playerHandler : playerHandlerList) {
-            if (sortedMap.containsKey(playerHandler.getSnake().getAllSnakePositions().size())) {
-                sortedMap.get(playerHandler.getSnake().getAllSnakePositions().size()).add(playerHandler);
+    public SortedMap<Long, ArrayList<PlayerDTO>> createSortedWinnerMap() {
+        SortedMap<Long, ArrayList<PlayerDTO>> sortedMap = new TreeMap<>();
+        for (PlayerDTO playerHandler : player) {
+            if (sortedMap.containsKey(playerHandler.getSize())) {
+                sortedMap.get(playerHandler.getSize()).add(playerHandler);
             } else {
-                ArrayList<PlayerHandler> playerHandlers = new ArrayList<PlayerHandler>() {{
+                ArrayList<PlayerDTO> playerHandlers = new ArrayList<PlayerDTO>() {{
                     add(playerHandler);
                 }};
-                sortedMap.put(playerHandler.getSnake().getAllSnakePositions().size(), playerHandlers);
+                sortedMap.put(playerHandler.getSize(), playerHandlers);
             }
         }
         if (!deadPlayer.isEmpty()) {
-            sortedMap.put(0, deadPlayer);
+            sortedMap.put(0L, deadPlayer);
         }
         return sortedMap;
     }
@@ -147,19 +101,48 @@ public class GameOverScreen extends AbstractScreen {
     /**
      * Draws the player name and points on the mainStage. Information gets extracted from PlayerHandler.
      *
-     * @param playerHandler PlayerHandler provides all the needed information about the player
+     * @param {@link #PlayerDTO} provides all the needed information about the player
      */
-    public void drawWinnerScreenPlayerDetails(PlayerHandler playerHandler) {
-        defaultFont.setColor(playerHandler.getSnake().getHeadColor());
-        layout.setText(defaultFont, playerHandler.getSnake().getAllSnakePositions().size() + "");
-        defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 + 250, newGameButton.getY() - PLAYERNAMES_YOFFSET * newLine);
-        layout.setText(defaultFont, playerHandler.getPlayerName());
-        defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 - 50, newGameButton.getY() - PLAYERNAMES_YOFFSET * newLine++);
+    public void drawWinnerScreenPlayerDetails(PlayerDTO playerDTO) {
+        defaultFont.setColor(playerDTO.getColor());
+        layout.setText(defaultFont, Long.toString(playerDTO.getSize()));
+        defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 + 250, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) - PLAYERNAMES_YOFFSET * newLine);
+        layout.setText(defaultFont, playerDTO.getName());
+        defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 - 50, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) - PLAYERNAMES_YOFFSET * newLine++);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+
+        getBatch().begin();
+        defaultFont.getData().setScale(4, 4);
+        defaultFont.setColor(0, 0, 0, 1);
+
+        layout.setText(defaultFont, "Result of the round:");
+        defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) + 75 * 2);
+
+        defaultFont.getData().setScale(3, 3);
+
+        SortedMap<Long, ArrayList<PlayerDTO>> sortedMap = createSortedWinnerMap();
+
+        this.isWinner = true;
+        this.isSecond = false;
+        newLine = 0;
+        for (int i = sortedMap.size() - 1; i >= 0; i--) {
+            ArrayList<PlayerDTO> sortedMapValue = sortedMap.get(sortedMap.keySet().toArray()[i]);
+            if (sortedMapValue.size() > 1) {
+                for (PlayerDTO playerDTO : sortedMapValue) {
+                    checkPositioningPlayer();
+                    drawWinnerScreenPlayerDetails(playerDTO);
+                }
+            } else {
+                checkPositioningPlayer();
+                drawWinnerScreenPlayerDetails(sortedMapValue.get(0));
+            }
+        }
+
+        getBatch().end();
     }
 
     @Override

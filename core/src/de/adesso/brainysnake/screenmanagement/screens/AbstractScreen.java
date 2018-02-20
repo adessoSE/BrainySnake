@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import de.adesso.brainysnake.Config;
 
 //TODO rukl doc
 public abstract class AbstractScreen extends Stage implements Screen {
@@ -25,7 +26,7 @@ public abstract class AbstractScreen extends Stage implements Screen {
     private void createDefaultSkin() {
         defaultSkin.add("default", defaultFont);
 
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(Config.APPLICATION_WIDTH / 10, Config.APPLICATION_HEIGHT / 10, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         defaultSkin.add("background", new Texture(pixmap));
