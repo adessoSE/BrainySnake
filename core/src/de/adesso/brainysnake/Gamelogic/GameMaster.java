@@ -12,6 +12,8 @@ import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
+import de.adesso.brainysnake.ScreenManager;
+import de.adesso.brainysnake.ScreenType;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
@@ -21,7 +23,7 @@ import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 
 public class GameMaster {
 
-    public ArrayList<PlayerHandler> deadPlayer = new ArrayList<>();
+    private ArrayList<PlayerHandler> deadPlayer = new ArrayList<>();
 
     // Create players
     private BrainySnakePlayer playerOne = new KeyBoardPlayer();
@@ -49,15 +51,15 @@ public class GameMaster {
     };
 
     // Add all Agents here
-    private List<BrainySnakePlayer> brainySnakePlayers = new ArrayList<BrainySnakePlayer>();
+    private List<BrainySnakePlayer> brainySnakePlayers = new ArrayList<>();
 
     private PlayerController playerController;
 
     private Level level;
+
     private boolean gameOver;
 
     public GameMaster(Level level) {
-        // Create UI ?
         this.level = level;
 
         // Add agents to the game
@@ -71,12 +73,7 @@ public class GameMaster {
         brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
         brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
         brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
-        /*
-        brainySnakePlayersUiModel.put(UP, level.createStartingGameObject(UP, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(DOWN, level.createStartingGameObject(DOWN, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(RIGHT, level.createStartingGameObject(RIGHT, Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.put(LEFT, level.createStartingGameObject(LEFT, Config.INITIAL_PLAYER_LENGTH));
-        **/
+
         // The PlayerController capsules agent actions an calculations
         // The Controller will randomly assign agents to GameObjects
         playerController = new PlayerController(brainySnakePlayers, brainySnakePlayersUiModel);
@@ -97,7 +94,7 @@ public class GameMaster {
         List<PlayerHandler> winner = getWinner();
         if (winner.size() > 0) {
             gameOver = true;
-            return;
+            ScreenManager.getINSTANCE().showScreen(ScreenType.WINNER_SCREEN);
         }
 
         Map<PlayerHandler, PlayerChoice> playerStatus = this.playerController.getPlayerStatus();
@@ -209,7 +206,7 @@ public class GameMaster {
     }
 
     public List<PlayerHandler> getWinner() {
-        List<PlayerHandler> winner = new ArrayList<PlayerHandler>();
+        List<PlayerHandler> winner = new ArrayList<>();
         if (GlobalGameState.movesRemaining() <= 0) {
 
             int maxPoints =-1;
@@ -283,5 +280,13 @@ public class GameMaster {
 
     public boolean isGameOver() {
         return gameOver;
+    }
+
+    public ArrayList<PlayerHandler> getDeadPlayer() {
+        return deadPlayer;
+    }
+
+    public Level getLevel() {
+        return level;
     }
 }
