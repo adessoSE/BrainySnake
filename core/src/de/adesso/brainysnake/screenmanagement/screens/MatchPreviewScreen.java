@@ -5,11 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.GameBoard;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
-
-import java.util.List;
 
 /**
  * Drawing the MatchScreen. Contains the button "Start Game" and "Back to Menu", also displays the number of rounds and the names of the player.
@@ -75,9 +72,9 @@ public class MatchPreviewScreen extends AbstractScreen {
      */
     private void drawAllPlayerNames(Float positionY) {
         int i = 1;
-        for (PlayerDTO playerDTO: GameBoard.getINSTANCE().getPlayerDTO()) {
-            defaultFont.setColor(playerDTO.getColor());
-            defaultFont.draw(getBatch(), playerDTO.getName(), Config.APPLICATION_WIDTH / 2 - 200f, positionY - PLAYERNAMES_YOFFSET * i++);
+        for (PlayerBoard playerBoard : GameBoard.getINSTANCE().getPlayerBoards()) {
+            defaultFont.setColor(playerBoard.getColor());
+            defaultFont.draw(getBatch(), playerBoard.getName(), Config.APPLICATION_WIDTH / 2 - 200f, positionY - PLAYERNAMES_YOFFSET * i++);
         }
     }
 

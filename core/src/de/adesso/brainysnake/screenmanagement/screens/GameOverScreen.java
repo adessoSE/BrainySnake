@@ -6,12 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.GameBoard;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -60,13 +58,13 @@ public class GameOverScreen extends AbstractScreen {
      *
      * @return Keys are the score as Integer and the value is a ArrayList with the PlayerHandlers with this score
      */
-    public SortedMap<Long, ArrayList<PlayerDTO>> createSortedWinnerMap() {
-        SortedMap<Long, ArrayList<PlayerDTO>> sortedMap = new TreeMap<>();
-        for (PlayerDTO playerHandler : GameBoard.getINSTANCE().getPlayerDTO()) {
+    public SortedMap<Long, ArrayList<PlayerBoard>> createSortedWinnerMap() {
+        SortedMap<Long, ArrayList<PlayerBoard>> sortedMap = new TreeMap<>();
+        for (PlayerBoard playerHandler : GameBoard.getINSTANCE().getPlayerBoards()) {
             if (sortedMap.containsKey(playerHandler.getSize())) {
                 sortedMap.get(playerHandler.getSize()).add(playerHandler);
             } else {
-                ArrayList<PlayerDTO> playerHandlers = new ArrayList<PlayerDTO>() {{
+                ArrayList<PlayerBoard> playerHandlers = new ArrayList<PlayerBoard>() {{
                     add(playerHandler);
                 }};
                 sortedMap.put(playerHandler.getSize(), playerHandlers);
@@ -94,13 +92,13 @@ public class GameOverScreen extends AbstractScreen {
     /**
      * Draws the player name and points on the mainStage. Information gets extracted from PlayerHandler.
      *
-     * @param {@link #PlayerDTO} provides all the needed information about the player
+     * @param {@link #PlayerBoard} provides all the needed information about the player
      */
-    public void drawWinnerScreenPlayerDetails(PlayerDTO playerDTO) {
-        defaultFont.setColor(playerDTO.getColor());
-        layout.setText(defaultFont, Long.toString(playerDTO.getSize()));
+    public void drawWinnerScreenPlayerDetails(PlayerBoard playerBoard) {
+        defaultFont.setColor(playerBoard.getColor());
+        layout.setText(defaultFont, Long.toString(playerBoard.getSize()));
         defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 + 250, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) - PLAYERNAMES_YOFFSET * newLine);
-        layout.setText(defaultFont, playerDTO.getName());
+        layout.setText(defaultFont, playerBoard.getName());
         defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 - 50, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) - PLAYERNAMES_YOFFSET * newLine++);
     }
 
@@ -117,17 +115,17 @@ public class GameOverScreen extends AbstractScreen {
 
         defaultFont.getData().setScale(3, 3);
 
-        SortedMap<Long, ArrayList<PlayerDTO>> sortedMap = createSortedWinnerMap();
+        SortedMap<Long, ArrayList<PlayerBoard>> sortedMap = createSortedWinnerMap();
 
         this.isWinner = true;
         this.isSecond = false;
         newLine = 0;
         for (int i = sortedMap.size() - 1; i >= 0; i--) {
-            ArrayList<PlayerDTO> sortedMapValue = sortedMap.get(sortedMap.keySet().toArray()[i]);
+            ArrayList<PlayerBoard> sortedMapValue = sortedMap.get(sortedMap.keySet().toArray()[i]);
             if (sortedMapValue.size() > 1) {
-                for (PlayerDTO playerDTO : sortedMapValue) {
+                for (PlayerBoard playerBoard : sortedMapValue) {
                     checkPositioningPlayer();
-                    drawWinnerScreenPlayerDetails(playerDTO);
+                    drawWinnerScreenPlayerDetails(playerBoard);
                 }
             } else {
                 checkPositioningPlayer();

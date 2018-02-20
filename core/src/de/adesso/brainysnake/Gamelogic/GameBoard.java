@@ -5,7 +5,7 @@ import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 import de.adesso.brainysnake.sampleplayer.YourPlayer;
-import de.adesso.brainysnake.screenmanagement.screens.PlayerDTO;
+import de.adesso.brainysnake.screenmanagement.screens.PlayerBoard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,10 +21,10 @@ public class GameBoard {
     private static final GameBoard INSTANCE = new GameBoard();
 
     // Add all Agents here
-    private Map<Color, BrainySnakePlayer> brainySnakePlayers;
+    private Map<Long, PlayerBoard> brainySnakePlayers;
 
     private GameBoard() {
-        List<BrainySnakePlayer> playerlist = createBrainySnakePlayerList();
+        List<PlayerBoard> playerlist = createBrainySnakePlayerList();
         brainySnakePlayers = createPlayerMap(playerlist, Utils.getShuffledPlayerColor(playerlist.size()));
     }
 
@@ -32,7 +32,7 @@ public class GameBoard {
         return INSTANCE;
     }
 
-    private List<BrainySnakePlayer> createBrainySnakePlayerList() {
+    private List<PlayerBoard> createBrainySnakePlayerList() {
 
         //crate BrainySnakePlayer manualy
         BrainySnakePlayer playerOne = new KeyBoardPlayer();
@@ -59,10 +59,10 @@ public class GameBoard {
         };
 
         // Add agents to the game
-        List<BrainySnakePlayer> playerList = new ArrayList<>();
-        playerList.add(playerOne);
-        playerList.add(playerTwo);
-        playerList.add(playerFour);
+        List<PlayerBoard> playerList = new ArrayList<>();
+        playerList.add(new PlayerBoard(playerOne));
+        playerList.add(new PlayerBoard(playerTwo));
+        playerList.add(new PlayerBoard(playerFour));
 
         return playerList;
     }
@@ -75,33 +75,33 @@ public class GameBoard {
      * @return Map of {@link BrainySnakePlayer} mapped to Color of Player {@link Color}
      */
     //TODO rukl TESTS
-    Map<Color, BrainySnakePlayer> createPlayerMap(List<BrainySnakePlayer> brainySnakePlayers, List<Color> playerColors) {
+    Map<Long, PlayerBoard> createPlayerMap(List<PlayerBoard> brainySnakePlayers, List<Color> playerColors) {
 
         if (brainySnakePlayers.size() > playerColors.size()) {
             throw new IllegalStateException("Not enough Playercolors available");
         }
 
-        Map<Color, BrainySnakePlayer> playerMap = new HashMap<>();
+        Map<Long, PlayerBoard> playerMap = new HashMap<>();
         for (int i = 0; i < brainySnakePlayers.size(); i++) {
-            playerMap.put(playerColors.get(i), brainySnakePlayers.get(i));
+            PlayerBoard tempPlayer = brainySnakePlayers.get(i);
+            tempPlayer.setColor(playerColors.get(i));
+            playerMap.put(Long.valueOf(i), tempPlayer);
         }
 
         return playerMap;
     }
 
-    //TODO rukl rename and implement
-    public List<PlayerDTO> getPlayerDTO(){
+    public List<PlayerBoard> getPlayerBoards(){
 
-        List<PlayerDTO> test = new ArrayList<>();
-        test.add(new PlayerDTO("asdf 1", Color.BLUE, 5));
-        test.add(new PlayerDTO("asdf 1", Color.YELLOW, 5));
-        test.add(new PlayerDTO("asdf 1", Color.CYAN, 7));
-        test.add(new PlayerDTO("asdf 1", Color.ORANGE, 2));
+        List<PlayerBoard> playerList = new ArrayList<>();
+        for (PlayerBoard playerBoard : brainySnakePlayers.values()) {
+            playerList.add(playerBoard);
+        }
 
-        return test;
+        return playerList;
     }
 
-    public Map<Color, BrainySnakePlayer> getBrainySnakePlayers() {
+    public Map<Long, PlayerBoard> getBrainySnakePlayers() {
         return brainySnakePlayers;
     }
 }

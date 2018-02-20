@@ -1,22 +1,31 @@
 package de.adesso.brainysnake.screenmanagement.screens;
 
 import com.badlogic.gdx.graphics.Color;
+import de.adesso.brainysnake.Config;
+import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 
-//TODO rukl rename
-public class PlayerDTO {
+/**
+ * Business object for the score and game properties of a player
+ */
+public class PlayerBoard {
+
+    private BrainySnakePlayer brainySnakePlayer;
 
     private String name;
 
-    private Color color;
+    private Color color = Config.DEAD_COLOR;
 
-    private long size;
+    private long size = 0;
 
-    private boolean isDead;
+    private boolean isDead = false;
 
-    public PlayerDTO(String name, Color color, long size){
-        this.name = name;
-        this.color = color;
-        this.size = size;
+    public PlayerBoard(BrainySnakePlayer brainySnakePlayer) {
+        this.brainySnakePlayer = brainySnakePlayer;
+        this.name = brainySnakePlayer.getPlayerName();
+    }
+
+    public BrainySnakePlayer getBrainySnakePlayer() {
+        return brainySnakePlayer;
     }
 
     public String getName() {

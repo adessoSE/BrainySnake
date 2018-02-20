@@ -1,6 +1,5 @@
 package de.adesso.brainysnake.Gamelogic;
 
-import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
@@ -15,7 +14,6 @@ import de.adesso.brainysnake.playercommon.RoundEvent;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
-import de.adesso.brainysnake.screenmanagement.screens.PlayerDTO;
 
 import java.util.ArrayList;
 import java.util.List;

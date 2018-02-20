@@ -3,11 +3,9 @@ package de.adesso.brainysnake.screenmanagement;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.*;
 import de.adesso.brainysnake.Gamelogic.GameBoard;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
-import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.screenmanagement.screens.*;
 
 import java.util.ArrayList;
@@ -25,9 +23,9 @@ public class ScreenManager {
 
     private GameMaster gameMaster;
 
-    private ArrayList<PlayerDTO> playerDTOS;
+    private ArrayList<PlayerBoard> playerBoards;
 
-    private ArrayList<PlayerDTO> deadPlayerDTOS;
+    private ArrayList<PlayerBoard> deadPlayerBoards;
 
     private ScreenManager() {
 
@@ -90,9 +88,9 @@ public class ScreenManager {
         return newScreen;
     }
 
-    public void finishGame(ArrayList<PlayerDTO>  player, ArrayList<PlayerDTO>  deadPlayer){
-        this.playerDTOS = player;
-        this.deadPlayerDTOS = deadPlayer;
+    public void finishGame(ArrayList<PlayerBoard>  player, ArrayList<PlayerBoard>  deadPlayer){
+        this.playerBoards = player;
+        this.deadPlayerBoards = deadPlayer;
         showScreen(ScreenType.GAME_OVER_SCREEN);
     }
 

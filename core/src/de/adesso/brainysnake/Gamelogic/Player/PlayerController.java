@@ -1,20 +1,15 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
-import java.util.*;
-import java.util.concurrent.*;
-
-import com.badlogic.gdx.graphics.Color;
-
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
-import de.adesso.brainysnake.Gamelogic.UI.UiState;
-import de.adesso.brainysnake.Gamelogic.Utils;
-import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
-import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import de.adesso.brainysnake.screenmanagement.screens.PlayerBoard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.concurrent.Callable;
 
 /**
  * Encapsulates thread- calls to the agents
@@ -29,12 +24,12 @@ public class PlayerController {
 
     private PlayerUpdateGetExecutorService playerUpdateGetExecutorService;
 
-    public PlayerController(Map<Color, BrainySnakePlayer> playerMap, Level level) {
+    public PlayerController(Map<Long, PlayerBoard> playerMap, Level level) {
 
         // Add player to handler
-        for (Color playerColor : playerMap.keySet()) {
-            Snake newPlayerSnake = level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH, playerColor);
-            playerHandlerList.add(new PlayerHandler(playerMap.get(playerColor), newPlayerSnake));
+        for (PlayerBoard player : playerMap.values()) {
+            Snake newPlayerSnake = level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH, player.getColor());
+            playerHandlerList.add(new PlayerHandler(player.getBrainySnakePlayer(), newPlayerSnake));
         }
 
         // create Thread handlers
@@ -79,38 +74,8 @@ public class PlayerController {
         return playerHandlerList;
     }
 
-    class PlayerStatePush implements Callable<Boolean> {
-
-        private PlayerHandler playerHandler;
-
-        public PlayerStatePush(PlayerHandler playerHandler) {
-            this.playerHandler = playerHandler;
-        }
-
-        @Override
-        public Boolean call() throws Exception {
-            return playerHandler.sendPlayerState();
-        }
-
-    }
-
-    class PlayerUpdateRequestCallable implements Callable<PlayerUpdate> {
-
-        private PlayerHandler playerHandler;
-
-        public PlayerUpdateRequestCallable(PlayerHandler playerHandler) {
-            this.playerHandler = playerHandler;
-        }
-
-        @Override
-        public PlayerUpdate call() throws Exception {
-            return playerHandler.requestPlayerUpdate();
-        }
-
-    }
-
     private PlayerChoice handlePlayerUpdate(Optional<PlayerUpdate> playerUpdate, PlayerHandler playerHandler) {
-        if(!playerUpdate.isPresent() || playerUpdate.get().getNextStep() == null) {
+        if (!playerUpdate.isPresent() || playerUpdate.get().getNextStep() == null) {
             LOGGER.error("PlayerController", "Player: " + playerHandler.getPlayerIdentifier() + " returns invalid PlayerUpdate");
             return PlayerChoice.createNoChoice();
         }
@@ -141,5 +106,35 @@ public class PlayerController {
         for (PlayerHandler deadPlayer : deadPlayers) {
             playerHandlerList.remove(deadPlayer);
         }
+    }
+
+    class PlayerStatePush implements Callable<Boolean> {
+
+        private PlayerHandler playerHandler;
+
+        public PlayerStatePush(PlayerHandler playerHandler) {
+            this.playerHandler = playerHandler;
+        }
+
+        @Override
+        public Boolean call() throws Exception {
+            return playerHandler.sendPlayerState();
+        }
+
+    }
+
+    class PlayerUpdateRequestCallable implements Callable<PlayerUpdate> {
+
+        private PlayerHandler playerHandler;
+
+        public PlayerUpdateRequestCallable(PlayerHandler playerHandler) {
+            this.playerHandler = playerHandler;
+        }
+
+        @Override
+        public PlayerUpdate call() throws Exception {
+            return playerHandler.requestPlayerUpdate();
+        }
+
     }
 }
