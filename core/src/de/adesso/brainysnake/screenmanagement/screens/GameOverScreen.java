@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
+import de.adesso.brainysnake.Gamelogic.GameBoard;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
@@ -31,14 +32,8 @@ public class GameOverScreen extends AbstractScreen {
 
     private boolean isSecond = !isWinner;
 
-    private List<PlayerDTO> player;
-
-    private ArrayList<PlayerDTO> deadPlayer;
-
-    public GameOverScreen(List<PlayerDTO> player, ArrayList<PlayerDTO> deadPlayer) {
+    public GameOverScreen() {
         super();
-        this.player = player;
-        this.deadPlayer = deadPlayer;
     }
 
     @Override
@@ -67,7 +62,7 @@ public class GameOverScreen extends AbstractScreen {
      */
     public SortedMap<Long, ArrayList<PlayerDTO>> createSortedWinnerMap() {
         SortedMap<Long, ArrayList<PlayerDTO>> sortedMap = new TreeMap<>();
-        for (PlayerDTO playerHandler : player) {
+        for (PlayerDTO playerHandler : GameBoard.getINSTANCE().getPlayerDTO()) {
             if (sortedMap.containsKey(playerHandler.getSize())) {
                 sortedMap.get(playerHandler.getSize()).add(playerHandler);
             } else {
@@ -77,9 +72,7 @@ public class GameOverScreen extends AbstractScreen {
                 sortedMap.put(playerHandler.getSize(), playerHandlers);
             }
         }
-        if (!deadPlayer.isEmpty()) {
-            sortedMap.put(0L, deadPlayer);
-        }
+
         return sortedMap;
     }
 

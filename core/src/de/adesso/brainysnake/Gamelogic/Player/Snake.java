@@ -1,12 +1,12 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
-import java.util.LinkedList;
-
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+
+import java.util.LinkedList;
 
 public class Snake {
 
@@ -20,12 +20,27 @@ public class Snake {
 
     private Orientation startOrientation;
 
-    public Snake(GameObject head, GameObject body, Orientation orientation) {
+    public Snake(GameObject head, GameObject body, Orientation orientation, Color color) {
         this.head = head;
         this.body = body;
         startOrientation = orientation;
-        headColor = head.getColor();
-        bodyColor = body.getColor();
+        setHeadAndBodyColor(color);
+    }
+
+    /**
+     * Sets the color of the snake. The head gets exactly the desired color.
+     * The body is set lighter at Config.SNAKE_BODY_LIGHTING
+     *
+     * @param color
+     */
+    //TODO rukl test
+    public void setHeadAndBodyColor(Color color) {
+        headColor = new Color(color);
+        bodyColor = new Color(color);
+        bodyColor.a = Config.SNAKE_BODY_LIGHTING;
+
+        head.setColor(headColor);
+        body.setColor(bodyColor);
     }
 
     public Point2D getHeadPosition() {
@@ -36,16 +51,12 @@ public class Snake {
         return body.getPositions().get(0);
     }
 
-    private void setHead(Point2D head) {
-        this.head.getPositions().set(0, head);
-    }
-
     public void setNextPosition(Point2D nextPosition) {
         body.getPositions().addFirst(getHeadPosition());
         setHead(nextPosition);
     }
 
-    public void removeHead(){
+    public void removeHead() {
         head.getPositions().removeLast();
     }
 
@@ -71,32 +82,27 @@ public class Snake {
         return getHeadPosition().equals(position) || body.getPositions().contains(position);
     }
 
-    public void setColor(Color color) {
-        headColor = new Color(color);
-        bodyColor = new Color(color);
-        bodyColor.a = Config.SNAKE_BODY_LIGHTING;
-
-        head.setColor(headColor);
-        body.setColor(bodyColor);
-    }
-
     public GameObject getHead() {
         return head;
+    }
+
+    private void setHead(Point2D head) {
+        this.head.getPositions().set(0, head);
     }
 
     public GameObject getBody() {
         return body;
     }
 
-    public Orientation getStartOrientation(){
+    public Orientation getStartOrientation() {
         return startOrientation;
     }
 
-    public int countPoints(){
+    public int countPoints() {
         return head.getPositions().size() + body.getPositions().size();
     }
 
-    public LinkedList<Point2D> getAllSnakePositions(){
+    public LinkedList<Point2D> getAllSnakePositions() {
         LinkedList<Point2D> positions = new LinkedList<Point2D>();
         positions.addAll(head.getPositions());
         positions.addAll(body.getPositions());

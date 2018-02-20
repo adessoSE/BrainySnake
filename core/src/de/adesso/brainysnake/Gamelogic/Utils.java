@@ -3,14 +3,17 @@ package de.adesso.brainysnake.Gamelogic;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
 
     /**
      * Return values of GridPoint2 as Point2D
+     *
      * @param gridPoint2
      * @return GridPoint2 as Point2D
      */
@@ -20,32 +23,33 @@ public class Utils {
 
     /**
      * Return values of Vector2 as Point2D
+     *
      * @param vector2
      * @return Vector2 as Point2D
      */
     public static Point2D fromVector2(Vector2 vector2) {
-        return new Point2D((int)vector2.x,(int) vector2.y);
+        return new Point2D((int) vector2.x, (int) vector2.y);
     }
 
     /**
-     * @return List of four valid Colors for Player
+     * List of shuffled Player Colors
+     *
+     * @param count Needed amount of Colors in List. Can not be more than Config.PLAYER_COLOR
+     * @return List of Color
      */
-    public static List<Color> getValidPlayerColors() {
-        List<Color> playerColors = new ArrayList<>();
-        playerColors.add(Color.BLUE);
-        playerColors.add(Color.GREEN);
-        playerColors.add(Color.ORANGE);
-        playerColors.add(Color.CYAN);
-        return playerColors;
-    }
+    public static List<Color> getShuffledPlayerColor(int count) {
+        List<Color> validPlayerColors = Config.PLAYER_COLORS;
 
-    /**
-     * @return List of four shuffled Player Colors {@link #getValidPlayerColors()}
-     */
-    public static List<Color> getShuffledGameColors() {
-        List<Color> validPlayerColors = getValidPlayerColors();
-        Collections.shuffle(validPlayerColors);
-        return validPlayerColors;
+        if (count > validPlayerColors.size()) {
+            throw new IllegalStateException("Not enough valid Playercolor available");
+        }
+
+        List<Color> colorList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            colorList.add(new Color(validPlayerColors.get(i)));
+        }
+
+        return colorList;
     }
 
 }

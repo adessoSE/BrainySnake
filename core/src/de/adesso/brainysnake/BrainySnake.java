@@ -11,6 +11,7 @@ import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.GameController;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
@@ -45,6 +46,7 @@ public class BrainySnake extends ApplicationAdapter {
 
     public BrainySnake(GameMaster gameMaster){
         gameController.init(gameMaster);
+        gameMaster.initialize(new Level(HEIGHT, WIDTH));
     }
 
     @Override

@@ -72,14 +72,4 @@ public class GameController {
 
         return gameObject;
     }
-
-    public void reset() {
-        gameObjects.clear();
-    }
-
-
-    public boolean isGameOver() {
-        return gameMaster.isGameOver();
-    }
-
 }

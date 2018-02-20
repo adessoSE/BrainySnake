@@ -1,23 +1,27 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
+import com.badlogic.gdx.Gdx;
+import de.adesso.brainysnake.Config;
+import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
+import de.adesso.brainysnake.Gamelogic.PlayerViewHelper;
+import de.adesso.brainysnake.playercommon.*;
+import de.adesso.brainysnake.playercommon.math.Point2D;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.badlogic.gdx.Gdx;
-import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
-import de.adesso.brainysnake.playercommon.*;
-import de.adesso.brainysnake.playercommon.math.Point2D;
-
-//TODO Technisch von Logisch trennen
+/**
+ * Technical object of a player as Snake.
+ * Holds meta-information for rendering the Snake object
+ */
 public class PlayerHandler {
 
     private Orientation currentOrientation;
 
     private BrainySnakePlayer brainySnakePlayer;
 
-    private List<RoundEvent> roundEvents = new ArrayList<RoundEvent>();
+    private List<RoundEvent> roundEvents = new ArrayList<>();
 
     private PlayerView playerView;
 
@@ -29,26 +33,17 @@ public class PlayerHandler {
 
     private Snake snake;
 
-    private String playerName;
-
     /**
      * leave nothing to chance
      * This id will identify the player and add its processing
      */
     private UUID playerIdentifier;
 
-    public PlayerHandler(BrainySnakePlayer brainySnakePlayer, Orientation orientation, Snake snake) {
+    public PlayerHandler(BrainySnakePlayer brainySnakePlayer, Snake snake) {
         this.brainySnakePlayer = brainySnakePlayer;
-        this.currentOrientation = orientation;
+        this.currentOrientation = snake.getStartOrientation();
         this.snake = snake;
         this.playerIdentifier = UUID.randomUUID();
-        this.playerName = (brainySnakePlayer.getPlayerName() == null || brainySnakePlayer.getPlayerName().isEmpty()) ? this.playerIdentifier.toString()
-                : this.brainySnakePlayer.getPlayerName().trim();
-
-    }
-
-    public String getPlayerName() {
-        return this.playerName;
     }
 
     public void update() {
@@ -91,15 +86,15 @@ public class PlayerHandler {
     /**
      * Calculates the next PlayerState from global GameData
      */
-    public void calculatePlayerState(GlobalGameState gameState) {
+    public void calculatePlayerState() {
 
         int points = snake.countPoints();
         Point2D head = snake.getHeadPosition();
         Point2D tail;
-        if(points > 1){
-        tail = snake.getTailPosition();
+        if (points > 1) {
+            tail = snake.getTailPosition();
         } else {
-        tail = null;
+            tail = null;
         }
         int ghostModeRemaining = Config.GHOST_TIME - ghostTime;
 
@@ -121,12 +116,12 @@ public class PlayerHandler {
             }
         }
 
-        this.lastPlayerState = new PlayerState(GlobalGameState.countMoves, GlobalGameState.movesRemaining(), points, head, tail,ghostMode, ghostModeRemaining, bitByPlayer, moved, collisionWithLevel, playerView);
+        this.lastPlayerState = new PlayerState(GlobalGameState.countMoves, GlobalGameState.movesRemaining(), points, head, tail, ghostMode, ghostModeRemaining, bitByPlayer, moved, collisionWithLevel, playerView);
     }
 
     /**
      * Sends the last PlayerState to the Agent Warning: Call this Method from Thread or Test only
-     * 
+     *
      * @return if processing was successful. (This can be ignored)
      */
     Boolean sendPlayerState() {
@@ -135,7 +130,7 @@ public class PlayerHandler {
 
     /**
      * Requests the next Update (step) from the Agent (Player) Warning: Call this Method from Thread or Test only
-     * 
+     *
      * @return PlayerUpdate (this can be null
      */
     PlayerUpdate requestPlayerUpdate() {
@@ -197,7 +192,7 @@ public class PlayerHandler {
         return snake;
     }
 
-    public Point2D getHeadPosition(){
+    public Point2D getHeadPosition() {
         return snake.getHeadPosition();
     }
 
@@ -236,16 +231,12 @@ public class PlayerHandler {
         return true;
     }
 
-    public void setCurrentOrientation(Orientation currentOrientation) {
-        this.currentOrientation = currentOrientation;
-    }
-
     public Orientation getCurrentOrientation() {
         return currentOrientation;
     }
 
-    public void grantPoint() {
-
+    public void setCurrentOrientation(Orientation currentOrientation) {
+        this.currentOrientation = currentOrientation;
     }
 
     public void updatePlayerView(PlayerView playerView) {

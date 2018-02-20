@@ -1,9 +1,6 @@
 package de.adesso.brainysnake.Gamelogic.Level;
 
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
@@ -13,10 +10,10 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Level {
 
@@ -36,7 +33,7 @@ public class Level {
 
     private LinkedList<Point2D> freeFields;
 
-    public Level(int height, int width, Color color) {
+    public Level(int height, int width) {
         this.height = height;
         this.width = width;
         levelWalls = new GameObject(buildOuterWalls(), Config.LEVEL_COLOR);
@@ -176,6 +173,7 @@ public class Level {
 
     /**
      * Checks if the given point collides with an already existing point
+     *
      * @return a boolean if the given Point collides with a Barrier or a Wall
      */
     public boolean checkCollision(Point2D point2D) {
@@ -183,29 +181,33 @@ public class Level {
     }
 
     /**
-     * Creates a new Snake.
+     * Creates a new Snake with initialLength, color and random {@link Orientation}
+     *
      * @return new snake
      */
-    public Snake createStartingGameObject(int initialLength) {
-        LinkedList<Point2D> head = new LinkedList<Point2D>();
-        LinkedList<Point2D> body = new LinkedList<Point2D>();
+    public Snake createStartingGameObject(int initialLength, Color color) {
+        LinkedList<Point2D> head = new LinkedList<>();
+        LinkedList<Point2D> body = new LinkedList<>();
+
         Point2D start = getRandomStart(initialLength);
         Orientation orientation = getRandomOrientation();
         int centerX = start.getX();
         int centerY = start.getY();
+
         head.add(start);
         for (int i = 1; i < initialLength; i++) {
             Point2D positionIn = getPositionIn(orientation, centerX, centerY, i);
             body.add(positionIn);
-            LOGGER.info("BodySpawn - X:" + positionIn.getX() + " Y:" + positionIn.getY() + " Orientation:" + orientation);
+            LOGGER.info("Snake body spawns at X:{}/Y:{} - Orientation: {}", positionIn.getX(), positionIn.getY(), orientation);
         }
         snakesStartingPositions.addAll(head);
         snakesStartingPositions.addAll(body);
-        return new Snake(new GameObject(head), new GameObject(body), orientation);
+        return new Snake(new GameObject(head), new GameObject(body), orientation, color);
     }
 
     /**
      * Generates a new random Orientation.
+     *
      * @return a new random Orientation
      */
     public Orientation getRandomOrientation() {
@@ -227,6 +229,7 @@ public class Level {
 
     /**
      * Generates a position behind the given position depending on the Orientation and the given length.
+     *
      * @return new Point
      */
     private Point2D getPositionIn(Orientation orientation, int centerX, int centerY, int length) {
@@ -259,6 +262,7 @@ public class Level {
 
     /**
      * creates a random level position
+     *
      * @return random Point2D
      */
     private Point2D getRandomLevelPosition() {
@@ -270,6 +274,7 @@ public class Level {
 
     /**
      * tries to consume and remove the point at the given position
+     *
      * @return true if the point is consumable
      */
     public boolean tryConsumePoint(Point2D position) {
@@ -284,6 +289,7 @@ public class Level {
 
     /**
      * returns true if the given position is on the same position as a consumablePoint
+     *
      * @return boolean
      */
     public boolean isPointOn(Point2D position) {
@@ -298,6 +304,7 @@ public class Level {
 
     /**
      * checks if the given point is within the level
+     *
      * @return true is given point is within the level
      */
     public boolean levelContainsPosition(Point2D point2D) {
@@ -307,6 +314,7 @@ public class Level {
     /**
      * to test if there is enough space for a snake
      * checks if there's nothing in a radius of length around the snake
+     *
      * @return true if there's enough space
      */
     private boolean isEnoughSpace(Point2D position, int snakeLength) {
@@ -333,6 +341,7 @@ public class Level {
 
     /**
      * to get a random start point for a snake with enough space
+     *
      * @return random Start with enough space for a snake
      */
     private Point2D getRandomStart(int length) {

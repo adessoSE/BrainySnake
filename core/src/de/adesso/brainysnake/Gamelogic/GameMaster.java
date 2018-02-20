@@ -7,56 +7,26 @@ import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
-import de.adesso.brainysnake.Gamelogic.Player.Snake;
-import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
-import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
-import de.adesso.brainysnake.playercommon.*;
+import de.adesso.brainysnake.playercommon.Field;
+import de.adesso.brainysnake.playercommon.FieldType;
+import de.adesso.brainysnake.playercommon.PlayerView;
+import de.adesso.brainysnake.playercommon.RoundEvent;
 import de.adesso.brainysnake.playercommon.math.Point2D;
-import de.adesso.brainysnake.sampleplayer.SamplePlayer;
-import de.adesso.brainysnake.sampleplayer.YourPlayer;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
 import de.adesso.brainysnake.screenmanagement.screens.PlayerDTO;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 
+/**
+ * Takes over the role of the game director. Know the rules of the game and take on professional validation, which concerns the game logic.
+ */
 public class GameMaster {
-
-    private ArrayList<PlayerHandler> deadPlayer = new ArrayList<>();
-
-    // Create players
-    private BrainySnakePlayer playerOne = new KeyBoardPlayer();
-    private BrainySnakePlayer yourPlayer = new YourPlayer();
-    private BrainySnakePlayer playerTwo = new SamplePlayer() {
-
-        @Override
-        public String getPlayerName() {
-            return "SamplePlayer Two";
-        }
-    };
-    private BrainySnakePlayer playerThree = new SamplePlayer() {
-
-        @Override
-        public String getPlayerName() {
-            return "SamplePlayer Three";
-        }
-    };
-    private BrainySnakePlayer playerFour = new SamplePlayer() {
-
-        @Override
-        public String getPlayerName() {
-            return "SamplePlayer Four";
-        }
-    };
-
-    // Add all Agents here
-    private List<BrainySnakePlayer> brainySnakePlayers = new ArrayList<>();
 
     private PlayerController playerController;
 
@@ -64,24 +34,15 @@ public class GameMaster {
 
     private boolean gameOver;
 
-    public GameMaster(Level level) {
+    private GameBoard gameBoard;
+
+    public GameMaster(GameBoard gameBoard) {
+        this.gameBoard = gameBoard;
+    }
+
+    public void initialize(Level level){
         this.level = level;
-
-        // Add agents to the game
-        brainySnakePlayers.add(playerOne);
-        brainySnakePlayers.add(playerTwo);
-        brainySnakePlayers.add(playerFour);
-
-        // Build UI Models for the agents
-        LinkedList<Snake> brainySnakePlayersUiModel = new LinkedList<>();
-        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
-        brainySnakePlayersUiModel.add(level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH));
-
-        // The PlayerController capsules agent actions an calculations
-        // The Controller will randomly assign agents to GameObjects
-        playerController = new PlayerController(brainySnakePlayers, brainySnakePlayersUiModel);
+        playerController = new PlayerController(gameBoard.getBrainySnakePlayers(), level);
     }
 
     public void update(float delta) {
@@ -91,23 +52,13 @@ public class GameMaster {
     public void gameLoop() {
 
         GlobalGameState.countMoves++;
+
         UiState.getINSTANCE().setRoundsRemaining(GlobalGameState.movesRemaining());
-        List<PlayerHandler> winner = getWinner();
-        if (winner.size() > 0) {
+
+        //check if game is over
+        if (!checkIfPlayerWon().isEmpty()) {
             gameOver = true;
-
-            ArrayList<PlayerDTO> playerDTOS = new ArrayList<>();
-            for (PlayerHandler playerHandler : getPlayerHandler()) {
-                playerDTOS.add(new PlayerDTO(playerHandler.getPlayerName(), new Color(playerHandler.getSnake().getHeadColor()), playerHandler.getSnake().getAllSnakePositions().size()));
-            }
-
-            ArrayList<PlayerDTO> deadPlayerDTOS = new ArrayList<>();
-            for (PlayerHandler playerHandler : deadPlayer) {
-                deadPlayerDTOS.add(new PlayerDTO(playerHandler.getPlayerName(), new Color(playerHandler.getSnake().getHeadColor()), playerHandler.getSnake().getAllSnakePositions().size()));
-            }
-
-            ScreenManager.getINSTANCE().finishGame(playerDTOS, deadPlayerDTOS);
-            ScreenManager.getINSTANCE().showScreen(ScreenType.WINNER_SCREEN);
+            ScreenManager.getINSTANCE().showScreen(ScreenType.GAME_OVER_SCREEN);
         }
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
@@ -115,10 +66,10 @@ public class GameMaster {
             updateRoundForPlayer(playerHandler);
 
             // calculates the playerState and updates the playercontroller via call
-            this.playerController.updatePlayerState(new GlobalGameState());
+            playerController.updatePlayerState();
         }
 
-        Map<PlayerHandler, PlayerChoice> playerStatus = this.playerController.getPlayerStatus();
+        Map<PlayerHandler, PlayerChoice> playerStatus = playerController.getPlayerStatus();
         for (PlayerHandler playerHandler : playerStatus.keySet()) {
             PlayerChoice playerChoice = playerStatus.get(playerHandler);
             validateEvents(playerHandler, playerChoice);
@@ -133,7 +84,6 @@ public class GameMaster {
                 switch (roundEvent) {
                     case DIED:
                         playerHandler.getSnake().removeHead();
-                        deadPlayer.add(playerHandler);
                         break;
                     case MOVED:
                         // move player as he planned
@@ -175,11 +125,8 @@ public class GameMaster {
             }
         }
 
-        // remove dead player from player list
-        for (PlayerHandler dead : deadPlayer) {
-            playerController.getPlayerHandlerList().remove(dead);
-            UiState.getINSTANCE().rip(dead.getPlayerName());
-        }
+        playerController.removeDeadPlayer();
+
 
         // spread new points in level
         level.spreadPoints();
@@ -188,13 +135,15 @@ public class GameMaster {
             // reset data of player
             playerHandler.endRound();
         }
+
+        //TODO rukl update uistate
+        // UiState.getINSTANCE().updatePlayerPoints(playerHandler.getPlayerName(), new UIPlayerInformation(playerHandler.getSnake().getHeadColor(), playerHandler.getSnake().countPoints()));
     }
 
     private void updateRoundForPlayer(PlayerHandler playerHandler) {
-        List<PlayerHandler> playerHandlerList = playerController.getPlayerHandlerList();
         List<Point2D> playerViewPositions = PlayerViewHelper.generatePlayerView(playerHandler.getCurrentOrientation(), playerHandler.getHeadPosition());
         List<Point2D> playerPositions = playerController.getPlayerPositions();
-        List<Field> playerView = new ArrayList<Field>();
+        List<Field> playerView = new ArrayList<>();
         for (Point2D point2D : playerViewPositions) {
             if (!level.levelContainsPosition(point2D)) {
                 playerView.add(new Field(point2D, FieldType.NONE));
@@ -215,10 +164,16 @@ public class GameMaster {
 
         playerHandler.updatePlayerView(new PlayerView(playerView, playerHandler.getCurrentOrientation(), Config.PLAYERVIEW_OFFSET_TO_VIEWWIDTH, Config.PLAYERVIEW_OFFSET_TO_AHEAD));
         playerHandler.update();
-        UiState.getINSTANCE().updatePlayerPoints(playerHandler.getPlayerName(), new UIPlayerInformation(playerHandler.getSnake().getHeadColor(), playerHandler.getSnake().countPoints()));
     }
 
-    public List<PlayerHandler> getWinner() {
+    /**
+     * Check if a player has won the game. When the time is up, the player with the most points has won.
+     * If there is only one snake left in the season, it has won.
+     * If there is a tie there can be more than one winner.
+     *
+     * @return Winner als {@link List} of {@link PlayerHandler}
+     */
+    public List<PlayerHandler> checkIfPlayerWon() {
         List<PlayerHandler> winner = new ArrayList<>();
         if (GlobalGameState.movesRemaining() <= 0) {
 
@@ -293,10 +248,6 @@ public class GameMaster {
 
     public boolean isGameOver() {
         return gameOver;
-    }
-
-    public ArrayList<PlayerHandler> getDeadPlayer() {
-        return deadPlayer;
     }
 
     public Level getLevel() {

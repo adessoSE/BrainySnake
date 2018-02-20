@@ -5,13 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.*;
+import de.adesso.brainysnake.Gamelogic.GameBoard;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.screenmanagement.screens.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Manage the current shown Screens in Game
@@ -41,7 +40,7 @@ public class ScreenManager {
     // Initialization with the game class
     public void initialize(Game game) {
         this.game = game;
-        gameMaster = new GameMaster(new Level(HEIGHT, WIDTH, Color.WHITE));
+        gameMaster = new GameMaster(GameBoard.getINSTANCE());
     }
 
     public Screen showScreen(ScreenType screenType) {
@@ -58,7 +57,7 @@ public class ScreenManager {
                 break;
 
             case MATCHPREVIEW_SCREEN:
-                MatchPreviewScreen matchScreen = new MatchPreviewScreen(gameMaster.getPlayerHandler());
+                MatchPreviewScreen matchScreen = new MatchPreviewScreen();
                 matchScreen.initialize();
                 setGameScreen(matchScreen);
                 break;
@@ -69,8 +68,8 @@ public class ScreenManager {
                 setGameScreen(gameScreen);
                 break;
 
-            case WINNER_SCREEN:
-                GameOverScreen gameOverScreen = new GameOverScreen(playerDTOS, deadPlayerDTOS);
+            case GAME_OVER_SCREEN:
+                GameOverScreen gameOverScreen = new GameOverScreen();
                 gameOverScreen.initialize();
                 setGameScreen(gameOverScreen);
                 break;
@@ -94,7 +93,7 @@ public class ScreenManager {
     public void finishGame(ArrayList<PlayerDTO>  player, ArrayList<PlayerDTO>  deadPlayer){
         this.playerDTOS = player;
         this.deadPlayerDTOS = deadPlayer;
-        showScreen(ScreenType.WINNER_SCREEN);
+        showScreen(ScreenType.GAME_OVER_SCREEN);
     }
 
     private void setGameScreen(Screen screen) {

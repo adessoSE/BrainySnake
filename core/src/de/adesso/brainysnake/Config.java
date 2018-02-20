@@ -2,6 +2,10 @@ package de.adesso.brainysnake;
 
 import com.badlogic.gdx.graphics.Color;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Config {
 
     /* gameplay settings */
@@ -11,6 +15,8 @@ public class Config {
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
     public static int STARTING_POSITION_SPACE = 8;
     public static int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
+
+    public static List<Color> PLAYER_COLORS = Arrays.asList(Color.BLUE, Color.GREEN,Color.ORANGE, Color.CYAN);
 
     /* others */
     public static final float UPDATE_RATE = 10f;

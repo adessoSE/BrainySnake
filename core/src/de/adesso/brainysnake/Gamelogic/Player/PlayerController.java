@@ -6,6 +6,8 @@ import java.util.concurrent.*;
 import com.badlogic.gdx.graphics.Color;
 
 import de.adesso.brainysnake.Config;
+import de.adesso.brainysnake.Gamelogic.Level.Level;
+import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.Gamelogic.Utils;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
@@ -27,53 +29,35 @@ public class PlayerController {
 
     private PlayerUpdateGetExecutorService playerUpdateGetExecutorService;
 
-    public PlayerController(List<BrainySnakePlayer> playerList, LinkedList<Snake> playerGameObjects) {
-
-        // Shuffle Player Colors
-        List<Color> playerColors = Utils.getShuffledGameColors();
-
-        if (playerList.size() > playerColors.size() || playerList.size() > playerGameObjects.size()) {
-            throw new IllegalArgumentException("Too many players");
-        }
-
-        // Shuffle Starting Positions
-        LinkedList<Snake> snakeList = new LinkedList<>(playerGameObjects);
+    public PlayerController(Map<Color, BrainySnakePlayer> playerMap, Level level) {
 
         // Add player to handler
-        for (BrainySnakePlayer player : playerList) {
-
-            // Build the PlayerHandler
-            Color color = playerColors.remove(playerColors.size() - 1);
-            Snake currentSnake = snakeList.removeFirst();
-            currentSnake.setColor(color);
-
-            playerHandlerList.add(new PlayerHandler(player, currentSnake.getStartOrientation(), currentSnake));
+        for (Color playerColor : playerMap.keySet()) {
+            Snake newPlayerSnake = level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH, playerColor);
+            playerHandlerList.add(new PlayerHandler(playerMap.get(playerColor), newPlayerSnake));
         }
 
         // create Thread handlers
-        this.playerStatePushExecutorService = new PlayerStatePushExecutorService(this.playerHandlerList, Config.MAX_AGENT_PROCESSING_TIME_MS);
-        this.playerUpdateGetExecutorService = new PlayerUpdateGetExecutorService(this.playerHandlerList, Config.MAX_AGENT_PROCESSING_TIME_MS);
+        playerStatePushExecutorService = new PlayerStatePushExecutorService(playerHandlerList, Config.MAX_AGENT_PROCESSING_TIME_MS);
+        playerUpdateGetExecutorService = new PlayerUpdateGetExecutorService(playerHandlerList, Config.MAX_AGENT_PROCESSING_TIME_MS);
     }
 
-    public void updatePlayerState(GlobalGameState gameState) {
+    public void updatePlayerState() {
 
         for (PlayerHandler player : this.playerHandlerList) {
-            player.calculatePlayerState(gameState);
+            player.calculatePlayerState();
         }
 
-        this.playerStatePushExecutorService.process();
+        playerStatePushExecutorService.process();
     }
 
 
     /**
      * Returns the choice for every agent
-     *
-     * @return
      */
     public Map<PlayerHandler, PlayerChoice> getPlayerStatus() {
-        Map<PlayerHandler, PlayerChoice> agentChoiceMap = new HashMap<PlayerHandler, PlayerChoice>();
-
-        Map<PlayerHandler, Optional<PlayerUpdate>> updates = this.playerUpdateGetExecutorService.process();
+        Map<PlayerHandler, PlayerChoice> agentChoiceMap = new HashMap<>();
+        Map<PlayerHandler, Optional<PlayerUpdate>> updates = playerUpdateGetExecutorService.process();
 
         updates.forEach((playerHandler, playerUpdate) -> {
             agentChoiceMap.put(playerHandler, handlePlayerUpdate(playerUpdate, playerHandler));
@@ -127,7 +111,7 @@ public class PlayerController {
 
     private PlayerChoice handlePlayerUpdate(Optional<PlayerUpdate> playerUpdate, PlayerHandler playerHandler) {
         if(!playerUpdate.isPresent() || playerUpdate.get().getNextStep() == null) {
-            LOGGER.error("PlayerController", "Player: " + playerHandler.getPlayerName() + " returns invalid PlayerUpdate");
+            LOGGER.error("PlayerController", "Player: " + playerHandler.getPlayerIdentifier() + " returns invalid PlayerUpdate");
             return PlayerChoice.createNoChoice();
         }
         return new PlayerChoice(playerUpdate.get().getNextStep());
@@ -140,5 +124,22 @@ public class PlayerController {
         }
 
         return playerPositions;
+    }
+
+    /**
+     * Removes dead Player from playerHandlerList
+     */
+    public void removeDeadPlayer() {
+        // remove dead player from player list
+        List<PlayerHandler> deadPlayers = new ArrayList<>();
+        for (PlayerHandler playerHandler : playerHandlerList) {
+            if (playerHandler.isDead()) {
+                deadPlayers.add(playerHandler);
+            }
+        }
+
+        for (PlayerHandler deadPlayer : deadPlayers) {
+            playerHandlerList.remove(deadPlayer);
+        }
     }
 }

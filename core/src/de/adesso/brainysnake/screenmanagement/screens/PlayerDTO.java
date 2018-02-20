@@ -2,7 +2,7 @@ package de.adesso.brainysnake.screenmanagement.screens;
 
 import com.badlogic.gdx.graphics.Color;
 
-//TODO
+//TODO rukl rename
 public class PlayerDTO {
 
     private String name;
@@ -10,6 +10,8 @@ public class PlayerDTO {
     private Color color;
 
     private long size;
+
+    private boolean isDead;
 
     public PlayerDTO(String name, Color color, long size){
         this.name = name;
@@ -39,5 +41,13 @@ public class PlayerDTO {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean dead) {
+        isDead = dead;
     }
 }
