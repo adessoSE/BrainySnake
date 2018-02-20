@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
 
-//TODO rukl
 public class ApplicationController extends Game {
 
     @Override
@@ -13,7 +12,6 @@ public class ApplicationController extends Game {
         screenManager.initialize(this);
         screenManager.showScreen(ScreenType.MAIN_MENU);
     }
-
 
     @Override
     public void pause() {

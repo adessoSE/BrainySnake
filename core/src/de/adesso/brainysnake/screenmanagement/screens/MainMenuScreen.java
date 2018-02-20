@@ -10,7 +10,6 @@ import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
 
-//TODO rukl doc
 public class MainMenuScreen extends AbstractScreen {
 
     private final int BUTTON_OFFSET = 25;

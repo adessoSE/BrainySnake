@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import de.adesso.brainysnake.Config;
 
-//TODO rukl doc
 public abstract class AbstractScreen extends Stage implements Screen {
 
     protected Skin defaultSkin = new Skin();
