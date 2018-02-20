@@ -17,6 +17,7 @@ import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.Game;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
@@ -57,6 +58,8 @@ public class BrainySnake extends ApplicationAdapter {
     private TextButton newGameButton;
     private TextButton startGameButton;
     private TextButton exitButton;
+    private TextButton settingsButton;
+    private TextButton backButton;
     private float timeSinceLastRender = 0;
 
     private BitmapFont font;
@@ -68,6 +71,7 @@ public class BrainySnake extends ApplicationAdapter {
     private boolean menuShowing = true;
     private boolean matchMenuShowing = false;
     private boolean gameOver = false;
+    private boolean settingsShowing = false;
 
     private int newLine = 0;
     private boolean isWinner = true;
@@ -130,6 +134,11 @@ public class BrainySnake extends ApplicationAdapter {
 
         if (menuShowing) {
             drawStartScreen();
+            return;
+        }
+
+        if(settingsShowing){
+            drawSettingsScreen();
             return;
         }
 
@@ -271,9 +280,51 @@ public class BrainySnake extends ApplicationAdapter {
         });
         mainStage.addActor(exitButton);
 
+        settingsButton = new TextButton("Settings",skin);
+        settingsButton.setPosition(Config.APPLICATION_WIDTH/2-Config.APPLICATION_WIDTH/15,Config.APPLICATION_HEIGHT/2-(startGameButton.getHeight()+BUTTON_OFFSET));
+        settingsButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideAllActors(mainStage);
+                menuShowing = false;
+                settingsShowing = true;
+            }
+        });
+        mainStage.addActor(settingsButton);
+
+        gameMaster.setGameOver(false);
+        GlobalGameState.resetMoves();
+
         mainStage.act();
         mainStage.draw();
     }
+
+    /**
+     *Drawing the Settings Screen.
+     */
+    public void drawSettingsScreen() {
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+
+        mainStage.addActor(logoBrainySnake);
+        logoBrainySnake.setVisible(true);
+
+        backButton = new TextButton("Back",skin);
+        backButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2 - 2 * (startGameButton.getHeight() + BUTTON_OFFSET));
+        backButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hideAllActors(mainStage);
+                settingsShowing = false;
+                menuShowing = true;
+            }
+        });
+        mainStage.addActor(backButton);
+
+        mainStage.act();
+        mainStage.draw();
+    }
+
 
     private void createBasicSkin() {
         //Create a font
@@ -396,6 +447,8 @@ public class BrainySnake extends ApplicationAdapter {
 
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
+
+        //gameMaster.setGameOver(false);
 
         this.mainStage.getBatch().begin();
         font.getData().setScale(4, 4);
