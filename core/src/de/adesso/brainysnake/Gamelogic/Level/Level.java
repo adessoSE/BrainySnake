@@ -86,7 +86,7 @@ public class Level {
             if (duplicate.size() <= 0) {
                 return barriers;
             }
-            duplicate.remove(newBarrierPosition);
+            duplicate.removeAll(new Barrier(newBarrierPosition.getX(), newBarrierPosition.getY()).getBarrierDots());
 
             freeFields.removeAll((new Barrier(newBarrierPosition.getX(), newBarrierPosition.getY()).getBarrierDots()));
             barriers.addAll((new Barrier(newBarrierPosition.getX(), newBarrierPosition.getY()).getBarrierDots()));
