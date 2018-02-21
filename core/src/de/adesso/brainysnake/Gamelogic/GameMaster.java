@@ -52,11 +52,22 @@ public class GameMaster {
         GlobalGameState.countMoves++;
 
         UiState.getINSTANCE().setRoundsRemaining(GlobalGameState.movesRemaining());
-
-        //check if game is over
-        if (!checkIfPlayerWon().isEmpty()) {
+        List<PlayerHandler> winner = getWinner();
+        if (winner.size() > 0) {
             gameOver = true;
-            ScreenManager.getINSTANCE().showScreen(ScreenType.GAME_OVER_SCREEN);
+            GlobalGameState.countMoves=0;
+            ArrayList<PlayerDTO> playerDTOS = new ArrayList<>();
+            for (PlayerHandler playerHandler : getPlayerHandler()) {
+                playerDTOS.add(new PlayerDTO(playerHandler.getPlayerName(), new Color(playerHandler.getSnake().getHeadColor()), playerHandler.getSnake().getAllSnakePositions().size()));
+            }
+
+            ArrayList<PlayerDTO> deadPlayerDTOS = new ArrayList<>();
+            for (PlayerHandler playerHandler : deadPlayer) {
+                deadPlayerDTOS.add(new PlayerDTO(playerHandler.getPlayerName(), new Color(playerHandler.getSnake().getHeadColor()), playerHandler.getSnake().getAllSnakePositions().size()));
+            }
+
+            ScreenManager.getINSTANCE().finishGame(playerDTOS, deadPlayerDTOS);
+            ScreenManager.getINSTANCE().showScreen(ScreenType.WINNER_SCREEN);
         }
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
@@ -97,15 +108,11 @@ public class GameMaster {
                         collectedPoints--;
                         break;
                     case BIT_AGENT:
-                        if (!playerHandler.isGhostMode()) {
-                            collectedPoints++;
-                        }
+                        collectedPoints++;
                         break;
                     case BIT_BY_PLAYER:
                         // agent was Hit by another agent
-                        if (!playerHandler.isGhostMode()) {
-                            collectedPoints--;
-                        }
+                        collectedPoints--;
                         break;
                     case CONSUMED_POINT:
                         collectedPoints++;

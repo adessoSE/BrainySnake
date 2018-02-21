@@ -48,6 +48,7 @@ public class GameOverScreen extends AbstractScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ScreenManager.getINSTANCE().showScreen(ScreenType.MAIN_MENU);
+                ScreenManager.getINSTANCE().reset();
             }
         });
         returnButton.setWidth(250f);

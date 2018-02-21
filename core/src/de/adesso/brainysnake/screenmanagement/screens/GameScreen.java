@@ -6,6 +6,10 @@ import de.adesso.brainysnake.Gamelogic.GameMaster;
 
 public class GameScreen extends AbstractScreen {
 
+    public BrainySnake getBrainySnake() {
+        return brainySnake;
+    }
+
     private BrainySnake brainySnake;
 
     public GameScreen(GameMaster gameMaster) {
@@ -14,6 +18,7 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
+        super.show();
     }
 
     @Override
@@ -34,5 +39,6 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void dispose() {
         super.dispose();
+        brainySnake.toggleMusic();
     }
 }

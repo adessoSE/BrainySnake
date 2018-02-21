@@ -2,6 +2,7 @@ package de.adesso.brainysnake;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,9 +16,12 @@ import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import de.adesso.brainysnake.screenmanagement.ScreenManager;
+import de.adesso.brainysnake.screenmanagement.ScreenType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.Key;
 import java.util.HashMap;
 import java.util.List;
 
@@ -65,8 +69,6 @@ public class BrainySnake extends ApplicationAdapter {
 
         initializeCamera();
 
-        Gdx.input.setInputProcessor(new KeyBoardControl());
-
         gameSpriteBatch = new SpriteBatch();
         gameSpriteBatch.setProjectionMatrix(mainCamera.combined);
 
@@ -84,18 +86,24 @@ public class BrainySnake extends ApplicationAdapter {
         }
     }
 
+    private void checkPressedKeys(){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            ScreenManager.getINSTANCE().togglePauseGame();
+        }
+    }
+
     @Override
     public void render() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        checkPressedKeys();
 
-        timeSinceLastRender += Gdx.graphics.getDeltaTime();
-        if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
-            // Do the actual rendering, pass timeSinceLastRender as delta time.
-            timeSinceLastRender = 0f;
-            gameController.update(Gdx.graphics.getDeltaTime());
+        if(!ScreenManager.getINSTANCE().isGamePaused()){
+            timeSinceLastRender += Gdx.graphics.getDeltaTime();
+            if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
+                // Do the actual rendering, pass timeSinceLastRender as delta time.
+                timeSinceLastRender = 0f;
+                gameController.update(Gdx.graphics.getDeltaTime());
+            }
         }
-
         drawGameLoop();
     }
 
@@ -146,6 +154,14 @@ public class BrainySnake extends ApplicationAdapter {
         }
 
         fontSpriteBatch.end();
+    }
+
+    public void toggleMusic(){
+        if(backgroundSound.isPlaying()){
+            backgroundSound.pause();
+        } else {
+            backgroundSound.play();
+        }
     }
 
     @Override

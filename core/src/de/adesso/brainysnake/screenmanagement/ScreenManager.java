@@ -9,6 +9,7 @@ import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.PlayerBoard;
 import de.adesso.brainysnake.screenmanagement.screens.*;
 
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +28,8 @@ public class ScreenManager {
     private ArrayList<PlayerBoard> playerBoards;
 
     private ArrayList<PlayerBoard> deadPlayerBoards;
+
+    private boolean gamePaused = false;
 
     private ScreenManager() {
 
@@ -50,8 +53,6 @@ public class ScreenManager {
         // Get current screen to dispose it
         Screen currentScreen = game.getScreen();
 
-        // Show new screen
-        Screen newScreen = null;
         switch (screenType) {
             case MAIN_MENU:
                 MainMenuScreen mainMenuScreen = new MainMenuScreen();
@@ -81,6 +82,12 @@ public class ScreenManager {
                 Gdx.app.exit();
                 break;
 
+            case PAUSE_SCREEN:
+                PauseScreen pauseScreen = new PauseScreen(currentScreen);
+                pauseScreen.initialize();
+                setGameScreen(pauseScreen);
+                break;
+
             default:
                 break;
         }
@@ -89,6 +96,7 @@ public class ScreenManager {
         if (currentScreen != null) {
             currentScreen.dispose();
         }
+
     }
 
     public void finishGame(ArrayList<PlayerBoard>  player, ArrayList<PlayerBoard>  deadPlayer){
@@ -101,4 +109,14 @@ public class ScreenManager {
         game.setScreen(screen);
     }
 
+    public void togglePauseGame() {
+        this.gamePaused = !gamePaused;
+        if(gamePaused){
+            showScreen(ScreenType.PAUSE_SCREEN);
+        } else showScreen(ScreenType.GAME_SCREEN);
+    }
+
+    public boolean isGamePaused() {
+        return gamePaused;
+    }
 }
