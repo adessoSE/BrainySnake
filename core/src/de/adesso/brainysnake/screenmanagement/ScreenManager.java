@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import de.adesso.brainysnake.*;
 import de.adesso.brainysnake.Gamelogic.GameBoard;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
+import de.adesso.brainysnake.Gamelogic.PlayerBoard;
 import de.adesso.brainysnake.screenmanagement.screens.*;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class ScreenManager {
     }
 
     public void reset(){
-        gameMaster = new GameMaster(new Level(HEIGHT, WIDTH, Color.WHITE));
+        GameBoard.getINSTANCE().reset();
     }
     
     public void showScreen(ScreenType screenType) {

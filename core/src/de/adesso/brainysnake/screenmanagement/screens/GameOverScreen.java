@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.GameBoard;
+import de.adesso.brainysnake.Gamelogic.PlayerBoard;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
 
@@ -60,14 +61,14 @@ public class GameOverScreen extends AbstractScreen {
      */
     public SortedMap<Long, ArrayList<PlayerBoard>> createSortedWinnerMap() {
         SortedMap<Long, ArrayList<PlayerBoard>> sortedMap = new TreeMap<>();
-        for (PlayerBoard playerHandler : GameBoard.getINSTANCE().getPlayerBoards()) {
-            if (sortedMap.containsKey(playerHandler.getSize())) {
-                sortedMap.get(playerHandler.getSize()).add(playerHandler);
+        for (PlayerBoard playerBoard : GameBoard.getINSTANCE().getPlayerBoards()) {
+            if (sortedMap.containsKey(playerBoard.getSize())) {
+                sortedMap.get(playerBoard.getSize()).add(playerBoard);
             } else {
                 ArrayList<PlayerBoard> playerHandlers = new ArrayList<PlayerBoard>() {{
-                    add(playerHandler);
+                    add(playerBoard);
                 }};
-                sortedMap.put(playerHandler.getSize(), playerHandlers);
+                sortedMap.put(playerBoard.getSize(), playerHandlers);
             }
         }
 

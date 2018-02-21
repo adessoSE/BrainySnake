@@ -5,6 +5,7 @@ import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 import de.adesso.brainysnake.sampleplayer.YourPlayer;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,7 +91,9 @@ public class GameBoard {
         return playerMap;
     }
 
-    //TODO rukl rename and implement
+    /**
+     * @return List of {@link PlayerBoard}
+     */
     public List<PlayerBoard> getPlayerBoards() {
 
         List<PlayerBoard> playerList = new ArrayList<>();
@@ -104,4 +107,8 @@ public class GameBoard {
         return brainySnakePlayers;
     }
 
+    //TODO rukl doc, test, impl
+    public void reset() {
+        throw new NotImplementedException();
+    }
 }

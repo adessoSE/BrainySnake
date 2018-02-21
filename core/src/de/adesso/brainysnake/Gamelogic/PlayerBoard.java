@@ -27,6 +27,10 @@ public class PlayerBoard {
         return brainySnakePlayer;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Color getColor() {
         return color;
     }
