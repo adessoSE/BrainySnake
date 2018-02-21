@@ -5,7 +5,6 @@ import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 import de.adesso.brainysnake.sampleplayer.YourPlayer;
-import de.adesso.brainysnake.screenmanagement.screens.PlayerBoard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,22 +85,23 @@ public class GameBoard {
             PlayerBoard tempPlayer = brainySnakePlayers.get(i);
             tempPlayer.setColor(playerColors.get(i));
             playerMap.put(Long.valueOf(i), tempPlayer);
-        }
 
+        }
         return playerMap;
     }
 
-    public List<PlayerBoard> getPlayerBoards(){
+    //TODO rukl rename and implement
+    public List<PlayerBoard> getPlayerBoards() {
 
         List<PlayerBoard> playerList = new ArrayList<>();
         for (PlayerBoard playerBoard : brainySnakePlayers.values()) {
             playerList.add(playerBoard);
         }
-
         return playerList;
     }
 
     public Map<Long, PlayerBoard> getBrainySnakePlayers() {
         return brainySnakePlayers;
     }
+
 }

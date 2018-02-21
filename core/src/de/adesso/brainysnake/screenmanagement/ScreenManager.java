@@ -41,7 +41,11 @@ public class ScreenManager {
         gameMaster = new GameMaster(GameBoard.getINSTANCE());
     }
 
-    public Screen showScreen(ScreenType screenType) {
+    public void reset(){
+        gameMaster = new GameMaster(new Level(HEIGHT, WIDTH, Color.WHITE));
+    }
+    
+    public void showScreen(ScreenType screenType) {
         // Get current screen to dispose it
         Screen currentScreen = game.getScreen();
 
@@ -84,8 +88,6 @@ public class ScreenManager {
         if (currentScreen != null) {
             currentScreen.dispose();
         }
-
-        return newScreen;
     }
 
     public void finishGame(ArrayList<PlayerBoard>  player, ArrayList<PlayerBoard>  deadPlayer){

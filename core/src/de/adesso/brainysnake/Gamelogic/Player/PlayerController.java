@@ -2,6 +2,11 @@ package de.adesso.brainysnake.Gamelogic.Player;
 
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
+import de.adesso.brainysnake.Gamelogic.PlayerBoard;
+import de.adesso.brainysnake.Gamelogic.UI.UiState;
+import de.adesso.brainysnake.Gamelogic.Utils;
+import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
+import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.screenmanagement.screens.PlayerBoard;
@@ -45,7 +50,6 @@ public class PlayerController {
 
         playerStatePushExecutorService.process();
     }
-
 
     /**
      * Returns the choice for every agent
