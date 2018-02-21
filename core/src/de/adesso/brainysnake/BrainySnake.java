@@ -2,6 +2,7 @@ package de.adesso.brainysnake;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -66,8 +67,6 @@ public class BrainySnake extends ApplicationAdapter {
 
         initializeCamera();
 
-        Gdx.input.setInputProcessor(new KeyBoardControl());
-
         gameSpriteBatch = new SpriteBatch();
         gameSpriteBatch.setProjectionMatrix(mainCamera.combined);
 
@@ -86,21 +85,15 @@ public class BrainySnake extends ApplicationAdapter {
     }
 
     private void checkPressedKeys(){
-        System.out.println("ESCAPE: " + KeyBoardControl.ESCAPE);
-        System.out.println("LEFT: " + KeyBoardControl.LEFT);
-        if (KeyBoardControl.ESCAPE) {
-            ScreenManager.getINSTANCE().pauseGame();
-            ScreenManager.getINSTANCE().showScreen(ScreenType.PAUSE_SCREEN);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            ScreenManager.getINSTANCE().togglePauseGame();
         }
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         checkPressedKeys();
-        System.out.println(ScreenManager.getINSTANCE().isGamePaused());
+
         if(!ScreenManager.getINSTANCE().isGamePaused()){
             timeSinceLastRender += Gdx.graphics.getDeltaTime();
             if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
@@ -108,9 +101,8 @@ public class BrainySnake extends ApplicationAdapter {
                 timeSinceLastRender = 0f;
                 gameController.update(Gdx.graphics.getDeltaTime());
             }
-
-            drawGameLoop();
         }
+        drawGameLoop();
     }
 
     private void initializeCamera() {
@@ -123,7 +115,6 @@ public class BrainySnake extends ApplicationAdapter {
     }
 
     public void drawGameLoop() {
-        System.out.println("Hallo ich zeichne mich!");
         // Redraw the head.
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
@@ -161,6 +152,14 @@ public class BrainySnake extends ApplicationAdapter {
         }
 
         fontSpriteBatch.end();
+    }
+
+    public void toggleMusic(){
+        if(backgroundSound.isPlaying()){
+            backgroundSound.pause();
+        } else {
+            backgroundSound.play();
+        }
     }
 
     @Override

@@ -1,22 +1,36 @@
 package de.adesso.brainysnake.screenmanagement.screens;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
 
-public class PauseScreen extends AbstractScreen {
+import java.awt.*;
 
-    private final int BUTTON_OFFSET = 25;
+public class PauseScreen extends AbstractScreen {
 
     private TextButton resumeButton;
 
     private TextButton exitGameButton;
 
-    public PauseScreen() {
+    private GameScreen gameScreen;
+
+    private Image logoPause;
+
+    public PauseScreen(Screen screen) {
         super();
+        gameScreen = (GameScreen) screen;
     }
 
     @Override
@@ -26,18 +40,24 @@ public class PauseScreen extends AbstractScreen {
 
     @Override
     public void initialize() {
+        TextureRegion region = new TextureRegion(new Texture("logoPause.png"), 0, 0, 512, 512);
+        logoPause = new Image(region);
+
+        logoPause.setPosition(Config.APPLICATION_WIDTH / 3 - 50, Config.APPLICATION_HEIGHT / 4);
+        addActor(logoPause);
+
         resumeButton = new TextButton("Resume", defaultSkin);
-        resumeButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2);
+        resumeButton.setPosition(Config.APPLICATION_WIDTH / 2 - 375, Config.APPLICATION_HEIGHT / 2);
         resumeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ScreenManager.getINSTANCE().resumeGame();
+                ScreenManager.getINSTANCE().togglePauseGame();
             }
         });
         addActor(resumeButton);
 
         exitGameButton = new TextButton("Exit", defaultSkin);
-        exitGameButton.setPosition(Config.APPLICATION_WIDTH / 2 - Config.APPLICATION_WIDTH / 15, Config.APPLICATION_HEIGHT / 2 - 2 * (resumeButton.getHeight() + BUTTON_OFFSET));
+        exitGameButton.setPosition(Config.APPLICATION_WIDTH / 2 + 250, Config.APPLICATION_HEIGHT / 2);
         exitGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -49,7 +69,10 @@ public class PauseScreen extends AbstractScreen {
 
     @Override
     public void render(float delta) {
-        super.render(delta);
+        this.gameScreen.getBrainySnake().render();
+
+        super.act(delta);
+        super.draw();
     }
 
     @Override
