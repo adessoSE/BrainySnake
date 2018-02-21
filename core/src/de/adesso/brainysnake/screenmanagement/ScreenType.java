@@ -9,4 +9,5 @@ public enum ScreenType {
     GAME_SCREEN,
     WINNER_SCREEN,
     EXIT_SCREEN,
+    PAUSE_SCREEN,
 }

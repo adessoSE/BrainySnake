@@ -30,6 +30,8 @@ public class ScreenManager {
 
     private ArrayList<PlayerDTO> deadPlayerDTOS;
 
+    private boolean gamePaused = false;
+
     private ScreenManager() {
 
     }
@@ -44,12 +46,10 @@ public class ScreenManager {
         gameMaster = new GameMaster(new Level(HEIGHT, WIDTH, Color.WHITE));
     }
 
-    public Screen showScreen(ScreenType screenType) {
+    public void showScreen(ScreenType screenType) {
         // Get current screen to dispose it
         Screen currentScreen = game.getScreen();
 
-        // Show new screen
-        Screen newScreen = null;
         switch (screenType) {
             case MAIN_MENU:
                 MainMenuScreen mainMenuScreen = new MainMenuScreen();
@@ -79,6 +79,12 @@ public class ScreenManager {
                 Gdx.app.exit();
                 break;
 
+            case PAUSE_SCREEN:
+                PauseScreen pauseScreen = new PauseScreen(currentScreen);
+                pauseScreen.initialize();
+                setGameScreen(pauseScreen);
+                break;
+
             default:
                 break;
         }
@@ -88,7 +94,6 @@ public class ScreenManager {
             currentScreen.dispose();
         }
 
-        return newScreen;
     }
 
     public void finishGame(ArrayList<PlayerDTO>  player, ArrayList<PlayerDTO>  deadPlayer){
@@ -101,4 +106,14 @@ public class ScreenManager {
         game.setScreen(screen);
     }
 
+    public void togglePauseGame() {
+        this.gamePaused = !gamePaused;
+        if(gamePaused){
+            showScreen(ScreenType.PAUSE_SCREEN);
+        } else showScreen(ScreenType.GAME_SCREEN);
+    }
+
+    public boolean isGamePaused() {
+        return gamePaused;
+    }
 }
