@@ -30,6 +30,8 @@ public class ScreenManager {
 
     private ArrayList<PlayerDTO> deadPlayerDTOS;
 
+    private boolean gamePaused = false;
+
     private ScreenManager() {
 
     }
@@ -79,6 +81,12 @@ public class ScreenManager {
                 Gdx.app.exit();
                 break;
 
+            case PAUSE_SCREEN:
+                PauseScreen pauseScreen = new PauseScreen();
+                pauseScreen.initialize();
+                setGameScreen(pauseScreen);
+                break;
+
             default:
                 break;
         }
@@ -101,4 +109,18 @@ public class ScreenManager {
         game.setScreen(screen);
     }
 
+    public void pauseGame(){
+        System.out.println("Game paused!");
+        this.gamePaused = true;
+    }
+
+    public void resumeGame() {
+        System.out.println("Resume Button pressed");
+        this.gamePaused = false;
+        showScreen(ScreenType.GAME_SCREEN);
+    }
+
+    public boolean isGamePaused() {
+        return gamePaused;
+    }
 }

@@ -14,9 +14,12 @@ import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
 import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import de.adesso.brainysnake.screenmanagement.ScreenManager;
+import de.adesso.brainysnake.screenmanagement.ScreenType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.Key;
 import java.util.HashMap;
 import java.util.List;
 
@@ -82,19 +85,32 @@ public class BrainySnake extends ApplicationAdapter {
         }
     }
 
+    private void checkPressedKeys(){
+        System.out.println("ESCAPE: " + KeyBoardControl.ESCAPE);
+        System.out.println("LEFT: " + KeyBoardControl.LEFT);
+        if (KeyBoardControl.ESCAPE) {
+            ScreenManager.getINSTANCE().pauseGame();
+            ScreenManager.getINSTANCE().showScreen(ScreenType.PAUSE_SCREEN);
+        }
+    }
+
     @Override
     public void render() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        timeSinceLastRender += Gdx.graphics.getDeltaTime();
-        if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
-            // Do the actual rendering, pass timeSinceLastRender as delta time.
-            timeSinceLastRender = 0f;
-            gameController.update(Gdx.graphics.getDeltaTime());
-        }
+        checkPressedKeys();
+        System.out.println(ScreenManager.getINSTANCE().isGamePaused());
+        if(!ScreenManager.getINSTANCE().isGamePaused()){
+            timeSinceLastRender += Gdx.graphics.getDeltaTime();
+            if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
+                // Do the actual rendering, pass timeSinceLastRender as delta time.
+                timeSinceLastRender = 0f;
+                gameController.update(Gdx.graphics.getDeltaTime());
+            }
 
-        drawGameLoop();
+            drawGameLoop();
+        }
     }
 
     private void initializeCamera() {
@@ -107,6 +123,7 @@ public class BrainySnake extends ApplicationAdapter {
     }
 
     public void drawGameLoop() {
+        System.out.println("Hallo ich zeichne mich!");
         // Redraw the head.
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
