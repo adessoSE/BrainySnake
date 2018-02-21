@@ -1,15 +1,30 @@
 package de.adesso.brainysnake.Gamelogic.Level;
 
-import de.adesso.brainysnake.Config;
 
 public class GlobalGameState {
 
-    public static int countMoves = 0;
+    private static int roundsToPlay = 0;
 
-    public static final int maxRounds = Config.MAX_ROUNDS;
+    private static int pastRounds = 0;
 
-    public static int movesRemaining(){
-        return maxRounds - countMoves;
+    public static void initialize(int roundsToPlay) {
+        GlobalGameState.roundsToPlay = roundsToPlay;
     }
 
+    public static int movesRemaining() {
+        return roundsToPlay - pastRounds;
+    }
+
+    public static int getPastRounds() {
+        return pastRounds;
+    }
+
+    /**
+     * Increases the number of rounds by one and returns the current round
+     *
+     * @return current Round
+     */
+    public static int increasePastRounds() {
+        return pastRounds++;
+    }
 }

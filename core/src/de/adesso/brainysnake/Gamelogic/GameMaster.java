@@ -6,7 +6,6 @@ import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
-import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.Field;
 import de.adesso.brainysnake.playercommon.FieldType;
 import de.adesso.brainysnake.playercommon.PlayerView;
@@ -30,16 +29,10 @@ public class GameMaster {
 
     private Level level;
 
-    private boolean gameOver;
-
-    private GameBoard gameBoard;
-
-    public GameMaster(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
-    }
-
-    public void initialize(Level level){
+    public GameMaster(Level level) {
         this.level = level;
+        GameBoard gameBoard = GameBoard.getINSTANCE();
+        GlobalGameState.initialize(gameBoard.getRemainingRoundsToPlay());
         playerController = new PlayerController(gameBoard.getBrainySnakePlayers(), level);
     }
 
@@ -49,25 +42,11 @@ public class GameMaster {
 
     public void gameLoop() {
 
-        GlobalGameState.countMoves++;
+        GlobalGameState.increasePastRounds();
 
-        UiState.getINSTANCE().setRoundsRemaining(GlobalGameState.movesRemaining());
-        List<PlayerHandler> winner = getWinner();
-        if (winner.size() > 0) {
-            gameOver = true;
-            GlobalGameState.countMoves=0;
-            ArrayList<PlayerDTO> playerDTOS = new ArrayList<>();
-            for (PlayerHandler playerHandler : getPlayerHandler()) {
-                playerDTOS.add(new PlayerDTO(playerHandler.getPlayerName(), new Color(playerHandler.getSnake().getHeadColor()), playerHandler.getSnake().getAllSnakePositions().size()));
-            }
-
-            ArrayList<PlayerDTO> deadPlayerDTOS = new ArrayList<>();
-            for (PlayerHandler playerHandler : deadPlayer) {
-                deadPlayerDTOS.add(new PlayerDTO(playerHandler.getPlayerName(), new Color(playerHandler.getSnake().getHeadColor()), playerHandler.getSnake().getAllSnakePositions().size()));
-            }
-
-            ScreenManager.getINSTANCE().finishGame(playerDTOS, deadPlayerDTOS);
-            ScreenManager.getINSTANCE().showScreen(ScreenType.WINNER_SCREEN);
+        //check if game is over
+        if (!checkIfPlayerWon().isEmpty()) {
+            ScreenManager.getINSTANCE().showScreen(ScreenType.GAME_OVER_SCREEN);
         }
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
@@ -141,8 +120,18 @@ public class GameMaster {
             playerHandler.endRound();
         }
 
-        //TODO rukl update uistate
-        // UiState.getINSTANCE().updatePlayerPoints(playerHandler.getPlayerName(), new UIPlayerInformation(playerHandler.getSnake().getHeadColor(), playerHandler.getSnake().countPoints()));
+        GlobalGameState.increasePastRounds();
+
+        //Update Metadata of game and player
+        updateGameBaordData();
+    }
+
+    /**
+     * Updates the meta information of the game and the player in the gameboard
+     */
+    private void updateGameBaordData() {
+        //Update Gameboard
+        GameBoard.getINSTANCE().updateGameBoard(GlobalGameState.movesRemaining());
     }
 
     private void updateRoundForPlayer(PlayerHandler playerHandler) {
@@ -249,10 +238,6 @@ public class GameMaster {
 
     public void shutdown() {
         this.playerController.shutdown();
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
     }
 
     public Level getLevel() {

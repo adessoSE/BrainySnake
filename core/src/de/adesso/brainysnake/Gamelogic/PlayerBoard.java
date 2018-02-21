@@ -14,7 +14,7 @@ public class PlayerBoard {
 
     private Color color = Config.DEAD_COLOR;
 
-    private long size = 0;
+    private long points = 0;
 
     private boolean isDead = false;
 
@@ -39,12 +39,12 @@ public class PlayerBoard {
         this.color = color;
     }
 
-    public long getSize() {
-        return size;
+    public long getPoints() {
+        return points;
     }
 
-    public void setSize(long size) {
-        this.size = size;
+    public void setPoints(long points) {
+        this.points = points;
     }
 
     public boolean isDead() {

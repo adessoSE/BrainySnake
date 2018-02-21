@@ -3,7 +3,6 @@ package de.adesso.brainysnake.Gamelogic.Player;
 import com.badlogic.gdx.Gdx;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
-import de.adesso.brainysnake.Gamelogic.PlayerViewHelper;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
@@ -116,7 +115,7 @@ public class PlayerHandler {
             }
         }
 
-        this.lastPlayerState = new PlayerState(GlobalGameState.countMoves, GlobalGameState.movesRemaining(), points, head, tail, ghostMode, ghostModeRemaining, bitByPlayer, moved, collisionWithLevel, playerView);
+        this.lastPlayerState = new PlayerState(GlobalGameState.getPastRounds(), GlobalGameState.movesRemaining(), points, head, tail, ghostMode, ghostModeRemaining, bitByPlayer, moved, collisionWithLevel, playerView);
     }
 
     /**

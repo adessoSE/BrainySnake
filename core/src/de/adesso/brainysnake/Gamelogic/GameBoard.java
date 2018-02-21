@@ -1,6 +1,7 @@
 package de.adesso.brainysnake.Gamelogic;
 
 import com.badlogic.gdx.graphics.Color;
+import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
@@ -22,6 +23,8 @@ public class GameBoard {
 
     // Add all Agents here
     private Map<Long, PlayerBoard> brainySnakePlayers;
+
+    private int remainingRoundsToPlay = Config.MAX_ROUNDS;
 
     private GameBoard() {
         List<PlayerBoard> playerlist = createBrainySnakePlayerList();
@@ -111,4 +114,17 @@ public class GameBoard {
     public void reset() {
         throw new NotImplementedException();
     }
+
+    public void setBrainySnakePlayers(Map<Long, PlayerBoard> brainySnakePlayers) {
+        this.brainySnakePlayers = brainySnakePlayers;
+    }
+
+    public void updateGameBoard(int remainingRoundsToPlay){
+        this.remainingRoundsToPlay = remainingRoundsToPlay;
+    }
+
+    public int getRemainingRoundsToPlay() {
+        return remainingRoundsToPlay;
+    }
+
 }

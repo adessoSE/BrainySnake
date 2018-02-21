@@ -18,16 +18,8 @@ import java.util.ArrayList;
 public class ScreenManager {
 
     private static ScreenManager INSTANCE = new ScreenManager();
-    private static int WIDTH = Config.APPLICATION_WIDTH / Config.DOT_SIZE;
-    private static int HEIGHT = Config.APPLICATION_HEIGHT / Config.DOT_SIZE;
 
     private Game game;
-
-    private GameMaster gameMaster;
-
-    private ArrayList<PlayerBoard> playerBoards;
-
-    private ArrayList<PlayerBoard> deadPlayerBoards;
 
     private boolean gamePaused = false;
 
@@ -42,7 +34,6 @@ public class ScreenManager {
     // Initialization with the game class
     public void initialize(Game game) {
         this.game = game;
-        gameMaster = new GameMaster(GameBoard.getINSTANCE());
     }
 
     public void reset(){
@@ -67,7 +58,7 @@ public class ScreenManager {
                 break;
 
             case GAME_SCREEN:
-                GameScreen gameScreen = new GameScreen(gameMaster);
+                GameScreen gameScreen = new GameScreen();
                 gameScreen.initialize();
                 setGameScreen(gameScreen);
                 break;
@@ -97,12 +88,6 @@ public class ScreenManager {
             currentScreen.dispose();
         }
 
-    }
-
-    public void finishGame(ArrayList<PlayerBoard>  player, ArrayList<PlayerBoard>  deadPlayer){
-        this.playerBoards = player;
-        this.deadPlayerBoards = deadPlayer;
-        showScreen(ScreenType.GAME_OVER_SCREEN);
     }
 
     private void setGameScreen(Screen screen) {

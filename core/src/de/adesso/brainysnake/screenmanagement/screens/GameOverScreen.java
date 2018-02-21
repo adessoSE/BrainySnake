@@ -63,13 +63,13 @@ public class GameOverScreen extends AbstractScreen {
     public SortedMap<Long, ArrayList<PlayerBoard>> createSortedWinnerMap() {
         SortedMap<Long, ArrayList<PlayerBoard>> sortedMap = new TreeMap<>();
         for (PlayerBoard playerBoard : GameBoard.getINSTANCE().getPlayerBoards()) {
-            if (sortedMap.containsKey(playerBoard.getSize())) {
-                sortedMap.get(playerBoard.getSize()).add(playerBoard);
+            if (sortedMap.containsKey(playerBoard.getPoints())) {
+                sortedMap.get(playerBoard.getPoints()).add(playerBoard);
             } else {
                 ArrayList<PlayerBoard> playerHandlers = new ArrayList<PlayerBoard>() {{
                     add(playerBoard);
                 }};
-                sortedMap.put(playerBoard.getSize(), playerHandlers);
+                sortedMap.put(playerBoard.getPoints(), playerHandlers);
             }
         }
 
@@ -98,7 +98,7 @@ public class GameOverScreen extends AbstractScreen {
      */
     public void drawWinnerScreenPlayerDetails(PlayerBoard playerBoard) {
         defaultFont.setColor(playerBoard.getColor());
-        layout.setText(defaultFont, Long.toString(playerBoard.getSize()));
+        layout.setText(defaultFont, Long.toString(playerBoard.getPoints()));
         defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 + 250, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) - PLAYERNAMES_YOFFSET * newLine);
         layout.setText(defaultFont, playerBoard.getName());
         defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 - 50, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) - PLAYERNAMES_YOFFSET * newLine++);

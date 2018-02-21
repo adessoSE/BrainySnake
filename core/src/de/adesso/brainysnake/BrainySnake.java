@@ -5,52 +5,38 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
 import de.adesso.brainysnake.Gamelogic.GameController;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
-import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
 import de.adesso.brainysnake.Gamelogic.Level.Level;
-import de.adesso.brainysnake.Gamelogic.UI.UIPlayerInformation;
-import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
-import de.adesso.brainysnake.screenmanagement.ScreenType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.Key;
-import java.util.HashMap;
 import java.util.List;
 
 public class BrainySnake extends ApplicationAdapter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BrainySnake.class.getName());
     private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
-    private static int DOT_SITZE = Config.DOT_SIZE;
-    private static int WIDTH = Config.APPLICATION_WIDTH / DOT_SITZE;
-    private static int HEIGHT = Config.APPLICATION_HEIGHT / DOT_SITZE;
-    private static int APPLICATION_WIDTH = Config.APPLICATION_WIDTH;
-    private static int APPLICATION_HEIGHT = Config.APPLICATION_HEIGHT;
+    private static int WIDTH = Config.APPLICATION_WIDTH / Config.DOT_SIZE;
+    private static int HEIGHT = Config.APPLICATION_HEIGHT / Config.DOT_SIZE;
+
     private Texture texture;
     private SpriteBatch gameSpriteBatch;
-    private SpriteBatch fontSpriteBatch;
     private Sprite sprite;
     private Pixmap pixmap;
     private Music backgroundSound;
     private OrthographicCamera mainCamera;
-    private OrthographicCamera fontCamera;
     private float timeSinceLastRender = 0;
 
-    private BitmapFont font = new BitmapFont();
     private List<GameObject> gameObjects;
     private GameController gameController = new GameController();
 
-    public BrainySnake(GameMaster gameMaster){
-        gameController.init(gameMaster);
-        gameMaster.initialize(new Level(HEIGHT, WIDTH));
+    public BrainySnake(){
+        gameController.init(new GameMaster(new Level(HEIGHT, WIDTH)));
     }
 
     @Override
@@ -65,15 +51,12 @@ public class BrainySnake extends ApplicationAdapter {
         pixmap.fill();
 
         backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.mp3"));
-        startPlayingMusic(backgroundSound);
+     //   startPlayingMusic(backgroundSound);
 
         initializeCamera();
 
         gameSpriteBatch = new SpriteBatch();
         gameSpriteBatch.setProjectionMatrix(mainCamera.combined);
-
-        fontSpriteBatch = new SpriteBatch();
-        fontSpriteBatch.setProjectionMatrix(fontCamera.combined);
     }
 
     /**
@@ -111,9 +94,6 @@ public class BrainySnake extends ApplicationAdapter {
 
         mainCamera = new OrthographicCamera();
         mainCamera.setToOrtho(true, WIDTH, HEIGHT);
-
-        fontCamera = new OrthographicCamera();
-        fontCamera.setToOrtho(false, APPLICATION_WIDTH, APPLICATION_HEIGHT);
     }
 
     public void drawGameLoop() {
@@ -135,33 +115,14 @@ public class BrainySnake extends ApplicationAdapter {
         gameSpriteBatch.begin();
         sprite.draw(gameSpriteBatch);
         gameSpriteBatch.end();
-
-
-        fontSpriteBatch.begin();
-        font.getData().setScale(1f);
-
-        font.setColor(Color.WHITE);
-        font.draw(fontSpriteBatch, "Rounds remaining: ", 20, APPLICATION_HEIGHT - 20);
-        font.draw(fontSpriteBatch, UiState.getINSTANCE().getRoundsRemaining(), 165, APPLICATION_HEIGHT - 20);
-
-        HashMap<String, UIPlayerInformation> playerMap = UiState.getINSTANCE().getPlayerMap();
-        int offset = 20;
-        for (String playername : playerMap.keySet()) {
-            font.setColor(playerMap.get(playername).getColor());
-            font.draw(fontSpriteBatch, playername, 20, APPLICATION_HEIGHT - 20 - offset);
-            font.draw(fontSpriteBatch, playerMap.get(playername).getPoints(), 165, APPLICATION_HEIGHT - 20 - offset);
-            offset += 20;
-        }
-
-        fontSpriteBatch.end();
     }
 
     public void toggleMusic(){
-        if(backgroundSound.isPlaying()){
-            backgroundSound.pause();
-        } else {
-            backgroundSound.play();
-        }
+//        if(backgroundSound.isPlaying()){
+//            backgroundSound.pause();
+//        } else {
+//            backgroundSound.play();
+//        }
     }
 
     @Override

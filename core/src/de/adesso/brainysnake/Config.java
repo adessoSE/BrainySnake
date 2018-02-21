@@ -9,7 +9,7 @@ import java.util.List;
 public class Config {
 
     /* gameplay settings */
-    public static final int MAX_ROUNDS = 200;
+    public static final int MAX_ROUNDS = 10;
     public static final boolean RENDER_PLAYERVIEW = true;
     public static int PLAYERVIEW_OFFSET_TO_LEFT = 2;
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
