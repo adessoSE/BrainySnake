@@ -95,7 +95,7 @@ public class GameMaster {
         List<PlayerHandler> winner = getWinner();
         if (winner.size() > 0) {
             gameOver = true;
-
+            GlobalGameState.countMoves=0;
             ArrayList<PlayerDTO> playerDTOS = new ArrayList<>();
             for (PlayerHandler playerHandler : getPlayerHandler()) {
                 playerDTOS.add(new PlayerDTO(playerHandler.getPlayerName(), new Color(playerHandler.getSnake().getHeadColor()), playerHandler.getSnake().getAllSnakePositions().size()));
