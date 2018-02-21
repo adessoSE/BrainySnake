@@ -11,6 +11,8 @@ public class Config {
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
     public static int STARTING_POSITION_SPACE = 8;
     public static int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
+    public static int RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD = PLAYERVIEW_OFFSET_TO_AHEAD;
+    public static int RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE = PLAYERVIEW_OFFSET_TO_LEFT * 2;
 
     /* others */
     public static final float UPDATE_RATE = 10f;

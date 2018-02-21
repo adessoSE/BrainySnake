@@ -4,6 +4,7 @@ package de.adesso.brainysnake.Gamelogic.Level;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
@@ -176,6 +177,7 @@ public class Level {
 
     /**
      * Checks if the given point collides with an already existing point
+     *
      * @return a boolean if the given Point collides with a Barrier or a Wall
      */
     public boolean checkCollision(Point2D point2D) {
@@ -184,20 +186,20 @@ public class Level {
 
     /**
      * Creates a new Snake.
+     *
      * @return new snake
      */
     public Snake createStartingGameObject(int initialLength) {
         LinkedList<Point2D> head = new LinkedList<Point2D>();
         LinkedList<Point2D> body = new LinkedList<Point2D>();
-        Point2D start = getRandomStart(initialLength);
         Orientation orientation = getRandomOrientation();
-        int centerX = start.getX();
-        int centerY = start.getY();
+        Point2D start = getRandomStart(initialLength, orientation);
+        int startX = start.getX();
+        int startY = start.getY();
         head.add(start);
         for (int i = 1; i < initialLength; i++) {
-            Point2D positionIn = getPositionIn(orientation, centerX, centerY, i);
+            Point2D positionIn = getPositionIn(orientation, startX, startY, i);
             body.add(positionIn);
-            LOGGER.info("BodySpawn - X:" + positionIn.getX() + " Y:" + positionIn.getY() + " Orientation:" + orientation);
         }
         snakesStartingPositions.addAll(head);
         snakesStartingPositions.addAll(body);
@@ -206,6 +208,7 @@ public class Level {
 
     /**
      * Generates a new random Orientation.
+     *
      * @return a new random Orientation
      */
     public Orientation getRandomOrientation() {
@@ -227,18 +230,19 @@ public class Level {
 
     /**
      * Generates a position behind the given position depending on the Orientation and the given length.
+     *
      * @return new Point
      */
-    private Point2D getPositionIn(Orientation orientation, int centerX, int centerY, int length) {
+    private Point2D getPositionIn(Orientation orientation, int startX, int startY, int length) {
         switch (orientation) {
             case UP:
-                return new Point2D(centerX, centerY - length);
+                return new Point2D(startX, startY - length);
             case DOWN:
-                return new Point2D(centerX, centerY + length);
+                return new Point2D(startX, startY + length);
             case RIGHT:
-                return new Point2D(centerX - length, centerY);
+                return new Point2D(startX - length, startY);
             case LEFT:
-                return new Point2D(centerX + length, centerY);
+                return new Point2D(startX + length, startY);
             default:
                 return null;
         }
@@ -259,6 +263,7 @@ public class Level {
 
     /**
      * creates a random level position
+     *
      * @return random Point2D
      */
     private Point2D getRandomLevelPosition() {
@@ -270,6 +275,7 @@ public class Level {
 
     /**
      * tries to consume and remove the point at the given position
+     *
      * @return true if the point is consumable
      */
     public boolean tryConsumePoint(Point2D position) {
@@ -284,6 +290,7 @@ public class Level {
 
     /**
      * returns true if the given position is on the same position as a consumablePoint
+     *
      * @return boolean
      */
     public boolean isPointOn(Point2D position) {
@@ -298,6 +305,7 @@ public class Level {
 
     /**
      * checks if the given point is within the level
+     *
      * @return true is given point is within the level
      */
     public boolean levelContainsPosition(Point2D point2D) {
@@ -305,43 +313,75 @@ public class Level {
     }
 
     /**
-     * to test if there is enough space for a snake
-     * checks if there's nothing in a radius of length around the snake
-     * @return true if there's enough space
+     * Checking the given point, if it's collides with a barrier or the level. Also checks if this is already a starting point of another snake.
+     * @param point The point, which should be validated.
+     * @return boolean: False means valid, true means invalid position.
      */
-    private boolean isEnoughSpace(Point2D position, int snakeLength) {
+    public boolean checkPositionValid(Point2D point) {
+        return checkCollision(new Point2D(point.getX(), point.getY())) || snakesStartingPositions.contains(new Point2D(point.getX(), point.getY()));
+    }
 
-        int snakeHeadx = position.getX();
-        int snakeHeady = position.getY();
-        snakeLength++;
+    /**
+     * Checks the surrounded points if there are any collisions.
+     * @param startValueX Starting point of the X-axle
+     * @param finalValueX Ending point of the X-axle (included in the checking)
+     * @param startValueY Starting point of the Y-axle
+     * @param finalValueY Ending point of the Y-axle (included in the checking)
+     * @return boolean: False means invalid, true means valid.
+     */
+    public boolean checkSurroundedPoints(int startValueX, int finalValueX, int startValueY, int finalValueY) {
         try {
-            for (int x = snakeHeadx - snakeLength; x < snakeHeadx + snakeLength; x++) {
-                for (int y = snakeHeady - snakeLength; y < snakeHeady + snakeLength; y++) {
-                    if (checkCollision(new Point2D(x, y)) || snakesStartingPositions.contains(new Point2D(x, y))) {
-                        LOGGER.error("Colission at - X:" + x + " Y:" + y);
+            for (int y = startValueY; y <= finalValueY; y++) {
+                for (int x = startValueX; x <= finalValueX; x++) {
+                    if (checkPositionValid(new Point2D(x, y))) {
                         return false;
                     }
                 }
             }
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("IndexOutOfBoundsException");
+            LOGGER.error(e.getMessage());
             return false;
         }
-        LOGGER.info("Valid position at - X:" + snakeHeadx + " Y:" + snakeHeady);
+        return true;
+    }
+
+    /**
+     * to test if there is enough space for a snake
+     * checks if there's nothing in a radius of length around the snake
+     *
+     * @return true if there's enough space
+     */
+    private boolean isEnoughSpace(Point2D position, int snakeLength, Orientation orientation) {
+
+        int snakeHeadX = position.getX();
+        int snakeHeadY = position.getY();
+
+        switch (orientation) {
+            case UP:
+                return checkSurroundedPoints(snakeHeadX - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadX + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadY - snakeLength, snakeHeadY + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD);
+            case DOWN:
+                return checkSurroundedPoints(snakeHeadX - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadX + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadY - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD, snakeHeadY + snakeLength);
+            case LEFT:
+                return checkSurroundedPoints(snakeHeadX - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD, snakeHeadX + snakeLength, snakeHeadY - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadY + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2);
+            case RIGHT:
+                return checkSurroundedPoints(snakeHeadX - snakeLength, snakeHeadX + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD, snakeHeadY - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadY + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2);
+        }
+
         return true;
     }
 
     /**
      * to get a random start point for a snake with enough space
+     *
      * @return random Start with enough space for a snake
      */
-    private Point2D getRandomStart(int length) {
+    private Point2D getRandomStart(int length, Orientation orientation) {
         Point2D randomPoint;
         do {
             randomPoint = getRandomLevelPosition();
         }
         //while there is not enough space
-        while (!isEnoughSpace(randomPoint, length));
+        while (!isEnoughSpace(randomPoint, length, orientation));
         return randomPoint;
     }
 
