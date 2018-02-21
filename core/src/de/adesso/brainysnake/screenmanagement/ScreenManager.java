@@ -10,6 +10,7 @@ import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
 import de.adesso.brainysnake.screenmanagement.screens.*;
 
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,9 @@ public class ScreenManager {
         gameMaster = new GameMaster(new Level(HEIGHT, WIDTH, Color.WHITE));
     }
 
+    public void reset(){
+        gameMaster = new GameMaster(new Level(HEIGHT, WIDTH, Color.WHITE));
+    }
     public void showScreen(ScreenType screenType) {
         // Get current screen to dispose it
         Screen currentScreen = game.getScreen();
