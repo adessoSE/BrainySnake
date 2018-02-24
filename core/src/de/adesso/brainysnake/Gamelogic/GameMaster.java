@@ -14,6 +14,7 @@ import de.adesso.brainysnake.Gamelogic.UI.UiState;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
+import de.adesso.brainysnake.sampleplayer.SuperKI;
 import de.adesso.brainysnake.sampleplayer.YourPlayer;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
@@ -32,6 +33,7 @@ public class GameMaster {
 
     // Create players
     private BrainySnakePlayer playerOne = new KeyBoardPlayer();
+    private BrainySnakePlayer superKI = new SuperKI();
     private BrainySnakePlayer yourPlayer = new YourPlayer();
     private BrainySnakePlayer playerTwo = new SamplePlayer() {
 
