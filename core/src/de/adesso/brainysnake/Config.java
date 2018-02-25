@@ -44,5 +44,5 @@ public class Config {
     public static final int BLINK_TIME = ((int) UPDATE_RATE / 10) + 1;
 
     /* threaded playerupdate config */
-    public static final int MAX_AGENT_PROCESSING_TIME_MS = 1000;
+    public static final int MAX_AGENT_PROCESSING_TIME_MS = 250;
 }
