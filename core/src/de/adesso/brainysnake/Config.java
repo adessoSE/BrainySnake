@@ -30,6 +30,7 @@ public class Config {
 
     public static final Color LEVEL_COLOR = Color.WHITE;
     public static final Color BARRIER_COLOR = Color.LIGHT_GRAY;
+    public static final Color POINT_LABYRINTH_COLOR = Color.WHITE;
     public static final Color COLOR_404 = Color.PINK;
     public static final Color BLINK_COLOR = Color.YELLOW;
 

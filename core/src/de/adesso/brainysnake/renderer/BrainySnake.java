@@ -80,6 +80,7 @@ public class BrainySnake extends ApplicationAdapter {
         List<LevelObject> levelObjects = new ArrayList<>();
         LevelObject walls = levelDTO.getWalls();
         LevelObject barriers = levelDTO.getBarriers();
+        LevelObject pointLabyrinths = levelDTO.getPointLabyrinths();
         LevelObject points = levelDTO.getPoints();
 
         if (walls != null) {
@@ -88,6 +89,10 @@ public class BrainySnake extends ApplicationAdapter {
 
         if (barriers != null) {
             levelObjects.add(barriers);
+        }
+
+        if (barriers != null) {
+            levelObjects.add(pointLabyrinths);
         }
 
         if (points != null) {
@@ -105,10 +110,11 @@ public class BrainySnake extends ApplicationAdapter {
         snakes = levelObjects;
     }
 
-    public void updateLevelPoints(LevelObject points, LevelObject barriers, LevelObject walls) {
+    public void updateLevelPoints(LevelObject points, LevelObject barriers, LevelObject walls, LevelObject pointLabyrinths) {
         levelDTO.setBarriers(barriers);
         levelDTO.setWalls(walls);
         levelDTO.setPoints(points);
+        levelDTO.setPointLabyrinths(pointLabyrinths);
     }
 
     public void drawGameLoop() {

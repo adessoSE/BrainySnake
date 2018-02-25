@@ -1,8 +1,8 @@
 package de.adesso.brainysnake.gamelogic.player;
 
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.gamelogic.level.GlobalGameState;
 import de.adesso.brainysnake.gamelogic.PlayerBoard;
+import de.adesso.brainysnake.gamelogic.level.GlobalGameState;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import org.slf4j.Logger;
@@ -153,7 +153,7 @@ public class PlayerHandler {
         }
     }
 
-    public void updatePlayerBoard(){
+    public void updatePlayerBoard() {
         playerBoard.setColor(snake.getHeadColor());
         playerBoard.setDead(isDead);
         playerBoard.setPoints(snake.countPoints());

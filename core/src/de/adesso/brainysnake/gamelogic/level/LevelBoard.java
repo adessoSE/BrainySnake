@@ -25,7 +25,7 @@ public class LevelBoard {
 
     private final int width, height;
 
-    private LevelObject walls, barriers, points;
+    private LevelObject walls, barriers, points, pointLabyrinths;
 
     private LinkedList<Point2D> spawnPositions = new LinkedList<>();
 
@@ -34,9 +34,20 @@ public class LevelBoard {
     public LevelBoard(int width, int height) {
         this.width = width;
         this.height = height;
-        this.walls = new LevelObject(buildOuterWalls(), Config.LEVEL_COLOR);
+        walls = new LevelObject(buildOuterWalls(), Config.LEVEL_COLOR);
         barriers = new LevelObject(buildBarriers(), Config.BARRIER_COLOR);
         points = new LevelObject(null, Config.POINT_COLLOR);
+        pointLabyrinths = buildPointLabyrinths();
+    }
+
+    private LevelObject buildPointLabyrinths() {
+        LinkedList<Point2D> pointLabyrinths = new LinkedList<>();
+
+        //TODO rukl generate position
+        PointLabyrinth pointLabyrinth = new PointLabyrinth(10, 10);
+        pointLabyrinths.addAll(pointLabyrinth.getLabyrinthDots());
+
+        return new LevelObject(pointLabyrinth.getLabyrinthDots(), Config.POINT_LABYRINTH_COLOR);
     }
 
     /**
@@ -84,7 +95,6 @@ public class LevelBoard {
     private LinkedList<Point2D> generateBarriers() {
 
         LinkedList<Point2D> barriers = new LinkedList<>();
-
         LinkedList<Point2D> duplicate = (LinkedList) freeFields.clone();
 
         // Number of barriers to be created, defined in config file.
@@ -334,5 +344,9 @@ public class LevelBoard {
 
     public LevelObject getPoints() {
         return points;
+    }
+
+    public LevelObject getPointLabyrinths() {
+        return pointLabyrinths;
     }
 }

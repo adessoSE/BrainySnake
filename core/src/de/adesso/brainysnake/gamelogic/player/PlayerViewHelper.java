@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.gamelogic;
+package de.adesso.brainysnake.gamelogic.player;
 
 import java.util.ArrayList;
 import java.util.List;

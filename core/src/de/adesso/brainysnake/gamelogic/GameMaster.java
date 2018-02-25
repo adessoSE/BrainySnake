@@ -1,14 +1,11 @@
 package de.adesso.brainysnake.gamelogic;
 
 import com.badlogic.gdx.graphics.Color;
+import de.adesso.brainysnake.gamelogic.player.*;
 import de.adesso.brainysnake.renderer.BrainySnake;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.gamelogic.level.GlobalGameState;
 import de.adesso.brainysnake.gamelogic.level.LevelBoard;
-import de.adesso.brainysnake.gamelogic.player.PlayerChoice;
-import de.adesso.brainysnake.gamelogic.player.PlayerController;
-import de.adesso.brainysnake.gamelogic.player.PlayerHandler;
-import de.adesso.brainysnake.gamelogic.player.Snake;
 import de.adesso.brainysnake.playercommon.Field;
 import de.adesso.brainysnake.playercommon.FieldType;
 import de.adesso.brainysnake.playercommon.PlayerView;
@@ -151,7 +148,7 @@ public class GameMaster {
     }
 
     public void updateGame() {
-        brainySnake.updateLevelPoints(levelBoard.getPoints(), levelBoard.getBarriers(), levelBoard.getWalls());
+        brainySnake.updateLevelPoints(levelBoard.getPoints(), levelBoard.getBarriers(), levelBoard.getWalls(), levelBoard.getPointLabyrinths());
 
         List<LevelObject> snakes = new ArrayList<>();
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {

@@ -135,6 +135,5 @@ public class PlayerController {
         public PlayerUpdate call() throws Exception {
             return playerHandler.requestPlayerUpdate();
         }
-
     }
 }

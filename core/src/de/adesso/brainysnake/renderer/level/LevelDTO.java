@@ -16,6 +16,8 @@ public class LevelDTO {
 
     private LevelObject points;
 
+    private LevelObject pointLabyrinths;
+
     public LevelDTO(int width, int height) {
         this.width = width;
         this.height = height;
@@ -45,6 +47,14 @@ public class LevelDTO {
         this.points = points;
     }
 
+    public LevelObject getPointLabyrinths() {
+        return pointLabyrinths;
+    }
+
+    public void setPointLabyrinths(LevelObject pointLabyrinths) {
+        this.pointLabyrinths = pointLabyrinths;
+    }
+
     public int getWidth() {
         return width;
     }
@@ -52,4 +62,6 @@ public class LevelDTO {
     public int getHeight() {
         return height;
     }
+
+
 }

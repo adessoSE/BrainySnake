@@ -4,7 +4,7 @@ import de.adesso.brainysnake.playercommon.Orientation;
 
 public class PlayerChoice {
 
-    private boolean     hasChosen;
+    private boolean hasChosen;
     private Orientation orientation;
 
     public PlayerChoice(Orientation orientation) {
