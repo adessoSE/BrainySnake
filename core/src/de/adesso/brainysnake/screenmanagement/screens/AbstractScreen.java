@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.io.KeyBoardControl;
+import de.adesso.brainysnake.gamelogic.io.KeyBoardControl;
 
 public abstract class AbstractScreen extends Stage implements Screen {
 
