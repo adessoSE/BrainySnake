@@ -7,18 +7,18 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Config {
-    public static int DOT_SIZE = 10;
-    public static int APPLICATION_WIDTH = 1280;
-    public static int APPLICATION_HEIGHT = 900;
+    public static final int DOT_SIZE = 10;
+    public static final int APPLICATION_WIDTH = 1280;
+    public static final int APPLICATION_HEIGHT = 900;
 
     /* gameplay settings */
     public static final int MAX_ROUNDS = 100;
     public static final boolean RENDER_PLAYERVIEW = true;
-    public static int PLAYERVIEW_OFFSET_TO_LEFT = 2;
-    public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
-    public static int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
-    public static int LEVEL_WIDTH = APPLICATION_WIDTH / DOT_SIZE;
-    public static int LEVEL_HEIGHT = APPLICATION_HEIGHT/ DOT_SIZE;
+    public static final int PLAYERVIEW_OFFSET_TO_LEFT = 2;
+    public static final int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
+    public static final int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
+    public static final int LEVEL_WIDTH = APPLICATION_WIDTH / DOT_SIZE;
+    public static final int LEVEL_HEIGHT = APPLICATION_HEIGHT/ DOT_SIZE;
 
     public static List<Color> PLAYER_COLORS = Arrays.asList(Color.PINK, Color.GREEN,Color.ORANGE, Color.CYAN);
 
@@ -28,15 +28,15 @@ public class Config {
     public static final Color GHOSTMODE_COLOR = Color.GRAY;
     public static final float SNAKE_BODY_LIGHTING = 0.7f;
 
-    public static Color LEVEL_COLOR = Color.WHITE;
-    public static Color BARRIER_COLOR = Color.LIGHT_GRAY;
-    public static Color COLOR_404 = Color.PINK;
-    public static Color BLINK_COLOR = Color.YELLOW;
+    public static final Color LEVEL_COLOR = Color.WHITE;
+    public static final Color BARRIER_COLOR = Color.LIGHT_GRAY;
+    public static final Color COLOR_404 = Color.PINK;
+    public static final Color BLINK_COLOR = Color.YELLOW;
 
-    public static Color DEAD_COLOR = Color.VIOLET;
-    public static int QUANTITY_BARRIERS = 5;
+    public static final Color DEAD_COLOR = Color.VIOLET;
+    public static final int QUANTITY_BARRIERS = 5;
     // If there's not enough space to create each barrier with enough distance to the next barriers, not all barriers are created
-    public static int DISTANCE_BETWEEN_BARRIERS = 10;
+    public static final int DISTANCE_BETWEEN_BARRIERS = 10;
     public static final int INITIAL_PLAYER_LENGTH = 10;
     public static final int MAX_POINTS_IN_LEVEL = 15;
     public static final int GHOST_TIME = 30;
