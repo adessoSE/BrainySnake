@@ -54,6 +54,7 @@ public class GameScreen extends AbstractScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isGamePaused = false;
+                showPauseScree(isGamePaused);
             }
         });
 
@@ -81,9 +82,7 @@ public class GameScreen extends AbstractScreen {
         //Show pause screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             isGamePaused = !isGamePaused;
-            logoPause.setVisible(isGamePaused);
-            resumeButton.setVisible(isGamePaused);
-            exitGameButton.setVisible(isGamePaused);
+            showPauseScree(isGamePaused);
         }
 
         if (!isGamePaused) {
@@ -93,6 +92,12 @@ public class GameScreen extends AbstractScreen {
 
         super.act(delta);
         super.draw();
+    }
+
+    private void showPauseScree(boolean show) {
+        logoPause.setVisible(show);
+        resumeButton.setVisible(show);
+        exitGameButton.setVisible(show);
     }
 
     /**
