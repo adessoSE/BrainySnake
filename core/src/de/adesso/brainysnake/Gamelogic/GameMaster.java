@@ -1,8 +1,9 @@
 package de.adesso.brainysnake.Gamelogic;
 
+import de.adesso.brainysnake.BrainySnake;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
-import de.adesso.brainysnake.Gamelogic.Level.Level;
+import de.adesso.brainysnake.Gamelogic.Level.LevelBoard;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
@@ -25,19 +26,33 @@ import static de.adesso.brainysnake.playercommon.RoundEvent.*;
  */
 public class GameMaster {
 
+    private BrainySnake brainySnake;
+
     private PlayerController playerController;
 
-    private Level level;
+    private LevelBoard levelBoard;
 
-    public GameMaster(Level level) {
-        this.level = level;
+    public GameMaster() {
+        brainySnake = new BrainySnake();
+        brainySnake.initialize(Config.LEVEL_WIDTH, Config.LEVEL_HEIGHT);
+        brainySnake.create();
+
+        levelBoard = new LevelBoard(Config.LEVEL_WIDTH, Config.LEVEL_HEIGHT);
+
         GameBoard gameBoard = GameBoard.getINSTANCE();
         GlobalGameState.initialize(gameBoard.getRemainingRoundsToPlay());
-        playerController = new PlayerController(gameBoard.getBrainySnakePlayers(), level);
+        playerController = new PlayerController(gameBoard.getBrainySnakePlayers(), levelBoard);
     }
 
     public void update(float delta) {
+        //check if game is over
+        if (!checkIfPlayerWon().isEmpty()) {
+            gameOver();
+            return;
+        }
+
         gameLoop();
+        updateGame();
     }
 
     public void gameLoop() {
@@ -46,7 +61,8 @@ public class GameMaster {
 
         //check if game is over
         if (!checkIfPlayerWon().isEmpty()) {
-            ScreenManager.getINSTANCE().showScreen(ScreenType.GAME_OVER_SCREEN);
+            gameOver();
+            return;
         }
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
@@ -113,7 +129,7 @@ public class GameMaster {
 
 
         // spread new points in level
-        level.spreadPoints();
+        levelBoard.fillUpWithPoints(Config.MAX_POINTS_IN_LEVEL);
 
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             // reset data of player
@@ -126,6 +142,16 @@ public class GameMaster {
         updateGameBaordData();
     }
 
+    private void gameOver() {
+        brainySnake.dispose();
+        ScreenManager.getINSTANCE().showScreen(ScreenType.GAME_OVER_SCREEN);
+    }
+
+    public void updateGame(){
+
+        brainySnake.render();
+      //todo rukl  brainySnake.up
+    }
     /**
      * Updates the meta information of the game and the player in the gameboard
      */
@@ -139,14 +165,14 @@ public class GameMaster {
         List<Point2D> playerPositions = playerController.getPlayerPositions();
         List<Field> playerView = new ArrayList<>();
         for (Point2D point2D : playerViewPositions) {
-            if (!level.levelContainsPosition(point2D)) {
+            if (!levelBoard.contains(point2D)) {
                 playerView.add(new Field(point2D, FieldType.NONE));
                 continue;
             }
 
-            if (level.checkCollision(point2D)) {
+            if (levelBoard.checkCollision(point2D)) {
                 playerView.add(new Field(point2D, FieldType.LEVEL));
-            } else if (level.isPointOn(point2D)) {
+            } else if (levelBoard.isPointOn(point2D)) {
                 playerView.add(new Field(point2D, FieldType.POINT));
             } else if (playerPositions.contains(point2D)) {
                 playerView.add(new Field(point2D, FieldType.PLAYER));
@@ -204,7 +230,7 @@ public class GameMaster {
         }
 
         Point2D nextPosition = playerHandler.getNextPositionBy(playerChoice.getOrientation());
-        if (level.checkCollision(nextPosition)) {
+        if (levelBoard.checkCollision(nextPosition)) {
             roundEvents.add(COLLISION_WITH_LEVEL);
             playerHandler.setConfused(true);
             return;
@@ -227,7 +253,7 @@ public class GameMaster {
             }
         }
 
-        if (!playerHandler.isGhostMode() && level.tryConsumePoint(nextPosition)) {
+        if (!playerHandler.isGhostMode() && levelBoard.tryConsumePoint(nextPosition)) {
             roundEvents.add(CONSUMED_POINT);
         }
     }
@@ -238,9 +264,5 @@ public class GameMaster {
 
     public void shutdown() {
         this.playerController.shutdown();
-    }
-
-    public Level getLevel() {
-        return level;
     }
 }

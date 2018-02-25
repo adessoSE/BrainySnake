@@ -47,8 +47,8 @@ public class GameOverScreen extends AbstractScreen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                resetGameState();
                 ScreenManager.getINSTANCE().showScreen(ScreenType.MAIN_MENU);
-                ScreenManager.getINSTANCE().reset();
             }
         });
         returnButton.setWidth(250f);
@@ -138,12 +138,15 @@ public class GameOverScreen extends AbstractScreen {
         getBatch().end();
     }
 
+    private void resetGameState() {
+        GameBoard.getINSTANCE().reset();
+    }
+
     @Override
     public void hide() {
     }
 
     @Override
     public void dispose() {
-        super.dispose();
     }
 }

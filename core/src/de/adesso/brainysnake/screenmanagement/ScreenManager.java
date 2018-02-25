@@ -36,10 +36,6 @@ public class ScreenManager {
         this.game = game;
     }
 
-    public void reset(){
-        GameBoard.getINSTANCE().reset();
-    }
-    
     public void showScreen(ScreenType screenType) {
         // Get current screen to dispose it
         Screen currentScreen = game.getScreen();

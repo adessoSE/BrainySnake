@@ -1,7 +1,7 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Level.Level;
+import de.adesso.brainysnake.Gamelogic.Level.LevelBoard;
 import de.adesso.brainysnake.Gamelogic.PlayerBoard;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 import de.adesso.brainysnake.playercommon.math.Point2D;
@@ -24,11 +24,11 @@ public class PlayerController {
 
     private PlayerUpdateGetExecutorService playerUpdateGetExecutorService;
 
-    public PlayerController(Map<Long, PlayerBoard> playerMap, Level level) {
+    public PlayerController(Map<Long, PlayerBoard> playerMap, LevelBoard levelBoard) {
 
         // Add player to handler
         for (PlayerBoard player : playerMap.values()) {
-            Snake newPlayerSnake = level.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH, player.getColor());
+            Snake newPlayerSnake = levelBoard.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH, player.getColor());
             playerHandlerList.add(new PlayerHandler(player.getBrainySnakePlayer(), newPlayerSnake));
         }
 
@@ -75,7 +75,7 @@ public class PlayerController {
 
     private PlayerChoice handlePlayerUpdate(Optional<PlayerUpdate> playerUpdate, PlayerHandler playerHandler) {
         if (!playerUpdate.isPresent() || playerUpdate.get().getNextStep() == null) {
-            LOGGER.error("PlayerController", "Player: " + playerHandler.getPlayerIdentifier() + " returns invalid PlayerUpdate");
+            LOGGER.error("Player: {} returns invalid PlayerUpdate", playerHandler.getPlayerIdentifier());
             return PlayerChoice.createNoChoice();
         }
         return new PlayerChoice(playerUpdate.get().getNextStep());

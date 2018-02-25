@@ -89,8 +89,5 @@ public abstract class AbstractScreen extends Stage implements Screen {
 
     @Override
     public void dispose() {
-        super.dispose();
-        defaultFont.dispose();
-        defaultSkin.dispose();
     }
 }

@@ -16,14 +16,10 @@ import java.util.List;
 //TODO move Pause-Screen to this Screen
 public class GameScreen extends AbstractScreen {
 
-    private BrainySnake brainySnake;
+    private GameMaster gameMaster;
 
     public GameScreen() {
-        brainySnake = new BrainySnake();
-    }
-
-    public BrainySnake getBrainySnake() {
-        return brainySnake;
+        gameMaster = new GameMaster();
     }
 
     @Override
@@ -33,13 +29,11 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void initialize() {
-        brainySnake.create();
     }
 
     @Override
     public void render(float delta) {
-        super.render(delta);
-        brainySnake.render();
+        gameMaster.update(delta);
         drawGameUI();
         super.act(delta);
         super.draw();
@@ -75,7 +69,8 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        super.dispose();
-        brainySnake.toggleMusic();
+     //   brainySnake.toggleMusic();
     }
+
+
 }

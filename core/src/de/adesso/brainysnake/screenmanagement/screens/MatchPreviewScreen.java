@@ -95,6 +95,5 @@ public class MatchPreviewScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        super.dispose();
     }
 }

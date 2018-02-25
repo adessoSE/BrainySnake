@@ -69,7 +69,7 @@ public class PauseScreen extends AbstractScreen {
 
     @Override
     public void render(float delta) {
-        this.gameScreen.getBrainySnake().render();
+    //todo rukl    this.gameScreen.getBrainySnake().render();
 
         super.act(delta);
         super.draw();
@@ -81,6 +81,5 @@ public class PauseScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        super.dispose();
     }
 }

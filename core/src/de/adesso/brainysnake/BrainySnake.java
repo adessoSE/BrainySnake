@@ -4,25 +4,26 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
-import de.adesso.brainysnake.Gamelogic.GameController;
-import de.adesso.brainysnake.Gamelogic.GameMaster;
-import de.adesso.brainysnake.Gamelogic.Level.Level;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import de.adesso.brainysnake.renderer.GameController;
+import de.adesso.brainysnake.renderer.level.LevelDTO;
+import de.adesso.brainysnake.renderer.level.LevelObject;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BrainySnake extends ApplicationAdapter {
 
     private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
-    private static int WIDTH = Config.APPLICATION_WIDTH / Config.DOT_SIZE;
-    private static int HEIGHT = Config.APPLICATION_HEIGHT / Config.DOT_SIZE;
+    private int levelWidth;// = Config.APPLICATION_WIDTH / Config.DOT_SIZE;
+    private int levelHeight;// = Config.APPLICATION_HEIGHT / Config.DOT_SIZE;
 
     private Texture texture;
     private SpriteBatch gameSpriteBatch;
@@ -32,17 +33,28 @@ public class BrainySnake extends ApplicationAdapter {
     private OrthographicCamera mainCamera;
     private float timeSinceLastRender = 0;
 
-    private List<GameObject> gameObjects;
+    private LevelDTO levelDTO;
+
     private GameController gameController = new GameController();
 
-    public BrainySnake(){
-        gameController.init(new GameMaster(new Level(HEIGHT, WIDTH)));
+    public BrainySnake() {
+
+    }
+
+    public void initialize(int levelWidth, int levelHeight) {
+        this.levelWidth = levelWidth;
+        this.levelHeight = levelHeight;
+        this.levelDTO = new LevelDTO(levelWidth, levelHeight);
+    }
+
+    public void updateLevelPoints() {
+
     }
 
     @Override
     public void create() {
 
-        pixmap = new Pixmap(WIDTH, HEIGHT, Pixmap.Format.RGBA8888);
+        pixmap = new Pixmap(levelWidth, levelHeight, Pixmap.Format.RGBA8888);
 
         texture = new Texture(pixmap);
         sprite = new Sprite(texture);
@@ -51,7 +63,7 @@ public class BrainySnake extends ApplicationAdapter {
         pixmap.fill();
 
         backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.mp3"));
-     //   startPlayingMusic(backgroundSound);
+        //   startPlayingMusic(backgroundSound);
 
         initializeCamera();
 
@@ -69,7 +81,7 @@ public class BrainySnake extends ApplicationAdapter {
         }
     }
 
-    private void checkPressedKeys(){
+    private void checkPressedKeys() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             ScreenManager.getINSTANCE().togglePauseGame();
         }
@@ -79,12 +91,11 @@ public class BrainySnake extends ApplicationAdapter {
     public void render() {
         checkPressedKeys();
 
-        if(!ScreenManager.getINSTANCE().isGamePaused()){
+        if (!ScreenManager.getINSTANCE().isGamePaused()) {
             timeSinceLastRender += Gdx.graphics.getDeltaTime();
             if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
                 // Do the actual rendering, pass timeSinceLastRender as delta time.
                 timeSinceLastRender = 0f;
-                gameController.update(Gdx.graphics.getDeltaTime());
             }
         }
         drawGameLoop();
@@ -93,7 +104,40 @@ public class BrainySnake extends ApplicationAdapter {
     private void initializeCamera() {
 
         mainCamera = new OrthographicCamera();
-        mainCamera.setToOrtho(true, WIDTH, HEIGHT);
+        mainCamera.setToOrtho(true, levelWidth, levelHeight);
+    }
+
+    public List<LevelObject> test() {
+        List<LevelObject> levelObjects = new ArrayList<>();
+        LevelObject walls = levelDTO.getWalls();
+        LevelObject barriers = levelDTO.getBarriers();
+        LevelObject points = levelDTO.getPoints();
+
+        if (walls != null) {
+            levelObjects.add(walls);
+        }
+
+        if (barriers != null) {
+            levelObjects.add(barriers);
+        }
+
+        if (points != null) {
+            levelObjects.add(points);
+        }
+
+        //todo rukl
+         /*   for (PlayerHandler playerHandler : gameMaster.getPlayerHandler()) {
+                Snake snake = playerHandler.getSnake();
+                if (Config.RENDER_PLAYERVIEW && playerHandler.getPlayerView() != null) {
+                    levelObjects.addAll(drawPlayerView(playerHandler.getPlayerView()));
+                }
+                levelObjects.add(snake.getHead());
+                levelObjects.add(snake.getBody());
+
+            }
+            */
+
+        return levelObjects;
     }
 
     public void drawGameLoop() {
@@ -101,14 +145,14 @@ public class BrainySnake extends ApplicationAdapter {
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
 
-        gameObjects = gameController.draw(Gdx.graphics.getDeltaTime());
-        for (GameObject gameObject : gameObjects) {
-            pixmap.setColor(gameObject.getColor());
-            for (Point2D tempDot : gameObject.getPositions()) {
+        List<LevelObject> levelObjects = test();
+        for (LevelObject levelObject : levelObjects) {
+            pixmap.setColor(levelObject.getColor());
+            for (Point2D tempDot : levelObject.getPositions()) {
                 pixmap.drawPixel(tempDot.getX(), tempDot.getY());
             }
         }
-        gameObjects.clear();
+        levelObjects.clear();
 
         // drawGameLoop pixmap to gameSpriteBatch
         texture.draw(pixmap, 0, 0);
@@ -117,7 +161,7 @@ public class BrainySnake extends ApplicationAdapter {
         gameSpriteBatch.end();
     }
 
-    public void toggleMusic(){
+    public void toggleMusic() {
 //        if(backgroundSound.isPlaying()){
 //            backgroundSound.pause();
 //        } else {

@@ -2,7 +2,7 @@ package de.adesso.brainysnake.Gamelogic.Player;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Entities.GameObject;
+import de.adesso.brainysnake.renderer.level.LevelObject;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
@@ -10,17 +10,17 @@ import java.util.LinkedList;
 
 public class Snake {
 
-    private GameObject head;
+    private LevelObject head;
 
     private Color headColor;
 
-    private GameObject body;
+    private LevelObject body;
 
     private Color bodyColor;
 
     private Orientation startOrientation;
 
-    public Snake(GameObject head, GameObject body, Orientation orientation, Color color) {
+    public Snake(LevelObject head, LevelObject body, Orientation orientation, Color color) {
         this.head = head;
         this.body = body;
         startOrientation = orientation;
@@ -82,7 +82,7 @@ public class Snake {
         return getHeadPosition().equals(position) || body.getPositions().contains(position);
     }
 
-    public GameObject getHead() {
+    public LevelObject getHead() {
         return head;
     }
 
@@ -90,7 +90,7 @@ public class Snake {
         this.head.getPositions().set(0, head);
     }
 
-    public GameObject getBody() {
+    public LevelObject getBody() {
         return body;
     }
 

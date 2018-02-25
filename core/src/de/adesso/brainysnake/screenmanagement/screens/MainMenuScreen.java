@@ -73,6 +73,5 @@ public class MainMenuScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        super.dispose();
     }
 }

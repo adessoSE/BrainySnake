@@ -110,11 +110,6 @@ public class GameBoard {
         return brainySnakePlayers;
     }
 
-    //TODO rukl doc, test, impl
-    public void reset() {
-        throw new NotImplementedException();
-    }
-
     public void setBrainySnakePlayers(Map<Long, PlayerBoard> brainySnakePlayers) {
         this.brainySnakePlayers = brainySnakePlayers;
     }
@@ -127,4 +122,14 @@ public class GameBoard {
         return remainingRoundsToPlay;
     }
 
+    public void reset() {
+
+        //Reset reached Points of Player
+        for (PlayerBoard playerBoard : brainySnakePlayers.values()) {
+            playerBoard.resetState();
+        }
+
+        //Reste rounds to play
+        remainingRoundsToPlay = Config.MAX_ROUNDS;
+    }
 }

@@ -9,12 +9,14 @@ import java.util.List;
 public class Config {
 
     /* gameplay settings */
-    public static final int MAX_ROUNDS = 10;
+    public static final int MAX_ROUNDS = 100;
     public static final boolean RENDER_PLAYERVIEW = true;
     public static int PLAYERVIEW_OFFSET_TO_LEFT = 2;
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
     public static int STARTING_POSITION_SPACE = 8;
     public static int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
+    public static int LEVEL_WIDTH = 100;//quantity in Fields (not Pixel)
+    public static int LEVEL_HEIGHT = 100;//quantity in Fields (not Pixel)
 
     public static List<Color> PLAYER_COLORS = Arrays.asList(Color.BLUE, Color.GREEN,Color.ORANGE, Color.CYAN);
 

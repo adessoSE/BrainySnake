@@ -9,6 +9,7 @@ public class GlobalGameState {
 
     public static void initialize(int roundsToPlay) {
         GlobalGameState.roundsToPlay = roundsToPlay;
+        GlobalGameState.pastRounds = 0;
     }
 
     public static int movesRemaining() {

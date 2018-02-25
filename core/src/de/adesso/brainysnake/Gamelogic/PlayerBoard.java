@@ -54,4 +54,9 @@ public class PlayerBoard {
     public void setDead(boolean value) {
         this.isDead = value;
     }
+
+    public void resetState(){
+        isDead = false;
+        points = 0;
+    }
 }
