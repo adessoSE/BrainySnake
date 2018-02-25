@@ -1,5 +1,6 @@
 package de.adesso.brainysnake.screenmanagement.screens;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -110,7 +111,7 @@ public class GameOverScreen extends AbstractScreen {
 
         getBatch().begin();
         defaultFont.getData().setScale(4, 4);
-        defaultFont.setColor(0, 0, 0, 1);
+        defaultFont.setColor(Color.WHITE);
 
         layout.setText(defaultFont, "Result of the round:");
         defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) + 75 * 2);
