@@ -1,14 +1,14 @@
 package de.adesso.brainysnake.renderer.level;
 
 
-import java.util.LinkedList;
-
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
+import java.util.LinkedList;
+
 /**
- * todo rukl doc
+ * Represents a renderable object for game
  */
 public class LevelObject {
 

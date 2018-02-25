@@ -9,6 +9,7 @@ import de.adesso.brainysnake.renderer.level.LevelObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -43,9 +44,24 @@ public class LevelBoard {
     private LevelObject buildPointLabyrinths() {
         LinkedList<Point2D> pointLabyrinths = new LinkedList<>();
 
-        //TODO rukl generate position
-        PointLabyrinth pointLabyrinth = new PointLabyrinth(10, 10);
+        List<Point2D> spawnPositions = new ArrayList<>();
+        spawnPositions.add(new Point2D(10, 10));
+        spawnPositions.add(new Point2D(110, 10));
+        spawnPositions.add(new Point2D(10, 110));
+
+        Point2D randomSpawnPosition = spawnPositions.get((int) (Math.random() * (spawnPositions.size() - 1)));
+        PointLabyrinth pointLabyrinth = new PointLabyrinth(randomSpawnPosition.x, randomSpawnPosition.y);
         pointLabyrinths.addAll(pointLabyrinth.getLabyrinthDots());
+        LinkedList<Point2D> pointPositions = pointLabyrinth.getPointPositions();
+
+        int i = 0;
+        for (Point2D pointPosition : pointPositions) {
+            if (i == 3) {
+                i = 0;
+                points.getPositions().add(new Point2D(pointPosition));
+            }
+            i++;
+        }
 
         return new LevelObject(pointLabyrinth.getLabyrinthDots(), Config.POINT_LABYRINTH_COLOR);
     }
@@ -224,20 +240,16 @@ public class LevelBoard {
         int snakeHeadx = position.getX();
         int snakeHeady = position.getY();
         snakeLength++;
-        try {
-            for (int x = snakeHeadx - snakeLength; x < snakeHeadx + snakeLength; x++) {
-                for (int y = snakeHeady - snakeLength; y < snakeHeady + snakeLength; y++) {
-                    if (checkCollision(new Point2D(x, y)) || spawnPositions.contains(new Point2D(x, y))) {
-                        LOGGER.error("Colission at - X:" + x + " Y:" + y);
-                        return false;
-                    }
+
+        for (int x = snakeHeadx - snakeLength; x < snakeHeadx + snakeLength; x++) {
+            for (int y = snakeHeady - snakeLength; y < snakeHeady + snakeLength; y++) {
+                if (checkCollision(new Point2D(x, y)) || spawnPositions.contains(new Point2D(x, y))) {
+                    return false;
                 }
             }
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("IndexOutOfBoundsException");
-            return false;
         }
-        LOGGER.info("Valid position at - X:" + snakeHeadx + " Y:" + snakeHeady);
+
+        LOGGER.debug("Valid position at - X:" + snakeHeadx + " Y:" + snakeHeady);
         return true;
     }
 
@@ -247,7 +259,7 @@ public class LevelBoard {
      * @return a boolean if the given Point collides with a Barrier or a Wall
      */
     public boolean checkCollision(Point2D point2D) {
-        return walls.getPositions().contains(point2D) || barriers.getPositions().contains(point2D);
+        return walls.getPositions().contains(point2D) || barriers.getPositions().contains(point2D) || pointLabyrinths.getPositions().contains(point2D);
     }
 
     /**

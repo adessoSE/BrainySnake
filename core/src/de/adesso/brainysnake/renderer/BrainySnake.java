@@ -139,14 +139,6 @@ public class BrainySnake extends ApplicationAdapter {
         gameSpriteBatch.end();
     }
 
-    public void toggleMusic() {
-        if (backgroundSound.isPlaying()) {
-            backgroundSound.pause();
-        } else {
-            backgroundSound.play();
-        }
-    }
-
     @Override
     public void dispose() {
         levelTexture.dispose();

@@ -12,7 +12,7 @@ public class Config {
     public static final int APPLICATION_HEIGHT = 900;
 
     /* gameplay settings */
-    public static final int MAX_ROUNDS = 100;
+    public static final int MAX_ROUNDS = 2000;
     public static final boolean RENDER_PLAYERVIEW = true;
     public static final int PLAYERVIEW_OFFSET_TO_LEFT = 2;
     public static final int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
@@ -30,7 +30,7 @@ public class Config {
 
     public static final Color LEVEL_COLOR = Color.WHITE;
     public static final Color BARRIER_COLOR = Color.LIGHT_GRAY;
-    public static final Color POINT_LABYRINTH_COLOR = Color.WHITE;
+    public static final Color POINT_LABYRINTH_COLOR = Color.LIGHT_GRAY;
     public static final Color COLOR_404 = Color.PINK;
     public static final Color BLINK_COLOR = Color.YELLOW;
 
@@ -39,7 +39,7 @@ public class Config {
     // If there's not enough space to create each barrier with enough distance to the next barriers, not all barriers are created
     public static final int DISTANCE_BETWEEN_BARRIERS = 10;
     public static final int INITIAL_PLAYER_LENGTH = 10;
-    public static final int MAX_POINTS_IN_LEVEL = 15;
+    public static final int MAX_POINTS_IN_LEVEL = 30;
     public static final int GHOST_TIME = 30;
     public static final int BLINK_TIME = ((int) UPDATE_RATE / 10) + 1;
 
