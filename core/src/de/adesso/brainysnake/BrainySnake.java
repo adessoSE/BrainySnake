@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import de.adesso.brainysnake.playercommon.math.Point2D;
-import de.adesso.brainysnake.renderer.GameController;
 import de.adesso.brainysnake.renderer.level.LevelDTO;
 import de.adesso.brainysnake.renderer.level.LevelObject;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
@@ -22,9 +22,6 @@ import java.util.List;
 public class BrainySnake extends ApplicationAdapter {
 
     private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
-    private int levelWidth;// = Config.APPLICATION_WIDTH / Config.DOT_SIZE;
-    private int levelHeight;// = Config.APPLICATION_HEIGHT / Config.DOT_SIZE;
-
     private Texture texture;
     private SpriteBatch gameSpriteBatch;
     private Sprite sprite;
@@ -34,38 +31,44 @@ public class BrainySnake extends ApplicationAdapter {
     private float timeSinceLastRender = 0;
 
     private LevelDTO levelDTO;
-
-    private GameController gameController = new GameController();
+    private List<LevelObject> snakes;
 
     public BrainySnake() {
 
     }
 
-    public void initialize(int levelWidth, int levelHeight) {
-        this.levelWidth = levelWidth;
-        this.levelHeight = levelHeight;
-        this.levelDTO = new LevelDTO(levelWidth, levelHeight);
+    public void initialize() {
+        int height = Config.APPLICATION_HEIGHT / Config.DOT_SIZE;
+        int width = Config.APPLICATION_WIDTH / Config.DOT_SIZE;
+        this.levelDTO = new LevelDTO(width, height);
     }
 
-    public void updateLevelPoints() {
+    public void updateSnakes(List<LevelObject> levelObjects) {
+        snakes = levelObjects;
+    }
 
+    //todo rukl split in methods
+    public void updateLevelPoints(LevelObject points, LevelObject barriers, LevelObject walls) {
+        levelDTO.setBarriers(barriers);
+        levelDTO.setWalls(walls);
+        levelDTO.setPoints(points);
     }
 
     @Override
     public void create() {
 
-        pixmap = new Pixmap(levelWidth, levelHeight, Pixmap.Format.RGBA8888);
+        pixmap = new Pixmap(levelDTO.getWidth(), levelDTO.getHeight(), Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.BLACK);
+        pixmap.fill();
 
         texture = new Texture(pixmap);
         sprite = new Sprite(texture);
 
-        pixmap.setColor(Color.BLACK);
-        pixmap.fill();
-
         backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.mp3"));
         //   startPlayingMusic(backgroundSound);
 
-        initializeCamera();
+        mainCamera = new OrthographicCamera();
+        mainCamera.setToOrtho(true, levelDTO.getWidth(), levelDTO.getHeight());
 
         gameSpriteBatch = new SpriteBatch();
         gameSpriteBatch.setProjectionMatrix(mainCamera.combined);
@@ -101,12 +104,6 @@ public class BrainySnake extends ApplicationAdapter {
         drawGameLoop();
     }
 
-    private void initializeCamera() {
-
-        mainCamera = new OrthographicCamera();
-        mainCamera.setToOrtho(true, levelWidth, levelHeight);
-    }
-
     public List<LevelObject> test() {
         List<LevelObject> levelObjects = new ArrayList<>();
         LevelObject walls = levelDTO.getWalls();
@@ -125,17 +122,8 @@ public class BrainySnake extends ApplicationAdapter {
             levelObjects.add(points);
         }
 
-        //todo rukl
-         /*   for (PlayerHandler playerHandler : gameMaster.getPlayerHandler()) {
-                Snake snake = playerHandler.getSnake();
-                if (Config.RENDER_PLAYERVIEW && playerHandler.getPlayerView() != null) {
-                    levelObjects.addAll(drawPlayerView(playerHandler.getPlayerView()));
-                }
-                levelObjects.add(snake.getHead());
-                levelObjects.add(snake.getBody());
+        levelObjects.addAll(snakes);
 
-            }
-            */
 
         return levelObjects;
     }
@@ -145,6 +133,7 @@ public class BrainySnake extends ApplicationAdapter {
         pixmap.setColor(Color.BLACK);
         pixmap.fill();
 
+
         List<LevelObject> levelObjects = test();
         for (LevelObject levelObject : levelObjects) {
             pixmap.setColor(levelObject.getColor());
@@ -152,6 +141,7 @@ public class BrainySnake extends ApplicationAdapter {
                 pixmap.drawPixel(tempDot.getX(), tempDot.getY());
             }
         }
+
         levelObjects.clear();
 
         // drawGameLoop pixmap to gameSpriteBatch

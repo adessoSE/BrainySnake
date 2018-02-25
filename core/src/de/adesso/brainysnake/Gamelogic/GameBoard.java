@@ -124,12 +124,12 @@ public class GameBoard {
 
     public void reset() {
 
-        //Reset reached Points of Player
+        //Reset reached points of player
         for (PlayerBoard playerBoard : brainySnakePlayers.values()) {
             playerBoard.resetState();
         }
 
-        //Reste rounds to play
+        //Reset rounds to play
         remainingRoundsToPlay = Config.MAX_ROUNDS;
     }
 }

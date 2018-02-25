@@ -46,4 +46,12 @@ public class LevelDTO {
     public void setPoints(LevelObject points) {
         this.points = points;
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

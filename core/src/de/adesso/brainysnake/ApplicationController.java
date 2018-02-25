@@ -8,11 +8,6 @@ public class ApplicationController extends Game {
 
     @Override
     public void create() {
-
-
-
-
-
         ScreenManager screenManager = ScreenManager.getINSTANCE();
         screenManager.initialize(this);
         screenManager.showScreen(ScreenType.MAIN_MENU);

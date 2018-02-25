@@ -21,8 +21,8 @@ public class DesktopLauncher {
         config.title = "BrainySnake";
         config.fullscreen = false;
         config.vSyncEnabled = false;
-        config.backgroundFPS = 60;
-        config.foregroundFPS = 60;
+        config.backgroundFPS = 10;
+        config.foregroundFPS = 10;
         config.samples = 4;
         config.width = Config.APPLICATION_WIDTH;
         config.height = Config.APPLICATION_HEIGHT;

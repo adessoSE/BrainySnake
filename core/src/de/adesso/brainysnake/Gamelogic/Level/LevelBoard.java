@@ -46,7 +46,7 @@ public class LevelBoard {
      * @return a LinkedList with the positions of the generated LevelWalls
      */
     private LinkedList<Point2D> buildOuterWalls() {
-        LinkedList<Point2D> positionts = new LinkedList<Point2D>();
+        LinkedList<Point2D> positionts = new LinkedList<>();
         for (int x = 0; x < width; x++) {
             // wall top
             positionts.add(new Point2D(x, 0));
@@ -54,7 +54,7 @@ public class LevelBoard {
             positionts.add(new Point2D(x, height - 1));
         }
 
-        for (int y = 1; y < width; y++) {
+        for (int y = 1; y < height; y++) {
             // wall left
             positionts.add(new Point2D(0, y));
             // wall right
@@ -70,8 +70,8 @@ public class LevelBoard {
     private LinkedList<Point2D> buildBarriers() {
         // Create a list that contains every unoccupied field in the game
         freeFields = new LinkedList<>();
-        for (int i = 0; i < Config.APPLICATION_WIDTH / Config.DOT_SIZE; i++) {
-            for (int j = 0; j < Config.APPLICATION_HEIGHT / Config.DOT_SIZE; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 freeFields.add(new Point2D(i, j));
             }
         }
@@ -328,5 +328,15 @@ public class LevelBoard {
         return false;
     }
 
+    public LevelObject getWalls() {
+        return walls;
+    }
 
+    public LevelObject getBarriers() {
+        return barriers;
+    }
+
+    public LevelObject getPoints() {
+        return points;
+    }
 }

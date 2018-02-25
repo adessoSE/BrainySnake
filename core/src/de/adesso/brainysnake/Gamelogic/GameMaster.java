@@ -1,5 +1,6 @@
 package de.adesso.brainysnake.Gamelogic;
 
+import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.BrainySnake;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
@@ -7,11 +8,13 @@ import de.adesso.brainysnake.Gamelogic.Level.LevelBoard;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
+import de.adesso.brainysnake.Gamelogic.Player.Snake;
 import de.adesso.brainysnake.playercommon.Field;
 import de.adesso.brainysnake.playercommon.FieldType;
 import de.adesso.brainysnake.playercommon.PlayerView;
 import de.adesso.brainysnake.playercommon.RoundEvent;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import de.adesso.brainysnake.renderer.level.LevelObject;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
 
@@ -34,7 +37,7 @@ public class GameMaster {
 
     public GameMaster() {
         brainySnake = new BrainySnake();
-        brainySnake.initialize(Config.LEVEL_WIDTH, Config.LEVEL_HEIGHT);
+        brainySnake.initialize();
         brainySnake.create();
 
         levelBoard = new LevelBoard(Config.LEVEL_WIDTH, Config.LEVEL_HEIGHT);
@@ -147,17 +150,60 @@ public class GameMaster {
         ScreenManager.getINSTANCE().showScreen(ScreenType.GAME_OVER_SCREEN);
     }
 
-    public void updateGame(){
+    public void updateGame() {
 
+        brainySnake.updateLevelPoints(levelBoard.getPoints(), levelBoard.getBarriers(), levelBoard.getWalls());
+
+        List<LevelObject> snakes = new ArrayList<>();
+        for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
+            Snake snake = playerHandler.getSnake();
+            snakes.add(snake.getHead());
+            snakes.add(snake.getBody());
+            if (Config.RENDER_PLAYERVIEW && playerHandler.getPlayerView() != null) {
+                snakes.addAll(drawPlayerView(playerHandler.getPlayerView()));
+            }
+        }
+
+        brainySnake.updateSnakes(snakes);
         brainySnake.render();
-      //todo rukl  brainySnake.up
     }
+
     /**
      * Updates the meta information of the game and the player in the gameboard
      */
     private void updateGameBaordData() {
         //Update Gameboard
         GameBoard.getINSTANCE().updateGameBoard(GlobalGameState.movesRemaining());
+    }
+
+    //TODO rukl move to own package
+    public List<LevelObject> drawPlayerView(PlayerView playerView) {
+        List<LevelObject> levelObject = new ArrayList<>();
+
+        for (Field field : playerView.getVisibleFields()) {
+            LevelObject temp = new LevelObject();
+            temp.getPositions().add(field.getPosition());
+            switch (field.getFieldType()) {
+                case EMPTY:
+                    temp.setColor(Color.DARK_GRAY);
+                    break;
+                case LEVEL:
+                    temp.setColor(Color.GREEN);
+                    break;
+                case PLAYER:
+                    temp.setColor(Color.PINK);
+                    break;
+                case POINT:
+                    temp.setColor(Color.ORANGE);
+                    break;
+                default:
+                    temp.setColor(Color.PINK);
+            }
+
+            levelObject.add(temp);
+        }
+
+        return levelObject;
     }
 
     private void updateRoundForPlayer(PlayerHandler playerHandler) {

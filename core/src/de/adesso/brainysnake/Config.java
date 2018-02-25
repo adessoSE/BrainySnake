@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Config {
+    public static int DOT_SIZE = 10;
+    public static int APPLICATION_WIDTH = 1280;
+    public static int APPLICATION_HEIGHT = 900;
 
     /* gameplay settings */
     public static final int MAX_ROUNDS = 100;
@@ -15,8 +18,8 @@ public class Config {
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
     public static int STARTING_POSITION_SPACE = 8;
     public static int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
-    public static int LEVEL_WIDTH = 100;//quantity in Fields (not Pixel)
-    public static int LEVEL_HEIGHT = 100;//quantity in Fields (not Pixel)
+    public static int LEVEL_WIDTH = APPLICATION_WIDTH / DOT_SIZE;
+    public static int LEVEL_HEIGHT = APPLICATION_HEIGHT/ DOT_SIZE;
 
     public static List<Color> PLAYER_COLORS = Arrays.asList(Color.BLUE, Color.GREEN,Color.ORANGE, Color.CYAN);
 
@@ -25,9 +28,8 @@ public class Config {
     public static final Color POINT_COLLOR = Color.RED;
     public static final Color GHOSTMODE_COLOR = Color.GRAY;
     public static final float SNAKE_BODY_LIGHTING = 0.7f;
-    public static int APPLICATION_WIDTH = 1280;
-    public static int APPLICATION_HEIGHT = 900;
-    public static int DOT_SIZE = 10;
+
+
     public static int SNAKE_CUBE_SIZE = 10;
     public static Color LEVEL_COLOR = Color.WHITE;
     public static Color BARRIER_COLOR = Color.LIGHT_GRAY;
