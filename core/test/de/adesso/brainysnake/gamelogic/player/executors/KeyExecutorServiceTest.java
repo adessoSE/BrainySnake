@@ -1,7 +1,5 @@
-package de.adesso.brainysnake.Gamelogic.Player.executors;
+package de.adesso.brainysnake.gamelogic.player.executors;
 
-import de.adesso.brainysnake.Gamelogic.Player.SlowPlayer;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;

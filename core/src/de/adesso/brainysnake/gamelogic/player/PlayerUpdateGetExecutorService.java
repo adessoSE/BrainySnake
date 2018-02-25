@@ -1,6 +1,6 @@
-package de.adesso.brainysnake.Gamelogic.Player;
+package de.adesso.brainysnake.gamelogic.player;
 
-import de.adesso.brainysnake.Gamelogic.Player.executors.KeyExecutorService;
+import de.adesso.brainysnake.gamelogic.player.executors.KeyExecutorService;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 
 import java.util.List;

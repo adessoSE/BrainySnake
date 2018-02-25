@@ -1,8 +1,8 @@
-package de.adesso.brainysnake.Gamelogic.Player;
+package de.adesso.brainysnake.gamelogic.player;
 
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.level.GlobalGameState;
-import de.adesso.brainysnake.Gamelogic.PlayerBoard;
+import de.adesso.brainysnake.gamelogic.level.GlobalGameState;
+import de.adesso.brainysnake.gamelogic.PlayerBoard;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import org.slf4j.Logger;
@@ -132,7 +132,7 @@ public class PlayerHandler {
     }
 
     /**
-     * Requests the next Update (step) from the Agent (Player) Warning: Call this Method from Thread or Test only
+     * Requests the next Update (step) from the Agent (player) Warning: Call this Method from Thread or Test only
      *
      * @return PlayerUpdate (this can be null
      */
@@ -147,7 +147,7 @@ public class PlayerHandler {
     public void penalty() {
         if (snake.countPoints() <= 1) {
             kill();
-            LOGGER.info("RIP Player {}", playerBoard.getName());
+            LOGGER.info("RIP player {}", playerBoard.getName());
         } else {
             snake.removeTail();
         }

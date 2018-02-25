@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic.level;
+package de.adesso.brainysnake.gamelogic.level;
 
 import de.adesso.brainysnake.playercommon.math.Point2D;
 

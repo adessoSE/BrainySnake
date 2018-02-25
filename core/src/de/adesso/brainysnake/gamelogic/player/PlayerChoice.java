@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic.Player;
+package de.adesso.brainysnake.gamelogic.player;
 
 import de.adesso.brainysnake.playercommon.Orientation;
 

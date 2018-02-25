@@ -1,6 +1,6 @@
-package de.adesso.brainysnake.Gamelogic.Player.executors;
+package de.adesso.brainysnake.gamelogic.player.executors;
 
-import de.adesso.brainysnake.Gamelogic.utils.time.Timekeeper;
+import de.adesso.brainysnake.gamelogic.utils.time.Timekeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

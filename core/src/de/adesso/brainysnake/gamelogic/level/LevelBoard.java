@@ -1,8 +1,8 @@
-package de.adesso.brainysnake.Gamelogic.level;
+package de.adesso.brainysnake.gamelogic.level;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Player.Snake;
+import de.adesso.brainysnake.gamelogic.player.Snake;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.renderer.level.LevelObject;
