@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic.utils.time;
+package de.adesso.brainysnake.gamelogic.utils.time;
 
 import java.util.concurrent.TimeUnit;
 

@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic;
+package de.adesso.brainysnake.gamelogic;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
@@ -32,7 +32,7 @@ public class Utils {
     }
 
     /**
-     * List of shuffled Player Colors
+     * List of shuffled player Colors
      *
      * @param count Needed amount of Colors in List. Can not be more than Config.PLAYER_COLOR
      * @return List of Color

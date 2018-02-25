@@ -1,14 +1,14 @@
-package de.adesso.brainysnake.Gamelogic;
+package de.adesso.brainysnake.gamelogic;
 
 import com.badlogic.gdx.graphics.Color;
-import de.adesso.brainysnake.BrainySnake;
+import de.adesso.brainysnake.renderer.BrainySnake;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.level.GlobalGameState;
-import de.adesso.brainysnake.Gamelogic.level.LevelBoard;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
-import de.adesso.brainysnake.Gamelogic.Player.Snake;
+import de.adesso.brainysnake.gamelogic.level.GlobalGameState;
+import de.adesso.brainysnake.gamelogic.level.LevelBoard;
+import de.adesso.brainysnake.gamelogic.player.PlayerChoice;
+import de.adesso.brainysnake.gamelogic.player.PlayerController;
+import de.adesso.brainysnake.gamelogic.player.PlayerHandler;
+import de.adesso.brainysnake.gamelogic.player.Snake;
 import de.adesso.brainysnake.playercommon.Field;
 import de.adesso.brainysnake.playercommon.FieldType;
 import de.adesso.brainysnake.playercommon.PlayerView;

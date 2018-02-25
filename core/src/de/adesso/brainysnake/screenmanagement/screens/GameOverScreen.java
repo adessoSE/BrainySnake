@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.GameBoard;
-import de.adesso.brainysnake.Gamelogic.PlayerBoard;
+import de.adesso.brainysnake.gamelogic.GameBoard;
+import de.adesso.brainysnake.gamelogic.PlayerBoard;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
 

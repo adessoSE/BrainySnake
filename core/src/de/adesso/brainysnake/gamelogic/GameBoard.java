@@ -1,8 +1,8 @@
-package de.adesso.brainysnake.Gamelogic;
+package de.adesso.brainysnake.gamelogic;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Player.exampleagents.KeyBoardPlayer;
+import de.adesso.brainysnake.gamelogic.player.exampleagents.KeyBoardPlayer;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 import de.adesso.brainysnake.sampleplayer.YourPlayer;
@@ -74,7 +74,7 @@ public class GameBoard {
      *
      * @param brainySnakePlayers List of players
      * @param playerColors       A list of colors to be shared among the players
-     * @return Map of {@link BrainySnakePlayer} mapped to Color of Player {@link Color}
+     * @return Map of {@link BrainySnakePlayer} mapped to Color of player {@link Color}
      */
     //TODO rukl TESTS
     Map<Long, PlayerBoard> createPlayerMap(List<PlayerBoard> brainySnakePlayers, List<Color> playerColors) {

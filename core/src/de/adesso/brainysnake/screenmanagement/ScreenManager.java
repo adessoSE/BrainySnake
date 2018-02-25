@@ -3,14 +3,7 @@ package de.adesso.brainysnake.screenmanagement;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import de.adesso.brainysnake.*;
-import de.adesso.brainysnake.Gamelogic.GameBoard;
-import de.adesso.brainysnake.Gamelogic.GameMaster;
-import de.adesso.brainysnake.Gamelogic.PlayerBoard;
 import de.adesso.brainysnake.screenmanagement.screens.*;
-
-import java.lang.reflect.WildcardType;
-import java.util.ArrayList;
 
 /**
  * Manage the current shown Screens in Game

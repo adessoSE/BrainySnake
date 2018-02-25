@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic;
+package de.adesso.brainysnake.gamelogic;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;

@@ -1,4 +1,4 @@
-package de.adesso.brainysnake;
+package de.adesso.brainysnake.renderer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.renderer.level.LevelDTO;
 import de.adesso.brainysnake.renderer.level.LevelObject;
