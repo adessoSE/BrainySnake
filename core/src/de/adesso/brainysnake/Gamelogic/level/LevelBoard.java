@@ -204,7 +204,7 @@ public class LevelBoard {
     }
 
     /**
-     * to test if there is enough space for a snake
+     * to createLevelObjects if there is enough space for a snake
      * checks if there's nothing in a radius of length around the snake
      *
      * @return true if there's enough space

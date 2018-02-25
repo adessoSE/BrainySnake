@@ -4,11 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO rukl
+ * Holds information about level objects for the renderer
  */
 public class LevelDTO {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LevelDTO.class.getName());
 
     private int width, height;
 

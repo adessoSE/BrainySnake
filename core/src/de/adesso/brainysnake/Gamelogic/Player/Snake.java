@@ -33,7 +33,7 @@ public class Snake {
      *
      * @param color
      */
-    //TODO rukl test
+    //TODO rukl createLevelObjects
     public void setHeadAndBodyColor(Color color) {
         headColor = new Color(color);
         bodyColor = new Color(color);

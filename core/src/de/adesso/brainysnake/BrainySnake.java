@@ -18,20 +18,15 @@ import java.util.List;
 
 public class BrainySnake extends ApplicationAdapter {
 
-    private static final float MIN_FRAME_LENGTH = 1f / Config.UPDATE_RATE;
-    private Texture texture;
     private SpriteBatch gameSpriteBatch;
-    private Sprite sprite;
-    private Pixmap pixmap;
+    private Texture levelTexture;
+    private Sprite levelSprite;
+    private Pixmap levelMap;
     private Music backgroundSound;
-    private OrthographicCamera mainCamera;
-    private float timeSinceLastRender = 0;
-
     private LevelDTO levelDTO;
     private List<LevelObject> snakes;
 
     public BrainySnake() {
-
     }
 
     public void initialize() {
@@ -40,31 +35,20 @@ public class BrainySnake extends ApplicationAdapter {
         this.levelDTO = new LevelDTO(width, height);
     }
 
-    public void updateSnakes(List<LevelObject> levelObjects) {
-        snakes = levelObjects;
-    }
-
-    //todo rukl split in methods
-    public void updateLevelPoints(LevelObject points, LevelObject barriers, LevelObject walls) {
-        levelDTO.setBarriers(barriers);
-        levelDTO.setWalls(walls);
-        levelDTO.setPoints(points);
-    }
-
     @Override
     public void create() {
 
-        pixmap = new Pixmap(levelDTO.getWidth(), levelDTO.getHeight(), Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.BLACK);
-        pixmap.fill();
+        levelMap = new Pixmap(levelDTO.getWidth(), levelDTO.getHeight(), Pixmap.Format.RGBA8888);
+        levelMap.setColor(Color.BLACK);
+        levelMap.fill();
 
-        texture = new Texture(pixmap);
-        sprite = new Sprite(texture);
+        levelTexture = new Texture(levelMap);
+        levelSprite = new Sprite(levelTexture);
 
         backgroundSound = Gdx.audio.newMusic(Gdx.files.internal("backgroundMusic.mp3"));
-        //   startPlayingMusic(backgroundSound);
+        startPlayingMusic(backgroundSound);
 
-        mainCamera = new OrthographicCamera();
+        OrthographicCamera mainCamera = new OrthographicCamera();
         mainCamera.setToOrtho(true, levelDTO.getWidth(), levelDTO.getHeight());
 
         gameSpriteBatch = new SpriteBatch();
@@ -83,16 +67,15 @@ public class BrainySnake extends ApplicationAdapter {
 
     @Override
     public void render() {
-        timeSinceLastRender += Gdx.graphics.getDeltaTime();
-        if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
-            // Do the actual rendering, pass timeSinceLastRender as delta time.
-            timeSinceLastRender = 0f;
-        }
-
         drawGameLoop();
     }
 
-    public List<LevelObject> test() {
+    /**
+     * Collects all Object, which should be renderen in level
+     *
+     * @return List<LevelObject> with alls Object, belong to the level
+     */
+    private List<LevelObject> createLevelObjects() {
         List<LevelObject> levelObjects = new ArrayList<>();
         LevelObject walls = levelDTO.getWalls();
         LevelObject barriers = levelDTO.getBarriers();
@@ -110,48 +93,58 @@ public class BrainySnake extends ApplicationAdapter {
             levelObjects.add(points);
         }
 
-        levelObjects.addAll(snakes);
-
+        if (!snakes.isEmpty()) {
+            levelObjects.addAll(snakes);
+        }
 
         return levelObjects;
     }
 
+    public void updateSnakes(List<LevelObject> levelObjects) {
+        snakes = levelObjects;
+    }
+
+    public void updateLevelPoints(LevelObject points, LevelObject barriers, LevelObject walls) {
+        levelDTO.setBarriers(barriers);
+        levelDTO.setWalls(walls);
+        levelDTO.setPoints(points);
+    }
+
     public void drawGameLoop() {
         // Redraw the head.
-        pixmap.setColor(Color.BLACK);
-        pixmap.fill();
+        levelMap.setColor(Color.BLACK);
+        levelMap.fill();
 
-
-        List<LevelObject> levelObjects = test();
+        List<LevelObject> levelObjects = createLevelObjects();
         for (LevelObject levelObject : levelObjects) {
-            pixmap.setColor(levelObject.getColor());
+            levelMap.setColor(levelObject.getColor());
             for (Point2D tempDot : levelObject.getPositions()) {
-                pixmap.drawPixel(tempDot.getX(), tempDot.getY());
+                levelMap.drawPixel(tempDot.getX(), tempDot.getY());
             }
         }
 
         levelObjects.clear();
 
         // drawGameLoop pixmap to gameSpriteBatch
-        texture.draw(pixmap, 0, 0);
+        levelTexture.draw(levelMap, 0, 0);
         gameSpriteBatch.begin();
-        sprite.draw(gameSpriteBatch);
+        levelSprite.draw(gameSpriteBatch);
         gameSpriteBatch.end();
     }
 
     public void toggleMusic() {
-//        if(backgroundSound.isPlaying()){
-//            backgroundSound.pause();
-//        } else {
-//            backgroundSound.play();
-//        }
+        if (backgroundSound.isPlaying()) {
+            backgroundSound.pause();
+        } else {
+            backgroundSound.play();
+        }
     }
 
     @Override
     public void dispose() {
-        texture.dispose();
+        levelTexture.dispose();
         gameSpriteBatch.dispose();
-        pixmap.dispose();
+        levelMap.dispose();
         backgroundSound.dispose();
     }
 }
