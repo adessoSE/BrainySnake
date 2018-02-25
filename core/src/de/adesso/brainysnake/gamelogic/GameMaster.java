@@ -178,7 +178,6 @@ public class GameMaster {
         gameBoard.updateGameBoard(GlobalGameState.movesRemaining());
     }
 
-    //TODO rukl move to own package
     public List<LevelObject> drawPlayerView(PlayerView playerView) {
         List<LevelObject> levelObject = new ArrayList<>();
 
@@ -303,13 +302,5 @@ public class GameMaster {
         if (!playerHandler.isGhostMode() && levelBoard.tryConsumePoint(nextPosition)) {
             roundEvents.add(CONSUMED_POINT);
         }
-    }
-
-    public List<PlayerHandler> getPlayerHandler() {
-        return playerController.getPlayerHandlerList();
-    }
-
-    public void shutdown() {
-        this.playerController.shutdown();
     }
 }

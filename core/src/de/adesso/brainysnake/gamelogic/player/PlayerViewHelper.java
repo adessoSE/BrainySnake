@@ -13,7 +13,7 @@ import static de.adesso.brainysnake.Config.PLAYERVIEW_OFFSET_TO_LEFT;
 public class PlayerViewHelper {
 
     public static List<Point2D> generatePlayerView(Orientation orientation, Point2D position) {
-        List<Point2D> view = new ArrayList<Point2D>();
+        List<Point2D> view = new ArrayList<>();
 
         // Find the first
         Point2D leftTopCornerPositionOfView = getLeftTopCornerPositionOfView(orientation, position, PLAYERVIEW_OFFSET_TO_LEFT, PLAYERVIEW_OFFSET_TO_AHEAD);
@@ -62,5 +62,4 @@ public class PlayerViewHelper {
 
         return currentPosition;
     }
-
 }

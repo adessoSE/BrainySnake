@@ -76,7 +76,6 @@ public class GameBoard {
      * @param playerColors       A list of colors to be shared among the players
      * @return Map of {@link BrainySnakePlayer} mapped to Color of player {@link Color}
      */
-    //TODO rukl TESTS
     Map<Long, PlayerBoard> createPlayerMap(List<PlayerBoard> brainySnakePlayers, List<Color> playerColors) {
 
         if (brainySnakePlayers.size() > playerColors.size()) {

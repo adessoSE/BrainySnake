@@ -19,7 +19,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * Help for the Gamemaster. Stores meta-information about level.
  * And provides helper methods to place objects in the level
  */
-//TODO don't use LevelObject in Gamelogik-Package. It should be fully separated from Renderer. Use a DTO instead
 public class LevelBoard {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LevelBoard.class.getName());

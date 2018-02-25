@@ -4,7 +4,10 @@ import de.adesso.brainysnake.gamelogic.utils.time.Timekeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -12,9 +15,10 @@ import java.util.function.Supplier;
 
 /**
  * KeyExecutorService handles all thread call in the game
- * @param <V> Expected competition result
+ *
+ * @param <V>   Expected competition result
  * @param <KEY> identifies the competing instance
- * @param <IN> instance to compute
+ * @param <IN>  instance to compute
  */
 public abstract class KeyExecutorService<V, KEY, IN> {
 
@@ -25,21 +29,19 @@ public abstract class KeyExecutorService<V, KEY, IN> {
     private final Map<KEY, IN> executableInstances;
     private final Map<KEY, ExecutorService> executorMap;
     private final Map<KEY, FutureTask> futureTaskMap;
-
-
-    private Timekeeper timekeeper;
-
     /**
      * To prevent any future mismatch, we will iterate on this number
      */
     private final int numberOfExecutions;
+    private Timekeeper timekeeper;
 
     public KeyExecutorService(List<IN> instancesToCall, int maxProcessingTimeMs) {
         this.executableInstances = new HashMap<>();
         this.executorMap = new HashMap<>();
         this.futureTaskMap = new HashMap<>();
 
-        this.completionQueue = new LinkedBlockingQueue<Future<KeyResult>>();;
+        this.completionQueue = new LinkedBlockingQueue<Future<KeyResult>>();
+        ;
 
 
         this.numberOfExecutions = instancesToCall.size();
@@ -68,7 +70,7 @@ public abstract class KeyExecutorService<V, KEY, IN> {
 
     void stopAll() {
         this.futureTaskMap.forEach((key, futureTask) -> {
-            if(futureTask.isDone()) {
+            if (futureTask.isDone()) {
                 this.onSuccess(this.executableInstances.get(key), key);
             } else if (futureTask.isCancelled()) {
                 // if the task was already canceled
@@ -124,7 +126,6 @@ public abstract class KeyExecutorService<V, KEY, IN> {
     /**
      * Returns all results form the current execution
      * incomplete Tasks will get an empty Optional as result
-     * @return
      */
     Map<KEY, Optional<V>> getAllResults() {
         Map<KEY, Optional<V>> results = new HashMap<>();
@@ -140,9 +141,10 @@ public abstract class KeyExecutorService<V, KEY, IN> {
 
     /**
      * Get all completed results monitored by the {@link Timekeeper}
+     *
      * @return all completed tasks
      */
-     Map<KEY, Optional<V>> getCompletedResults() {
+    Map<KEY, Optional<V>> getCompletedResults() {
         Map<KEY, Optional<V>> resultMap = new HashMap<KEY, Optional<V>>();
 
         // start time
@@ -183,7 +185,7 @@ public abstract class KeyExecutorService<V, KEY, IN> {
 
     /**
      * Executes the Callable with the executor, the result will be stored in the completionQueue
-     *
+     * <p>
      * If the callable task generates some Throwable,
      * this will cause the UncaughtExceptionHandler for the Thread running the Task
      * The default UncaughtExceptionHandler will print the Throwables stack trace to System.err,
@@ -199,7 +201,7 @@ public abstract class KeyExecutorService<V, KEY, IN> {
 
     /**
      * Executes the Callable with the executor, the result will be stored in the completionQueue
-     *
+     * <p>
      * If the callable task generates some Throwable,
      * the Trowable will be bind to the Future.
      * Calling get() on the Future, will throw the ExecutionException
@@ -215,6 +217,7 @@ public abstract class KeyExecutorService<V, KEY, IN> {
 
     /**
      * Executes the Callable with the executor, the result will be stored in the completionQueue
+     *
      * @param callable task to run
      * @param executor runnable to run the callable
      * @return A cancellable asynchronous computation
@@ -226,40 +229,44 @@ public abstract class KeyExecutorService<V, KEY, IN> {
         return futureTask;
     }
 
-
-    /**
-     * FutureTask extension to enqueue upon completion
-     */
-    private class QueueingFuture extends FutureTask<Void> {
-        QueueingFuture(RunnableFuture<KeyResult> task) {
-            super(task, null);
-            this.task = task;
-        }
-
-        // if the task finishes add the result to completion Queue
-        protected void done() { completionQueue.add(task); }
-        private final Future<KeyResult> task;
-    }
-
     public abstract Supplier<V> functionCall(IN caller);
 
     public abstract KEY getKey(IN caller);
 
     /**
      * tells whether {@link #functionCall(Object)} was canceled
+     *
      * @param instance instance on which the als call was performed
-     * @param key identifies the caller instance
+     * @param key      identifies the caller instance
      */
     public abstract void onCancel(IN instance, KEY key);
 
     /**
      * Maintenance method
      * Tells whether {@link #functionCall(Object)} was successful
+     *
      * @param instance instance on which the als call was performed
-     * @param key identifies the caller instance
+     * @param key      identifies the caller instance
      */
     public void onSuccess(IN instance, KEY key) {
         // normally we don't have to do anything of everything is fine
+    }
+
+    /**
+     * FutureTask extension to enqueue upon completion
+     */
+    private class QueueingFuture extends FutureTask<Void> {
+        private final Future<KeyResult> task;
+
+        QueueingFuture(RunnableFuture<KeyResult> task) {
+            super(task, null);
+            this.task = task;
+        }
+
+        // if the task finishes add the result to completion Queue
+        protected void done() {
+            completionQueue.add(task);
+        }
     }
 
     public class KeyCallable implements Callable<KeyResult<KEY, V>> {

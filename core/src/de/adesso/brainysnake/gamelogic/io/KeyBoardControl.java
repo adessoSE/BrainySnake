@@ -7,15 +7,9 @@ public class KeyBoardControl extends InputAdapter {
 
     public static boolean SPACE;
 
-    public static boolean UP;
-    public static boolean LEFT;
-    public static boolean DOWN;
-    public static boolean RIGHT;
+    public static boolean UP, LEFT, DOWN, RIGHT;
 
-    public static boolean W;
-    public static boolean A;
-    public static boolean S;
-    public static boolean D;
+    public static boolean W, A, S, D;
 
     public boolean keyDown(int k) {
         if (k == Input.Keys.LEFT) {

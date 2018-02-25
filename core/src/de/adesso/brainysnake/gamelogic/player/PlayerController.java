@@ -60,16 +60,6 @@ public class PlayerController {
         return agentChoiceMap;
     }
 
-    //TODO @florianKroschewski
-    public void shutdown() {
-        // This will make the executor accept no new threads
-        // and finish all existing threads in the queue
-
-
-        // Wait until all threads are finish
-        // playerStatePushExecutor.awaitTermination();
-    }
-
     public List<PlayerHandler> getPlayerHandlerList() {
         return playerHandlerList;
     }

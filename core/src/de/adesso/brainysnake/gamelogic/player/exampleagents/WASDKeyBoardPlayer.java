@@ -6,6 +6,9 @@ import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.PlayerState;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 
+/**
+ * Agent whicht can be controlled by keyboard input (w, a, s, d keys)
+ */
 public class WASDKeyBoardPlayer implements BrainySnakePlayer {
 
     private Orientation lastOrientation;

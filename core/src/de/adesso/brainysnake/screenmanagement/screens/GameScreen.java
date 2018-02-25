@@ -19,7 +19,6 @@ import de.adesso.brainysnake.screenmanagement.ScreenType;
 
 import java.util.List;
 
-//TODO move Pause-Screen to this Screen
 public class GameScreen extends AbstractScreen {
 
     private GameMaster gameMaster;

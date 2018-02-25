@@ -6,7 +6,12 @@ import de.adesso.brainysnake.playercommon.PlayerUpdate;
 
 import static de.adesso.brainysnake.playercommon.Orientation.RIGHT;
 
+/**
+ * Testclass for agents, which takes much time to make a decision.
+ * For testing thread handling with blocking agents.
+ */
 public class BlockingPlayer implements BrainySnakePlayer {
+
     @Override
     public String getPlayerName() {
         return "BlockingPlayer";

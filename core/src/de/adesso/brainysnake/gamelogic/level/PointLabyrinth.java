@@ -34,9 +34,6 @@ public class PointLabyrinth {
         buildLabyrinth(x, y);
     }
 
-    /**
-     * TODO rukl doc
-     */
     private void buildLabyrinth(int x, int y) {
 
         for (int tempY = 0; tempY < layout.length; tempY++) {
