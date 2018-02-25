@@ -29,7 +29,7 @@ public class PlayerController {
         // Add player to handler
         for (PlayerBoard player : playerMap.values()) {
             Snake newPlayerSnake = levelBoard.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH, player.getColor());
-            playerHandlerList.add(new PlayerHandler(player.getBrainySnakePlayer(), newPlayerSnake));
+            playerHandlerList.add(new PlayerHandler(player, newPlayerSnake));
         }
 
         // create Thread handlers
@@ -60,6 +60,7 @@ public class PlayerController {
         return agentChoiceMap;
     }
 
+    //TODO @florianKroschewski
     public void shutdown() {
         // This will make the executor accept no new threads
         // and finish all existing threads in the queue

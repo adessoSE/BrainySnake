@@ -16,12 +16,11 @@ public class Config {
     public static final boolean RENDER_PLAYERVIEW = true;
     public static int PLAYERVIEW_OFFSET_TO_LEFT = 2;
     public static int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
-    public static int STARTING_POSITION_SPACE = 8;
     public static int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
     public static int LEVEL_WIDTH = APPLICATION_WIDTH / DOT_SIZE;
     public static int LEVEL_HEIGHT = APPLICATION_HEIGHT/ DOT_SIZE;
 
-    public static List<Color> PLAYER_COLORS = Arrays.asList(Color.BLUE, Color.GREEN,Color.ORANGE, Color.CYAN);
+    public static List<Color> PLAYER_COLORS = Arrays.asList(Color.PINK, Color.GREEN,Color.ORANGE, Color.CYAN);
 
     /* others */
     public static final float UPDATE_RATE = 10f;
@@ -29,15 +28,12 @@ public class Config {
     public static final Color GHOSTMODE_COLOR = Color.GRAY;
     public static final float SNAKE_BODY_LIGHTING = 0.7f;
 
-
-    public static int SNAKE_CUBE_SIZE = 10;
     public static Color LEVEL_COLOR = Color.WHITE;
     public static Color BARRIER_COLOR = Color.LIGHT_GRAY;
     public static Color COLOR_404 = Color.PINK;
     public static Color BLINK_COLOR = Color.YELLOW;
 
     public static Color DEAD_COLOR = Color.VIOLET;
-    public static int BLINKING_SPEED = 5; // Blink length in Update-Calls
     public static int QUANTITY_BARRIERS = 5;
     // If there's not enough space to create each barrier with enough distance to the next barriers, not all barriers are created
     public static int DISTANCE_BETWEEN_BARRIERS = 10;

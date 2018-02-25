@@ -2,9 +2,9 @@ package de.adesso.brainysnake.Gamelogic.Player;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.renderer.level.LevelObject;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import de.adesso.brainysnake.renderer.level.LevelObject;
 
 import java.util.LinkedList;
 
@@ -57,11 +57,20 @@ public class Snake {
     }
 
     public void removeHead() {
-        head.getPositions().removeLast();
+        if (!head.getPositions().isEmpty()) {
+            head.getPositions().removeLast();
+        }
     }
 
     public void removeTail() {
-        body.getPositions().removeLast();
+        if (!body.getPositions().isEmpty()) {
+            body.getPositions().removeLast();
+        }
+    }
+
+    public void clear(){
+        head.getPositions().clear();
+        body.getPositions().clear();
     }
 
     public void setGhostMode() {

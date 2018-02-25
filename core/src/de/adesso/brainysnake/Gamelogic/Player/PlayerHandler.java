@@ -3,8 +3,12 @@ package de.adesso.brainysnake.Gamelogic.Player;
 import com.badlogic.gdx.Gdx;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
+import de.adesso.brainysnake.Gamelogic.PlayerBoard;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import de.adesso.brainysnake.renderer.level.LevelDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +20,11 @@ import java.util.UUID;
  */
 public class PlayerHandler {
 
-    private Orientation currentOrientation;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerHandler.class.getName());
 
-    private BrainySnakePlayer brainySnakePlayer;
+    private PlayerBoard playerBoard;
+
+    private Orientation currentOrientation;
 
     private List<RoundEvent> roundEvents = new ArrayList<>();
 
@@ -26,7 +32,7 @@ public class PlayerHandler {
 
     private PlayerState lastPlayerState;
 
-    private boolean dead, ghostMode, confused, blinked;
+    private boolean isDead, isGhostMode, isConfused, isBlinking;
 
     private int ghostTime = 0, blinkTime = 0;
 
@@ -38,21 +44,21 @@ public class PlayerHandler {
      */
     private UUID playerIdentifier;
 
-    public PlayerHandler(BrainySnakePlayer brainySnakePlayer, Snake snake) {
-        this.brainySnakePlayer = brainySnakePlayer;
+    public PlayerHandler(PlayerBoard playerBoard, Snake snake) {
+        this.playerBoard = playerBoard;
         this.currentOrientation = snake.getStartOrientation();
         this.snake = snake;
         this.playerIdentifier = UUID.randomUUID();
     }
 
     public void update() {
-        if (dead) {
+        if (isDead) {
             return;
         }
 
-        if (ghostMode) {
+        if (isGhostMode) {
             ghostMode();
-        } else if (confused) {
+        } else if (isConfused) {
             blink();
         } else {
             snake.reset();
@@ -63,7 +69,7 @@ public class PlayerHandler {
         if (ghostTime++ > Config.GHOST_TIME) {
             ghostTime = 0;
             snake.reset();
-            ghostMode = false;
+            isGhostMode = false;
         } else {
             snake.setGhostMode();
         }
@@ -72,10 +78,10 @@ public class PlayerHandler {
     private void blink() {
         if (blinkTime++ > Config.BLINK_TIME) {
             blinkTime = 0;
-            blinked = !blinked;
+            isBlinking = !isBlinking;
         }
 
-        if (blinked) {
+        if (isBlinking) {
             snake.reset();
         } else {
             snake.blink();
@@ -115,7 +121,7 @@ public class PlayerHandler {
             }
         }
 
-        this.lastPlayerState = new PlayerState(GlobalGameState.getPastRounds(), GlobalGameState.movesRemaining(), points, head, tail, ghostMode, ghostModeRemaining, bitByPlayer, moved, collisionWithLevel, playerView);
+        this.lastPlayerState = new PlayerState(GlobalGameState.getPastRounds(), GlobalGameState.movesRemaining(), points, head, tail, isGhostMode, ghostModeRemaining, bitByPlayer, moved, collisionWithLevel, playerView);
     }
 
     /**
@@ -124,7 +130,7 @@ public class PlayerHandler {
      * @return if processing was successful. (This can be ignored)
      */
     Boolean sendPlayerState() {
-        return this.brainySnakePlayer.handlePlayerStatusUpdate(this.lastPlayerState);
+        return playerBoard.getBrainySnakePlayer().handlePlayerStatusUpdate(this.lastPlayerState);
     }
 
     /**
@@ -133,24 +139,26 @@ public class PlayerHandler {
      * @return PlayerUpdate (this can be null
      */
     PlayerUpdate requestPlayerUpdate() {
-        return brainySnakePlayer.tellPlayerUpdate();
-    }
-
-    public void kill() {
-        dead = true;
-        Gdx.app.log("AGENT: ", "Player " + brainySnakePlayer.getPlayerName() + " has died");
+        return playerBoard.getBrainySnakePlayer().tellPlayerUpdate();
     }
 
     public boolean isDead() {
-        return dead;
+        return isDead;
     }
 
     public void penalty() {
         if (snake.countPoints() <= 1) {
-            dead = true;
+            kill();
+            LOGGER.info("RIP Player {}", playerBoard.getName());
         } else {
             snake.removeTail();
         }
+    }
+
+    public void updatePlayerBoard(){
+        playerBoard.setColor(snake.getHeadColor());
+        playerBoard.setDead(isDead);
+        playerBoard.setPoints(snake.countPoints());
     }
 
     public Point2D getNextPositionBy(Orientation orientation) {
@@ -159,7 +167,7 @@ public class PlayerHandler {
 
     public void moveToNextPosition() {
         this.snake.setNextPosition(nextPositionIs(currentOrientation));
-        confused = false;
+        isConfused = false;
     }
 
     private Point2D nextPositionIs(Orientation orientation) {
@@ -196,16 +204,16 @@ public class PlayerHandler {
     }
 
     public void setConfused(boolean confused) {
-        this.confused = confused;
+        this.isConfused = confused;
     }
 
     public void setGhostMode() {
-        ghostMode = true;
+        isGhostMode = true;
         ghostTime = 0;
     }
 
     public boolean isGhostMode() {
-        return ghostMode;
+        return isGhostMode;
     }
 
     public boolean gotBitten(Point2D nextPosition) {
@@ -248,5 +256,10 @@ public class PlayerHandler {
 
     public UUID getPlayerIdentifier() {
         return playerIdentifier;
+    }
+
+    public void kill() {
+        isDead = true;
+        snake.clear();
     }
 }

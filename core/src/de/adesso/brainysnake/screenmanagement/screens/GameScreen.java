@@ -1,6 +1,7 @@
 package de.adesso.brainysnake.screenmanagement.screens;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -19,7 +20,7 @@ public class GameScreen extends AbstractScreen {
     private GameMaster gameMaster;
 
     public GameScreen() {
-        gameMaster = new GameMaster();
+        gameMaster = new GameMaster(GameBoard.getINSTANCE());
     }
 
     @Override

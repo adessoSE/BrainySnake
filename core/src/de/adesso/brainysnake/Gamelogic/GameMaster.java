@@ -1,5 +1,6 @@
 package de.adesso.brainysnake.Gamelogic;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.BrainySnake;
 import de.adesso.brainysnake.Config;
@@ -29,20 +30,22 @@ import static de.adesso.brainysnake.playercommon.RoundEvent.*;
  */
 public class GameMaster {
 
+    private GameBoard gameBoard;
+
     private BrainySnake brainySnake;
 
     private PlayerController playerController;
 
     private LevelBoard levelBoard;
 
-    public GameMaster() {
+    public GameMaster(GameBoard gameBoard) {
         brainySnake = new BrainySnake();
         brainySnake.initialize();
         brainySnake.create();
 
         levelBoard = new LevelBoard(Config.LEVEL_WIDTH, Config.LEVEL_HEIGHT);
 
-        GameBoard gameBoard = GameBoard.getINSTANCE();
+        this.gameBoard = gameBoard;
         GlobalGameState.initialize(gameBoard.getRemainingRoundsToPlay());
         playerController = new PlayerController(gameBoard.getBrainySnakePlayers(), levelBoard);
     }
@@ -90,7 +93,7 @@ public class GameMaster {
             for (RoundEvent roundEvent : roundEvents) {
                 switch (roundEvent) {
                     case DIED:
-                        playerHandler.getSnake().removeHead();
+                        playerHandler.kill();
                         break;
                     case MOVED:
                         // move player as he planned
@@ -128,9 +131,6 @@ public class GameMaster {
             }
         }
 
-        playerController.removeDeadPlayer();
-
-
         // spread new points in level
         levelBoard.fillUpWithPoints(Config.MAX_POINTS_IN_LEVEL);
 
@@ -143,6 +143,7 @@ public class GameMaster {
 
         //Update Metadata of game and player
         updateGameBaordData();
+        playerController.removeDeadPlayer();
     }
 
     private void gameOver() {
@@ -151,17 +152,17 @@ public class GameMaster {
     }
 
     public void updateGame() {
-
         brainySnake.updateLevelPoints(levelBoard.getPoints(), levelBoard.getBarriers(), levelBoard.getWalls());
 
         List<LevelObject> snakes = new ArrayList<>();
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             Snake snake = playerHandler.getSnake();
-            snakes.add(snake.getHead());
-            snakes.add(snake.getBody());
+
             if (Config.RENDER_PLAYERVIEW && playerHandler.getPlayerView() != null) {
                 snakes.addAll(drawPlayerView(playerHandler.getPlayerView()));
             }
+            snakes.add(snake.getBody());
+            snakes.add(snake.getHead());
         }
 
         brainySnake.updateSnakes(snakes);
@@ -172,8 +173,13 @@ public class GameMaster {
      * Updates the meta information of the game and the player in the gameboard
      */
     private void updateGameBaordData() {
+        //Update Playerboards
+        for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
+            playerHandler.updatePlayerBoard();
+        }
+
         //Update Gameboard
-        GameBoard.getINSTANCE().updateGameBoard(GlobalGameState.movesRemaining());
+        gameBoard.updateGameBoard(GlobalGameState.movesRemaining());
     }
 
     //TODO rukl move to own package
@@ -265,7 +271,6 @@ public class GameMaster {
 
         if (playerHandler.isDead() || playerHandler.getSnake().countPoints() <= 1) {
             roundEvents.add(DIED);
-            playerHandler.kill();
             return;
         }
 
