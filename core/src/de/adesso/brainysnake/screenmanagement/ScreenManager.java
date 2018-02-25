@@ -21,8 +21,6 @@ public class ScreenManager {
 
     private Game game;
 
-    private boolean gamePaused = false;
-
     private ScreenManager() {
 
     }
@@ -69,12 +67,6 @@ public class ScreenManager {
                 Gdx.app.exit();
                 break;
 
-            case PAUSE_SCREEN:
-                PauseScreen pauseScreen = new PauseScreen(currentScreen);
-                pauseScreen.initialize();
-                setGameScreen(pauseScreen);
-                break;
-
             default:
                 break;
         }
@@ -88,16 +80,5 @@ public class ScreenManager {
 
     private void setGameScreen(Screen screen) {
         game.setScreen(screen);
-    }
-
-    public void togglePauseGame() {
-        this.gamePaused = !gamePaused;
-        if(gamePaused){
-            showScreen(ScreenType.PAUSE_SCREEN);
-        } else showScreen(ScreenType.GAME_SCREEN);
-    }
-
-    public boolean isGamePaused() {
-        return gamePaused;
     }
 }

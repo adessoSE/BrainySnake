@@ -2,7 +2,6 @@ package de.adesso.brainysnake;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,11 +9,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import de.adesso.brainysnake.renderer.level.LevelDTO;
 import de.adesso.brainysnake.renderer.level.LevelObject;
-import de.adesso.brainysnake.screenmanagement.ScreenManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,23 +81,14 @@ public class BrainySnake extends ApplicationAdapter {
         }
     }
 
-    private void checkPressedKeys() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            ScreenManager.getINSTANCE().togglePauseGame();
-        }
-    }
-
     @Override
     public void render() {
-        checkPressedKeys();
-
-        if (!ScreenManager.getINSTANCE().isGamePaused()) {
-            timeSinceLastRender += Gdx.graphics.getDeltaTime();
-            if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
-                // Do the actual rendering, pass timeSinceLastRender as delta time.
-                timeSinceLastRender = 0f;
-            }
+        timeSinceLastRender += Gdx.graphics.getDeltaTime();
+        if (timeSinceLastRender >= MIN_FRAME_LENGTH) {
+            // Do the actual rendering, pass timeSinceLastRender as delta time.
+            timeSinceLastRender = 0f;
         }
+
         drawGameLoop();
     }
 
