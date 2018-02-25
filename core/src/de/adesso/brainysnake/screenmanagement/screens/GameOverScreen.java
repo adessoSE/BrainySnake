@@ -1,16 +1,17 @@
 package de.adesso.brainysnake.screenmanagement.screens;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;
+import de.adesso.brainysnake.gamelogic.GameBoard;
+import de.adesso.brainysnake.gamelogic.PlayerBoard;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -31,14 +32,8 @@ public class GameOverScreen extends AbstractScreen {
 
     private boolean isSecond = !isWinner;
 
-    private List<PlayerDTO> player;
-
-    private ArrayList<PlayerDTO> deadPlayer;
-
-    public GameOverScreen(List<PlayerDTO> player, ArrayList<PlayerDTO> deadPlayer) {
+    public GameOverScreen() {
         super();
-        this.player = player;
-        this.deadPlayer = deadPlayer;
     }
 
     @Override
@@ -53,8 +48,8 @@ public class GameOverScreen extends AbstractScreen {
         returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                resetGameState();
                 ScreenManager.getINSTANCE().showScreen(ScreenType.MAIN_MENU);
-                ScreenManager.getINSTANCE().reset();
             }
         });
         returnButton.setWidth(250f);
@@ -66,21 +61,19 @@ public class GameOverScreen extends AbstractScreen {
      *
      * @return Keys are the score as Integer and the value is a ArrayList with the PlayerHandlers with this score
      */
-    public SortedMap<Long, ArrayList<PlayerDTO>> createSortedWinnerMap() {
-        SortedMap<Long, ArrayList<PlayerDTO>> sortedMap = new TreeMap<>();
-        for (PlayerDTO playerHandler : player) {
-            if (sortedMap.containsKey(playerHandler.getSize())) {
-                sortedMap.get(playerHandler.getSize()).add(playerHandler);
+    public SortedMap<Long, ArrayList<PlayerBoard>> createSortedWinnerMap() {
+        SortedMap<Long, ArrayList<PlayerBoard>> sortedMap = new TreeMap<>();
+        for (PlayerBoard playerBoard : GameBoard.getINSTANCE().getPlayerBoards()) {
+            if (sortedMap.containsKey(playerBoard.getPoints())) {
+                sortedMap.get(playerBoard.getPoints()).add(playerBoard);
             } else {
-                ArrayList<PlayerDTO> playerHandlers = new ArrayList<PlayerDTO>() {{
-                    add(playerHandler);
+                ArrayList<PlayerBoard> playerHandlers = new ArrayList<PlayerBoard>() {{
+                    add(playerBoard);
                 }};
-                sortedMap.put(playerHandler.getSize(), playerHandlers);
+                sortedMap.put(playerBoard.getPoints(), playerHandlers);
             }
         }
-        if (!deadPlayer.isEmpty()) {
-            sortedMap.put(0L, deadPlayer);
-        }
+
         return sortedMap;
     }
 
@@ -102,13 +95,13 @@ public class GameOverScreen extends AbstractScreen {
     /**
      * Draws the player name and points on the mainStage. Information gets extracted from PlayerHandler.
      *
-     * @param {@link #PlayerDTO} provides all the needed information about the player
+     * @param {@link #PlayerBoard} provides all the needed information about the player
      */
-    public void drawWinnerScreenPlayerDetails(PlayerDTO playerDTO) {
-        defaultFont.setColor(playerDTO.getColor());
-        layout.setText(defaultFont, Long.toString(playerDTO.getSize()));
+    public void drawWinnerScreenPlayerDetails(PlayerBoard playerBoard) {
+        defaultFont.setColor(playerBoard.getColor());
+        layout.setText(defaultFont, Long.toString(playerBoard.getPoints()));
         defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 + 250, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) - PLAYERNAMES_YOFFSET * newLine);
-        layout.setText(defaultFont, playerDTO.getName());
+        layout.setText(defaultFont, playerBoard.getName());
         defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2 - 50, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) - PLAYERNAMES_YOFFSET * newLine++);
     }
 
@@ -118,24 +111,24 @@ public class GameOverScreen extends AbstractScreen {
 
         getBatch().begin();
         defaultFont.getData().setScale(4, 4);
-        defaultFont.setColor(0, 0, 0, 1);
+        defaultFont.setColor(Color.WHITE);
 
         layout.setText(defaultFont, "Result of the round:");
         defaultFont.draw(getBatch(), layout, (Config.APPLICATION_WIDTH - layout.width) / 2, (Config.APPLICATION_HEIGHT - Config.APPLICATION_HEIGHT / 4) + 75 * 2);
 
         defaultFont.getData().setScale(3, 3);
 
-        SortedMap<Long, ArrayList<PlayerDTO>> sortedMap = createSortedWinnerMap();
+        SortedMap<Long, ArrayList<PlayerBoard>> sortedMap = createSortedWinnerMap();
 
         this.isWinner = true;
         this.isSecond = false;
         newLine = 0;
         for (int i = sortedMap.size() - 1; i >= 0; i--) {
-            ArrayList<PlayerDTO> sortedMapValue = sortedMap.get(sortedMap.keySet().toArray()[i]);
+            ArrayList<PlayerBoard> sortedMapValue = sortedMap.get(sortedMap.keySet().toArray()[i]);
             if (sortedMapValue.size() > 1) {
-                for (PlayerDTO playerDTO : sortedMapValue) {
+                for (PlayerBoard playerBoard : sortedMapValue) {
                     checkPositioningPlayer();
-                    drawWinnerScreenPlayerDetails(playerDTO);
+                    drawWinnerScreenPlayerDetails(playerBoard);
                 }
             } else {
                 checkPositioningPlayer();
@@ -146,12 +139,15 @@ public class GameOverScreen extends AbstractScreen {
         getBatch().end();
     }
 
+    private void resetGameState() {
+        GameBoard.getINSTANCE().reset();
+    }
+
     @Override
     public void hide() {
     }
 
     @Override
     public void dispose() {
-        super.dispose();
     }
 }

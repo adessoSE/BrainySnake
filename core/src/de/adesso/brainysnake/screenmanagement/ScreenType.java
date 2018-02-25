@@ -7,7 +7,6 @@ public enum ScreenType {
     MAIN_MENU,
     MATCHPREVIEW_SCREEN,
     GAME_SCREEN,
-    WINNER_SCREEN,
+    GAME_OVER_SCREEN,
     EXIT_SCREEN,
-    PAUSE_SCREEN,
 }

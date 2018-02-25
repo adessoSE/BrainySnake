@@ -4,7 +4,7 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 
 /**
  * The PlayerState is immutable.
- * The BrainySnakePlayer should not change any values passed to the Player via update
+ * The BrainySnakePlayer should not change any values passed to the player via update
  */
 public final class PlayerState {
 

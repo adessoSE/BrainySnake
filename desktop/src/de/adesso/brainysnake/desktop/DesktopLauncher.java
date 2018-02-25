@@ -7,7 +7,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import de.adesso.brainysnake.ApplicationController;
-import de.adesso.brainysnake.BrainySnake;
 import de.adesso.brainysnake.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +20,8 @@ public class DesktopLauncher {
         config.title = "BrainySnake";
         config.fullscreen = false;
         config.vSyncEnabled = false;
-        config.backgroundFPS = 60;
-        config.foregroundFPS = 60;
+        config.backgroundFPS = 10;
+        config.foregroundFPS = 10;
         config.samples = 4;
         config.width = Config.APPLICATION_WIDTH;
         config.height = Config.APPLICATION_HEIGHT;

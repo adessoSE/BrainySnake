@@ -1,7 +1,7 @@
 package de.adesso.brainysnake.playercommon;
 
 /**
- * PlayerUpdate wird genutzt um dem Hauptspiel mitzuteilen, wie die Schlange sich im Level bewegen will/soll.
+ * PlayerUpdate wird genutzt um dem Hauptspiel mitzuteilen, wie die Schlange sich im level bewegen will/soll.
  * Hier kann eine Aktion einer Schlange hinterlegt werden. Die Aktion wird vom Hauptspiel validiert und wenn möglich ausgeführt.
  */
 public class PlayerUpdate {

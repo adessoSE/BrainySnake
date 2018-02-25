@@ -31,9 +31,6 @@ public class MainMenuScreen extends AbstractScreen {
 
     @Override
     public void initialize() {
-
-
-
         TextureRegion region = new TextureRegion(new Texture("BrainySnake_Headline.png"), 0, 0, 629, 180);
         logoBrainySnake = new Image(region);
 
@@ -73,6 +70,5 @@ public class MainMenuScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        super.dispose();
     }
 }

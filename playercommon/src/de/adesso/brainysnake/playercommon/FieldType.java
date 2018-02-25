@@ -4,7 +4,7 @@ package de.adesso.brainysnake.playercommon;
  * Spezifikation des Objekttyps eines Feldes
  */
 public enum FieldType {
-    /* Level Element*/
+    /* level Element*/
     LEVEL,
 
     /* Kein Objekt*/
