@@ -1,16 +1,11 @@
 package de.adesso.brainysnake.screenmanagement.screens;
 
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import de.adesso.brainysnake.BrainySnake;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.Gamelogic.GameBoard;
 import de.adesso.brainysnake.Gamelogic.GameMaster;
 import de.adesso.brainysnake.Gamelogic.PlayerBoard;
-import de.adesso.brainysnake.Gamelogic.UI.UiState;
 
 import java.util.List;
 
@@ -41,7 +36,7 @@ public class GameScreen extends AbstractScreen {
     }
 
     /**
-     * Draw the game UI.
+     * Draw the game ui.
      * Contains the player names including points reached so far
      */
     private void drawGameUI() {

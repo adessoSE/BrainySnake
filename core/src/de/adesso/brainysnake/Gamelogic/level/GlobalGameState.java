@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic.Level;
+package de.adesso.brainysnake.Gamelogic.level;
 
 
 public class GlobalGameState {

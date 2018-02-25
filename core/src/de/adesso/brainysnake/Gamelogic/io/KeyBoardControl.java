@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic.IO;
+package de.adesso.brainysnake.Gamelogic.io;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;

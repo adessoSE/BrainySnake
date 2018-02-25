@@ -1,7 +1,7 @@
 package de.adesso.brainysnake.playercommon;
 
 /**
- * Orientierung in einem Level
+ * Orientierung in einem level
  */
 public enum Orientation {
     UP,

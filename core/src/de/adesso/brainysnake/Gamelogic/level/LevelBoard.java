@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic.Level;
+package de.adesso.brainysnake.Gamelogic.level;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
@@ -15,20 +15,17 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * todo rukl doc
- * todo dont us levelobject in gamelocik package. it should be fully separated
+ * Help for the Gamemaster. Stores meta-information about level.
+ * And provides helper methods to place objects in the level
  */
+//TODO don't use LevelObject in Gamelogik-Package. It should be fully separated from Renderer. Use a DTO instead
 public class LevelBoard {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LevelBoard.class.getName());
 
     private final int width, height;
 
-    private LevelObject walls;
-
-    private LevelObject barriers;
-
-    private LevelObject points;
+    private LevelObject walls, barriers, points;
 
     private LinkedList<Point2D> spawnPositions = new LinkedList<>();
 
@@ -276,11 +273,10 @@ public class LevelBoard {
     }
 
     /**
-     * todo rukl doc
-     * spreads the consumable Points
+     * Generates random consumable points for snakes until maxQuantity in level
      */
-    public void fillUpWithPoints(int quantity) {
-        for (int i = 0; i < (quantity - points.size()); i++) {
+    public void fillUpWithPoints(int maxQuantity) {
+        for (int i = 0; i < (maxQuantity - points.size()); i++) {
             Point2D randomLevelPosition = null;
             do {
                 randomLevelPosition = getRandomLevelPosition();

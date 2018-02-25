@@ -4,7 +4,7 @@ import de.adesso.brainysnake.playercommon.math.Point2D;
 
 /**
  * Das Field enhält Informationen,
- * welches Objekt sich an einer Position im Level befindet. Die Position ist eine zweidimensionel Koordinate im Level.
+ * welches Objekt sich an einer Position im level befindet. Die Position ist eine zweidimensionel Koordinate im level.
  * Der Objekttyp wird über den Fieldtype spezifiziert.
  */
 public class Field {

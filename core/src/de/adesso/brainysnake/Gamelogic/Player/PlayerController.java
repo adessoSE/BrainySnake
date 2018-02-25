@@ -1,7 +1,7 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Level.LevelBoard;
+import de.adesso.brainysnake.Gamelogic.level.LevelBoard;
 import de.adesso.brainysnake.Gamelogic.PlayerBoard;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 import de.adesso.brainysnake.playercommon.math.Point2D;

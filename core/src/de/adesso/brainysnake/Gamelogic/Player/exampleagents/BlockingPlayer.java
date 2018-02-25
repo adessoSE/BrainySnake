@@ -1,4 +1,4 @@
-package de.adesso.brainysnake.Gamelogic.Player.TestPlayer;
+package de.adesso.brainysnake.Gamelogic.Player.exampleagents;
 
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.PlayerState;

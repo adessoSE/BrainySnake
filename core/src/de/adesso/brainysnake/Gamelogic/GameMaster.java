@@ -1,11 +1,10 @@
 package de.adesso.brainysnake.Gamelogic;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.BrainySnake;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
-import de.adesso.brainysnake.Gamelogic.Level.LevelBoard;
+import de.adesso.brainysnake.Gamelogic.level.GlobalGameState;
+import de.adesso.brainysnake.Gamelogic.level.LevelBoard;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerChoice;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerController;
 import de.adesso.brainysnake.Gamelogic.Player.PlayerHandler;

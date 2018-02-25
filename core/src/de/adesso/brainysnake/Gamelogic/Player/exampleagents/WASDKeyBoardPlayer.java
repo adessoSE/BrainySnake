@@ -1,7 +1,6 @@
-package de.adesso.brainysnake.Gamelogic.Player.TestPlayer;
+package de.adesso.brainysnake.Gamelogic.Player.exampleagents;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
-import de.adesso.brainysnake.Gamelogic.IO.KeyBoardControl;
+import de.adesso.brainysnake.Gamelogic.io.KeyBoardControl;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.playercommon.Orientation;
 import de.adesso.brainysnake.playercommon.PlayerState;

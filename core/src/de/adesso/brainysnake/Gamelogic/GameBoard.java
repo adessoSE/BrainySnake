@@ -2,11 +2,10 @@ package de.adesso.brainysnake.Gamelogic;
 
 import com.badlogic.gdx.graphics.Color;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Player.TestPlayer.KeyBoardPlayer;
+import de.adesso.brainysnake.Gamelogic.Player.exampleagents.KeyBoardPlayer;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
 import de.adesso.brainysnake.sampleplayer.YourPlayer;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,12 +1,10 @@
 package de.adesso.brainysnake.Gamelogic.Player;
 
-import com.badlogic.gdx.Gdx;
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.Gamelogic.Level.GlobalGameState;
+import de.adesso.brainysnake.Gamelogic.level.GlobalGameState;
 import de.adesso.brainysnake.Gamelogic.PlayerBoard;
 import de.adesso.brainysnake.playercommon.*;
 import de.adesso.brainysnake.playercommon.math.Point2D;
-import de.adesso.brainysnake.renderer.level.LevelDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

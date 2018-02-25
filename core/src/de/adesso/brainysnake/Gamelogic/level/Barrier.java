@@ -1,20 +1,22 @@
-package de.adesso.brainysnake.Gamelogic.Level;
+package de.adesso.brainysnake.Gamelogic.level;
 
 import de.adesso.brainysnake.playercommon.math.Point2D;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Square obstacle for a snake
+ */
 public class Barrier {
 
-    List<Point2D> barrierDots = new ArrayList<>();
+    private List<Point2D> barrierDots = new ArrayList<>();
 
     public Barrier(int x, int y) {
         buildBarrier(x, y);
     }
 
     /**
-     *
      * @param x x-coordinate of the barrier's center
      * @param y y-coordinate of the barrier's center
      */
