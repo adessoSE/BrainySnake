@@ -20,6 +20,9 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
+        assertJVersion = '3.9.1'
+        mockitoVersion = '2.0.+'
+        apacheCommonsLangVersion = '3.0'
     }
 
     repositories {
@@ -37,6 +40,7 @@ allprojects {
         // tie it in with some actual implementation, e.g., logback
         compile group: 'ch.qos.logback', name:'logback-classic', version: '1.0.9'
         compile group: 'ch.qos.logback', name:'logback-core', version: '1.0.9'
+        compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
     }
 }
 
@@ -61,6 +65,8 @@ project(":core") {
 
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile group: 'junit', name: 'junit', version: '4.12'
+        testCompile "org.mockito:mockito-all:$mockitoVersion"
+        testCompile "org.assertj:assertj-core:$assertJVersion"
     }
 
     sourceSets {
