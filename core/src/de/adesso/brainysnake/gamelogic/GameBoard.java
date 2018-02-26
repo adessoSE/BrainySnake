@@ -5,6 +5,7 @@ import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.gamelogic.player.exampleagents.KeyBoardPlayer;
 import de.adesso.brainysnake.playercommon.BrainySnakePlayer;
 import de.adesso.brainysnake.sampleplayer.SamplePlayer;
+import de.adesso.brainysnake.sampleplayer.SuperKi;
 import de.adesso.brainysnake.sampleplayer.YourPlayer;
 
 import java.util.ArrayList;
@@ -59,11 +60,13 @@ public class GameBoard {
                 return "SamplePlayer Four";
             }
         };
+        BrainySnakePlayer superKi = new SuperKi();
 
         // Add agents to the game
         List<PlayerBoard> playerList = new ArrayList<>();
         playerList.add(new PlayerBoard(playerOne));
         playerList.add(new PlayerBoard(playerTwo));
+        playerList.add(new PlayerBoard(superKi));
         playerList.add(new PlayerBoard(playerFour));
 
         return playerList;
