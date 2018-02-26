@@ -40,7 +40,7 @@ public class Config {
     public static final int DISTANCE_BETWEEN_BARRIERS = 10;
     public static final int INITIAL_PLAYER_LENGTH = 10;
     public static final int MAX_POINTS_IN_LEVEL = 40;
-    public static final int GHOST_TIME = 30;
+    public static final int GHOST_TIME = 10;
     public static final int BLINK_TIME = ((int) UPDATE_RATE / 10) + 1;
 
     /* threaded playerupdate config */
