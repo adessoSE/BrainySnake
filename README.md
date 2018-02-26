@@ -34,7 +34,7 @@ During a gameController, multiple autonomous Snakes are loaded simultaneously an
 
 ## Rules of the gameController
 
-![explainSnakePic](/Dokumentation/explainSnake.jpg)
+![explainSnakePic](/Dokumentation/explainSnake.png)
 
 
 * Each move the Snake can decide to go either forwards, left or right.
