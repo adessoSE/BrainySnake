@@ -53,7 +53,7 @@ public class GameScreen extends AbstractScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isGamePaused = false;
-                showPauseScree(isGamePaused);
+                showPauseScreen(isGamePaused);
             }
         });
 
@@ -62,7 +62,7 @@ public class GameScreen extends AbstractScreen {
         exitGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ScreenManager.getINSTANCE().showScreen(ScreenType.EXIT_SCREEN);
+                gameMaster.gameOver();
             }
         });
 
@@ -81,7 +81,7 @@ public class GameScreen extends AbstractScreen {
         //Show pause screen
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             isGamePaused = !isGamePaused;
-            showPauseScree(isGamePaused);
+            showPauseScreen(isGamePaused);
         }
 
         if (!isGamePaused) {
@@ -93,7 +93,7 @@ public class GameScreen extends AbstractScreen {
         super.draw();
     }
 
-    private void showPauseScree(boolean show) {
+    private void showPauseScreen(boolean show) {
         logoPause.setVisible(show);
         resumeButton.setVisible(show);
         exitGameButton.setVisible(show);
@@ -129,8 +129,5 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        //   brainySnake.toggleMusic();
     }
-
-
 }
