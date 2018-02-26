@@ -30,6 +30,9 @@ public class BrainySnake extends ApplicationAdapter {
     public BrainySnake() {
     }
 
+    /**
+     * Initializes the Level depending on the Application height/width and the dot size.
+     * */
     public void initialize() {
         int height = Config.APPLICATION_HEIGHT / Config.DOT_SIZE;
         int width = Config.APPLICATION_WIDTH / Config.DOT_SIZE;
@@ -66,6 +69,9 @@ public class BrainySnake extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Calls the method drawGameLoop.
+     * */
     @Override
     public void render() {
         drawGameLoop();

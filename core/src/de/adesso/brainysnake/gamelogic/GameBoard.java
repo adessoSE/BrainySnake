@@ -35,6 +35,11 @@ public class GameBoard {
         return INSTANCE;
     }
 
+    /**
+     * @return A List consisting of PlayerBoard objects.
+     * Creates a List that contains PlayerBoard objects.
+     */
+
     private List<PlayerBoard> createBrainySnakePlayerList() {
 
         //crate BrainySnakePlayer manualy
@@ -115,7 +120,7 @@ public class GameBoard {
         this.brainySnakePlayers = brainySnakePlayers;
     }
 
-    public void updateGameBoard(int remainingRoundsToPlay){
+    public void updateGameBoard(int remainingRoundsToPlay) {
         this.remainingRoundsToPlay = remainingRoundsToPlay;
     }
 
@@ -123,6 +128,9 @@ public class GameBoard {
         return remainingRoundsToPlay;
     }
 
+    /**
+     * Resets the State of every PlayerBoard and the remainingRoundToPlay.
+     */
     public void reset() {
 
         //Reset reached points of player

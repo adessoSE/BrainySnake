@@ -22,7 +22,7 @@ import java.util.Map;
 import static de.adesso.brainysnake.playercommon.RoundEvent.*;
 
 /**
- * Takes over the role of the game director. Know the rules of the game and take on professional validation, which concerns the game logic.
+ * Takes over the role of the game director. Knows the rules of the game and takes on professional validation, which concerns the game logic.
  */
 public class GameMaster {
 
@@ -46,6 +46,11 @@ public class GameMaster {
         playerController = new PlayerController(gameBoard.getBrainySnakePlayers(), levelBoard);
     }
 
+    /**
+     * Checks if one of the Players has one, otherwise calls the method gameLoop() and updateGame().
+     * If one of the Players has one, gameOver() is called and update() simply returns.
+     */
+
     public void update(float delta) {
         //check if game is over
         if (!checkIfPlayerWon().isEmpty()) {
@@ -56,6 +61,13 @@ public class GameMaster {
         gameLoop();
         updateGame();
     }
+
+    /**
+     * The main gameLoop.
+     * Updates the playerView, calculates the playerState und updates the playerController.
+     * Although gameLoop handles Events and their effects on the game.
+     * Furthermore it spreads new points once they have been consumed.
+     */
 
     public void gameLoop() {
 
@@ -71,7 +83,7 @@ public class GameMaster {
             //update view of player
             updateRoundForPlayer(playerHandler);
 
-            // calculates the playerState and updates the playercontroller via call
+            // calculates the playerState and updates the playerController via call
             playerController.updatePlayerState();
         }
 
@@ -142,10 +154,18 @@ public class GameMaster {
         playerController.removeDeadPlayer();
     }
 
+    /**
+     * Calls dispose in brainySnake and activates the GameOverScreen.
+     */
+
     private void gameOver() {
         brainySnake.dispose();
         ScreenManager.getINSTANCE().showScreen(ScreenType.GAME_OVER_SCREEN);
     }
+
+    /**
+     * Updates the game and calls updateSnake, render in brainySnake.
+     */
 
     public void updateGame() {
         brainySnake.updateLevelPoints(levelBoard.getPoints(), levelBoard.getBarriers(), levelBoard.getWalls(), levelBoard.getPointLabyrinths());
@@ -178,6 +198,9 @@ public class GameMaster {
         gameBoard.updateGameBoard(GlobalGameState.movesRemaining());
     }
 
+    /**
+     * Draws the playerView.
+     */
     public List<LevelObject> drawPlayerView(PlayerView playerView) {
         List<LevelObject> levelObject = new ArrayList<>();
 
@@ -207,6 +230,9 @@ public class GameMaster {
         return levelObject;
     }
 
+    /**
+     * Updates the PlayerView.
+     */
     private void updateRoundForPlayer(PlayerHandler playerHandler) {
         List<Point2D> playerViewPositions = PlayerViewHelper.generatePlayerView(playerHandler.getCurrentOrientation(), playerHandler.getHeadPosition());
         List<Point2D> playerPositions = playerController.getPlayerPositions();
@@ -234,7 +260,7 @@ public class GameMaster {
     }
 
     /**
-     * Check if a player has won the game. When the time is up, the player with the most points has won.
+     * Checks if a player has won the game. When the time is up, the player with the most points has won.
      * If there is only one snake left in the season, it has won.
      * If there is a tie there can be more than one winner.
      *
@@ -260,6 +286,10 @@ public class GameMaster {
 
         return winner;
     }
+
+    /**
+     * Validates Events and adds them to the roundEvents.
+     */
 
     private void validateEvents(PlayerHandler playerHandler, PlayerChoice playerChoice) {
         List<RoundEvent> roundEvents = playerHandler.getRoundEvents();
