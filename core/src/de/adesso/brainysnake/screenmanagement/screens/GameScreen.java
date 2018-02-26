@@ -57,7 +57,7 @@ public class GameScreen extends AbstractScreen {
             }
         });
 
-        exitGameButton = new TextButton("Exit", defaultSkin);
+        exitGameButton = new TextButton("Game Over", defaultSkin);
         exitGameButton.setPosition(Config.APPLICATION_WIDTH / 2 + 250, Config.APPLICATION_HEIGHT / 2);
         exitGameButton.addListener(new ClickListener() {
             @Override
