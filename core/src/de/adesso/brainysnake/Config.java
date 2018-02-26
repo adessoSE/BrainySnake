@@ -12,7 +12,7 @@ public class Config {
     public static final int APPLICATION_HEIGHT = 900;
 
     /* gameplay settings */
-    public static final int MAX_ROUNDS = 2000;
+    public static final int MAX_ROUNDS = 1000;
     public static final boolean RENDER_PLAYERVIEW = true;
     public static final int PLAYERVIEW_OFFSET_TO_LEFT = 2;
     public static final int PLAYERVIEW_OFFSET_TO_VIEWWIDTH = PLAYERVIEW_OFFSET_TO_LEFT * 2 + 1;
