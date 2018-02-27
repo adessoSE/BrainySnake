@@ -6,7 +6,7 @@ import de.adesso.brainysnake.playercommon.PlayerUpdate;
 
 
 /**
- * Implementiere hier deine Schlangensteuerung.
+ * TODO: Implement your agent here
  */
 public class YourPlayer implements BrainySnakePlayer {
 
@@ -14,7 +14,7 @@ public class YourPlayer implements BrainySnakePlayer {
 
     @Override
     public String getPlayerName() {
-        return "YourName";
+        return "TODO YourName";
     }
 
     @Override

@@ -45,24 +45,34 @@ public class LevelBoard {
 
         List<Point2D> spawnPositions = new ArrayList<>();
         spawnPositions.add(new Point2D(10, 10));
-        spawnPositions.add(new Point2D(110, 10));
-        spawnPositions.add(new Point2D(10, 110));
+        spawnPositions.add(new Point2D(100, 10));
+        spawnPositions.add(new Point2D(10, 70));
+        spawnPositions.add(new Point2D(100, 70));
 
+        //Labyrinth 1
         Point2D randomSpawnPosition = spawnPositions.get((int) (Math.random() * (spawnPositions.size() - 1)));
         PointLabyrinth pointLabyrinth = new PointLabyrinth(randomSpawnPosition.x, randomSpawnPosition.y);
         pointLabyrinths.addAll(pointLabyrinth.getLabyrinthDots());
         LinkedList<Point2D> pointPositions = pointLabyrinth.getPointPositions();
+        spawnPositions.remove(randomSpawnPosition);
+
+        //Labyrinth 2
+        Point2D randomSpawnPosition2 = spawnPositions.get((int) (Math.random() * (spawnPositions.size() - 1)));
+        PointLabyrinth pointLabyrinth2 = new PointLabyrinth(randomSpawnPosition2.x, randomSpawnPosition2.y);
+        pointLabyrinths.addAll(pointLabyrinth2.getLabyrinthDots());
+
+        pointPositions.addAll(pointLabyrinth2.getPointPositions());
 
         int i = 0;
         for (Point2D pointPosition : pointPositions) {
-            if (i == 3) {
+            if (i == 2) {
                 i = 0;
                 points.getPositions().add(new Point2D(pointPosition));
             }
             i++;
         }
 
-        return new LevelObject(pointLabyrinth.getLabyrinthDots(), Config.POINT_LABYRINTH_COLOR);
+        return new LevelObject(pointLabyrinths, Config.POINT_LABYRINTH_COLOR);
     }
 
     /**

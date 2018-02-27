@@ -9,18 +9,14 @@ import java.util.LinkedList;
  */
 public class PointLabyrinth {
 
-    private static final int[][] layout = {
-            {2, 2, 1, 1, 1, 1, 1, 1, 2},
-            {2, 1, 0, 0, 0, 1, 1, 1, 1},
-            {2, 1, 0, 1, 0, 0, 0, 1, 1},
-            {1, 1, 0, 1, 1, 1, 0, 0, 1},
-            {1, 1, 0, 0, 0, 1, 1, 0, 1},
-            {2, 2, 1, 1, 0, 1, 1, 0, 0},
-            {2, 2, 1, 0, 0, 1, 1, 1, 1},
-            {2, 1, 1, 0, 1, 0, 0, 0, 1},
-            {2, 1, 1, 0, 1, 0, 1, 0, 1},
-            {2, 2, 1, 0, 0, 0, 1, 0, 0},
-            {2, 2, 1, 1, 1, 1, 1, 1, 1}
+    private static final int[][] layout1 = {
+            {1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {0, 0, 1, 0, 0, 0, 0, 1, 1},
+            {1, 0, 1, 0, 1, 1, 0, 1, 1},
+            {1, 0, 0, 0, 1, 1, 0, 0, 0},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1}
     };
 
     private LinkedList<Point2D> labyrinthDots = new LinkedList<>();
@@ -36,9 +32,9 @@ public class PointLabyrinth {
 
     private void buildLabyrinth(int x, int y) {
 
-        for (int tempY = 0; tempY < layout.length; tempY++) {
-            for (int tempX = 0; tempX < layout[0].length; tempX++) {
-                int i = layout[tempY][tempX];
+        for (int tempY = 0; tempY < layout1.length; tempY++) {
+            for (int tempX = 0; tempX < layout1[0].length; tempX++) {
+                int i = layout1[tempY][tempX];
                 if (i == 1) {
                     labyrinthDots.add(new Point2D(tempX + x, tempY + y));
                 } else if (i == 0) {

@@ -3,7 +3,7 @@ package de.adesso.brainysnake.playercommon;
 import java.util.List;
 
 /**
- * Die PlayerView bildet das Sichtfeld einer Schlange. Es ist quadratisch angeordnet und befindet sich ein Feld vor dem Kopf der Schlange. Die einzelnen Felder
+ * Die PlayerView bildet das Sichtfeld einer Schlange. Es ist quadratisch angeordnet und befindet sich genau ein Feld vor dem Kopf der Schlange. Die einzelnen Felder
  * sind als Liste im PlayerView gespeichert. Das erste Feld in der Liste befindet sich immer hinten links aus Sicht der Schlange (Sichtweite + linker Rand der
  * Feldbreite). Das letzte Element der List ist der Punkt vorne Rechts.
  */

@@ -158,7 +158,9 @@ public class GameMaster {
      * Calls dispose in brainySnake and activates the GameOverScreen.
      */
 
-    private void gameOver() {
+
+    public void gameOver() {
+
         brainySnake.dispose();
         ScreenManager.getINSTANCE().showScreen(ScreenType.GAME_OVER_SCREEN);
     }
