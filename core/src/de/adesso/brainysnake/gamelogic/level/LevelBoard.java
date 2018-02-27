@@ -27,7 +27,7 @@ public class LevelBoard {
 
     private LevelObject walls, barriers, points, pointLabyrinths;
 
-    private LinkedList<Point2D> spawnPositions = new LinkedList<>();
+    private LinkedList<Point2D> snakesStartingPositions = new LinkedList<>();
 
     private LinkedList<Point2D> freeFields;
 
@@ -184,20 +184,17 @@ public class LevelBoard {
     public Snake createStartingGameObject(int initialLength, Color color) {
         LinkedList<Point2D> head = new LinkedList<>();
         LinkedList<Point2D> body = new LinkedList<>();
-
-        Point2D start = getRandomStart(initialLength);
         Orientation orientation = getRandomOrientation();
-        int centerX = start.getX();
-        int centerY = start.getY();
-
+        Point2D start = getRandomStart(initialLength, orientation);
+        int startX = start.getX();
+        int startY = start.getY();
         head.add(start);
         for (int i = 1; i < initialLength; i++) {
-            Point2D positionIn = getPositionIn(orientation, centerX, centerY, i);
+            Point2D positionIn = getPositionIn(orientation, startX, startY, i);
             body.add(positionIn);
-            LOGGER.info("Snake body spawns at X:{}/Y:{} - Orientation: {}", positionIn.getX(), positionIn.getY(), orientation);
         }
-        spawnPositions.addAll(head);
-        spawnPositions.addAll(body);
+        snakesStartingPositions.addAll(head);
+        snakesStartingPositions.addAll(body);
         return new Snake(new LevelObject(head), new LevelObject(body), orientation, color);
     }
 
@@ -206,7 +203,7 @@ public class LevelBoard {
      *
      * @return a new random Orientation
      */
-    public Orientation getRandomOrientation() {
+    private Orientation getRandomOrientation() {
         Random random = new Random();
         int randomNumber = random.nextInt(4);
         switch (randomNumber) {
@@ -228,37 +225,71 @@ public class LevelBoard {
      *
      * @return random Start with enough space for a snake
      */
-    private Point2D getRandomStart(int length) {
+    private Point2D getRandomStart(int length, Orientation orientation) {
         Point2D randomPoint;
         do {
             randomPoint = getRandomLevelPosition();
         }
         //while there is not enough space
-        while (!isEnoughSpace(randomPoint, length));
+        while (!isEnoughSpace(randomPoint, length, orientation));
         return randomPoint;
     }
 
     /**
-     * to createLevelObjects if there is enough space for a snake
+     * Checking the given point, if it's collides with a barrier or the level. Also checks if this is already a starting point of another snake.
+     * @param point The point, which should be validated.
+     * @return boolean: False means valid, true means invalid position.
+     */
+    private boolean checkPositionValid(Point2D point) {
+        return checkCollision(new Point2D(point.getX(), point.getY())) || snakesStartingPositions.contains(new Point2D(point.getX(), point.getY()));
+    }
+
+    /**
+     * Checks the surrounded points if there are any collisions.
+     * @param startValueX Starting point of the X-axle
+     * @param finalValueX Ending point of the X-axle (included in the checking)
+     * @param startValueY Starting point of the Y-axle
+     * @param finalValueY Ending point of the Y-axle (included in the checking)
+     * @return boolean: False means invalid, true means valid.
+     */
+    private boolean checkSurroundedPoints(int startValueX, int finalValueX, int startValueY, int finalValueY) {
+        try {
+            for (int y = startValueY; y <= finalValueY; y++) {
+                for (int x = startValueX; x <= finalValueX; x++) {
+                    if (checkPositionValid(new Point2D(x, y))) {
+                        return false;
+                    }
+                }
+            }
+        } catch (IndexOutOfBoundsException e) {
+            LOGGER.error(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * to test if there is enough space for a snake
      * checks if there's nothing in a radius of length around the snake
      *
      * @return true if there's enough space
      */
-    private boolean isEnoughSpace(Point2D position, int snakeLength) {
+    private boolean isEnoughSpace(Point2D position, int snakeLength, Orientation orientation) {
 
-        int snakeHeadx = position.getX();
-        int snakeHeady = position.getY();
-        snakeLength++;
+        int snakeHeadX = position.getX();
+        int snakeHeadY = position.getY();
 
-        for (int x = snakeHeadx - snakeLength; x < snakeHeadx + snakeLength; x++) {
-            for (int y = snakeHeady - snakeLength; y < snakeHeady + snakeLength; y++) {
-                if (checkCollision(new Point2D(x, y)) || spawnPositions.contains(new Point2D(x, y))) {
-                    return false;
-                }
-            }
+        switch (orientation) {
+            case UP:
+                return checkSurroundedPoints(snakeHeadX - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadX + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadY - snakeLength, snakeHeadY + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD);
+            case DOWN:
+                return checkSurroundedPoints(snakeHeadX - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadX + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadY - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD, snakeHeadY + snakeLength);
+            case LEFT:
+                return checkSurroundedPoints(snakeHeadX - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD, snakeHeadX + snakeLength, snakeHeadY - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadY + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2);
+            case RIGHT:
+                return checkSurroundedPoints(snakeHeadX - snakeLength, snakeHeadX + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD, snakeHeadY - Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2, snakeHeadY + Config.RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE/2);
         }
 
-        LOGGER.debug("Valid position at - X:" + snakeHeadx + " Y:" + snakeHeady);
         return true;
     }
 
@@ -308,10 +339,10 @@ public class LevelBoard {
      */
     public void fillUpWithPoints(int maxQuantity) {
         for (int i = 0; i < (maxQuantity - points.size()); i++) {
-            Point2D randomLevelPosition = null;
+            Point2D randomLevelPosition;
             do {
                 randomLevelPosition = getRandomLevelPosition();
-            } while (randomLevelPosition == null || checkCollision(randomLevelPosition));
+            } while (checkCollision(randomLevelPosition));
             points.getPositions().add(new Point2D(randomLevelPosition.x, randomLevelPosition.y));
         }
     }
