@@ -19,6 +19,8 @@ public class Config {
     public static final int PLAYERVIEW_OFFSET_TO_AHEAD = 5;
     public static final int LEVEL_WIDTH = APPLICATION_WIDTH / DOT_SIZE;
     public static final int LEVEL_HEIGHT = APPLICATION_HEIGHT/ DOT_SIZE;
+    public static int RANDOM_PLAYERSPAWN_OFFSET_TO_AHEAD = PLAYERVIEW_OFFSET_TO_AHEAD;
+    public static int RANDOM_PLAYERSPAWN_OFFSET_TO_SIDE = PLAYERVIEW_OFFSET_TO_LEFT * 2;
 
     public static List<Color> PLAYER_COLORS = Arrays.asList(Color.PINK, Color.GREEN,Color.ORANGE, Color.CYAN);
 
