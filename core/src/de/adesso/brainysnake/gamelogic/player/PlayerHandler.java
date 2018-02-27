@@ -49,11 +49,11 @@ public class PlayerHandler {
         this.playerIdentifier = UUID.randomUUID();
     }
 
+
     public void update() {
         if (isDead) {
             return;
         }
-
         if (isGhostMode) {
             ghostMode();
         } else if (isConfused) {

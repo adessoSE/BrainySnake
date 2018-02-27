@@ -45,7 +45,8 @@ public class SamplePlayer implements BrainySnakePlayer {
     }
 
     /**
-     * @return Check to see if the field in front of the snake contains a level object
+     * Checks if the field in front of the snake contains a level object.
+     * @return level object is ahead
      */
     private boolean isLevelAhead() {
         // Field 22 is the position in front of the head. Further information can be found in the documentation.
@@ -53,7 +54,8 @@ public class SamplePlayer implements BrainySnakePlayer {
     }
 
     /**
-     * Check to see if the field in front of the snake contains a snake object. Caution: The snake object could also be part of your own snake!
+     * Check to see if the field in front of the snake contains a snake object.
+     * Caution: The snake object could also be part of your own snake!
      *
      * @return snake is ahead
      */

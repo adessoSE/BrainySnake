@@ -44,13 +44,13 @@ public class GameBoard {
         //crate BrainySnakePlayer manualy
         BrainySnakePlayer yourPlayer = new YourPlayer();
         BrainySnakePlayer playerOne = new KeyBoardPlayer();
-        BrainySnakePlayer playerTwo = new SamplePlayer(){
+        BrainySnakePlayer playerTwo = new SamplePlayer() {
             @Override
-            public String getPlayerName(){
+            public String getPlayerName() {
                 return "SamplePlayer One";
             }
         };
-        BrainySnakePlayer playerThree = new SamplePlayer(){
+        BrainySnakePlayer playerThree = new SamplePlayer() {
             @Override
             public String getPlayerName() {
                 return "SamplePlayer Two";
@@ -102,6 +102,9 @@ public class GameBoard {
         return playerList;
     }
 
+    /**
+     * Returns the BrainySnakePlayers.
+     */
     public Map<Long, PlayerBoard> getBrainySnakePlayers() {
         return brainySnakePlayers;
     }
@@ -110,16 +113,24 @@ public class GameBoard {
         this.brainySnakePlayers = brainySnakePlayers;
     }
 
+    /**
+     *  Sets the remaining Rounds to play
+     *
+     *  @param remainingRoundsToPlay
+     */
     public void updateGameBoard(int remainingRoundsToPlay) {
         this.remainingRoundsToPlay = remainingRoundsToPlay;
     }
 
+    /**
+     * @return remaining Rounds to play
+     */
     public int getRemainingRoundsToPlay() {
         return remainingRoundsToPlay;
     }
 
     /**
-     * Resets the State of every PlayerBoard and the remainingRoundToPlay.
+     * Resets the State of every PlayerBoard and the remainingRoundsToPlay.
      */
     public void reset() {
 
