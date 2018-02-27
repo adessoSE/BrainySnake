@@ -1,16 +1,16 @@
 package de.adesso.brainysnake.gamelogic;
 
 import com.badlogic.gdx.graphics.Color;
-import de.adesso.brainysnake.gamelogic.player.*;
-import de.adesso.brainysnake.renderer.BrainySnake;
 import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.gamelogic.level.GlobalGameState;
 import de.adesso.brainysnake.gamelogic.level.LevelBoard;
+import de.adesso.brainysnake.gamelogic.player.*;
 import de.adesso.brainysnake.playercommon.Field;
 import de.adesso.brainysnake.playercommon.FieldType;
 import de.adesso.brainysnake.playercommon.PlayerView;
 import de.adesso.brainysnake.playercommon.RoundEvent;
 import de.adesso.brainysnake.playercommon.math.Point2D;
+import de.adesso.brainysnake.renderer.BrainySnake;
 import de.adesso.brainysnake.renderer.level.LevelObject;
 import de.adesso.brainysnake.screenmanagement.ScreenManager;
 import de.adesso.brainysnake.screenmanagement.ScreenType;
@@ -31,6 +31,8 @@ public class GameMaster {
     private BrainySnake brainySnake;
 
     private PlayerController playerController;
+
+    private boolean firstRun = true;
 
     private LevelBoard levelBoard;
 
@@ -70,6 +72,18 @@ public class GameMaster {
      */
 
     public void gameLoop() {
+
+        if (firstRun) {
+            firstRun = false;
+
+            for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
+                //update view of player
+                updateRoundForPlayer(playerHandler);
+
+                // calculates the playerState and updates the playerController via call
+                playerController.updatePlayerState();
+            }
+        }
 
         GlobalGameState.increasePastRounds();
 
