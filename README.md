@@ -1,5 +1,7 @@
 Buildstate master: [![CircleCI](https://circleci.com/gh/adessoAG/BrainySnake.svg?style=svg)](https://circleci.com/gh/adessoAG/BrainySnake)
 
+![JUG Presentation 27.02.2018](https://cdn.rawgit.com/wiki/adessoAG/BrainySnake/presentations/adessoOSS/BrainySnake/index.html)
+
 # BrainySnake
 ![brainySnakePic](/Dokumentation/brainySnake.png)
 
