@@ -131,6 +131,15 @@ public class GameMaster {
             }
         }
 
+        // spread new points in level
+        levelBoard.fillUpWithPoints(Config.MAX_POINTS_IN_LEVEL);
+
+        GlobalGameState.increasePastRounds();
+
+        //Update Metadata of game and player
+        updateGameBaordData();
+        playerController.removeDeadPlayer();
+
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             //update view of player
             updateRoundForPlayer(playerHandler);
@@ -139,19 +148,10 @@ public class GameMaster {
             playerController.updatePlayerState();
         }
 
-        // spread new points in level
-        levelBoard.fillUpWithPoints(Config.MAX_POINTS_IN_LEVEL);
-
         for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
             // reset data of player
             playerHandler.endRound();
         }
-
-        GlobalGameState.increasePastRounds();
-
-        //Update Metadata of game and player
-        updateGameBaordData();
-        playerController.removeDeadPlayer();
     }
 
     /**
