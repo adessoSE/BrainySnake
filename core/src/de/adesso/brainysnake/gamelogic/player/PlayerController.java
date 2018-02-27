@@ -1,8 +1,8 @@
 package de.adesso.brainysnake.gamelogic.player;
 
 import de.adesso.brainysnake.Config;
-import de.adesso.brainysnake.gamelogic.level.LevelBoard;
 import de.adesso.brainysnake.gamelogic.PlayerBoard;
+import de.adesso.brainysnake.gamelogic.level.LevelBoard;
 import de.adesso.brainysnake.playercommon.PlayerUpdate;
 import de.adesso.brainysnake.playercommon.math.Point2D;
 import org.slf4j.Logger;
@@ -66,7 +66,6 @@ public class PlayerController {
 
     private PlayerChoice handlePlayerUpdate(Optional<PlayerUpdate> playerUpdate, PlayerHandler playerHandler) {
         if (!playerUpdate.isPresent() || playerUpdate.get().getNextStep() == null) {
-            LOGGER.error("player: {} returns invalid PlayerUpdate", playerHandler.getPlayerIdentifier());
             return PlayerChoice.createNoChoice();
         }
         return new PlayerChoice(playerUpdate.get().getNextStep());
