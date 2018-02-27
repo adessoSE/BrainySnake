@@ -79,14 +79,6 @@ public class GameMaster {
             return;
         }
 
-        for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
-            //update view of player
-            updateRoundForPlayer(playerHandler);
-
-            // calculates the playerState and updates the playerController via call
-            playerController.updatePlayerState();
-        }
-
         Map<PlayerHandler, PlayerChoice> playerStatus = playerController.getPlayerStatus();
         for (PlayerHandler playerHandler : playerStatus.keySet()) {
             PlayerChoice playerChoice = playerStatus.get(playerHandler);
@@ -137,6 +129,14 @@ public class GameMaster {
                     playerHandler.penalty();
                 }
             }
+        }
+
+        for (PlayerHandler playerHandler : playerController.getPlayerHandlerList()) {
+            //update view of player
+            updateRoundForPlayer(playerHandler);
+
+            // calculates the playerState and updates the playerController via call
+            playerController.updatePlayerState();
         }
 
         // spread new points in level
