@@ -87,7 +87,7 @@ public class LevelBoard {
             positionts.add(new Point2D(x, height - 1));
         }
 
-        for (int y = 1; y < height; y++) {
+        for (int y = 1; y < height - 1; y++) {
             // wall left
             positionts.add(new Point2D(0, y));
             // wall right
