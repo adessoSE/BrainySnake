@@ -45,34 +45,15 @@ public class GameBoard {
         //crate BrainySnakePlayer manualy
         BrainySnakePlayer playerOne = new KeyBoardPlayer();
         BrainySnakePlayer yourPlayer = new YourPlayer();
-        BrainySnakePlayer playerTwo = new SamplePlayer() {
-            @Override
-            public String getPlayerName() {
-                return "SamplePlayer Two";
-            }
-        };
-        BrainySnakePlayer playerThree = new SamplePlayer() {
-
-            @Override
-            public String getPlayerName() {
-                return "SamplePlayer Three";
-            }
-        };
-        BrainySnakePlayer playerFour = new SamplePlayer() {
-
-            @Override
-            public String getPlayerName() {
-                return "SamplePlayer Four";
-            }
-        };
+        BrainySnakePlayer playerTwo = new SamplePlayer();
         BrainySnakePlayer superKi = new SuperKi();
 
         // Add agents to the game
         List<PlayerBoard> playerList = new ArrayList<>();
         playerList.add(new PlayerBoard(playerOne));
         playerList.add(new PlayerBoard(playerTwo));
+        playerList.add(new PlayerBoard(yourPlayer));
         playerList.add(new PlayerBoard(superKi));
-        playerList.add(new PlayerBoard(playerFour));
 
         return playerList;
     }
