@@ -29,7 +29,8 @@ public class PlayerController {
         // Add player to handler
         for (PlayerBoard player : playerMap.values()) {
             Snake newPlayerSnake = levelBoard.createStartingGameObject(Config.INITIAL_PLAYER_LENGTH, player.getColor());
-            playerHandlerList.add(new PlayerHandler(player, newPlayerSnake));
+            PlayerHandler playerHandler = new PlayerHandler(player, newPlayerSnake);
+            playerHandlerList.add(playerHandler);
         }
 
         // create Thread handlers
@@ -38,12 +39,15 @@ public class PlayerController {
     }
 
     public void updatePlayerState() {
+        this.calculatePlayerUpdate();
 
+        playerStatePushExecutorService.process();
+    }
+
+    public  void calculatePlayerUpdate() {
         for (PlayerHandler player : this.playerHandlerList) {
             player.calculatePlayerState();
         }
-
-        playerStatePushExecutorService.process();
     }
 
     /**

@@ -20,7 +20,6 @@ public class SamplePlayer implements BrainySnakePlayer {
         // Processing of the new  PlayerStatusUpdate. Storing the included PlayerState and the PlayerView.
         this.playerState = playerState;
         this.playerView = playerState.getPlayerView();
-
         // Return value "true" confirms the completed execution.
         return true;
     }
