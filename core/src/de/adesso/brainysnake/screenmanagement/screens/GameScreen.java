@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -14,8 +15,6 @@ import de.adesso.brainysnake.Config;
 import de.adesso.brainysnake.gamelogic.GameBoard;
 import de.adesso.brainysnake.gamelogic.GameMaster;
 import de.adesso.brainysnake.gamelogic.PlayerBoard;
-import de.adesso.brainysnake.screenmanagement.ScreenManager;
-import de.adesso.brainysnake.screenmanagement.ScreenType;
 
 import java.util.List;
 
@@ -24,6 +23,7 @@ public class GameScreen extends AbstractScreen {
     private GameMaster gameMaster;
     private TextButton resumeButton;
     private TextButton exitGameButton;
+    private Group pauseScreenActors;
     private Image logoPause;
     private boolean isGamePaused;
 
@@ -66,13 +66,14 @@ public class GameScreen extends AbstractScreen {
             }
         });
 
-        logoPause.setVisible(isGamePaused);
-        resumeButton.setVisible(isGamePaused);
-        exitGameButton.setVisible(isGamePaused);
+        pauseScreenActors = new Group();
+        pauseScreenActors.addActor(logoPause);
+        pauseScreenActors.addActor(resumeButton);
+        pauseScreenActors.addActor(exitGameButton);
 
-        addActor(logoPause);
-        addActor(resumeButton);
-        addActor(exitGameButton);
+        pauseScreenActors.setVisible(isGamePaused);
+
+        addActor(pauseScreenActors);
     }
 
     @Override
@@ -94,9 +95,7 @@ public class GameScreen extends AbstractScreen {
     }
 
     private void showPauseScreen(boolean show) {
-        logoPause.setVisible(show);
-        resumeButton.setVisible(show);
-        exitGameButton.setVisible(show);
+        pauseScreenActors.setVisible(show);
     }
 
     /**
