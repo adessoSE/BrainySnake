@@ -61,4 +61,3 @@ when the Game is loaded.
 
 ## Want to contribute?
 See the [contribution guide](https://github.com/adessoAG/BrainySnake/blob/master/CONTRIBUTING.md).
-Active Contributors can also join our [BrainySnake Slack](https://brainysnake.slack.com) Channel.
