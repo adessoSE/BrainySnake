@@ -1,9 +1,4 @@
-# Contributing
-
-Since the project is in an early stage, the contributing guide will develop over time. For the time being you can use
-the following sections for some orientation.
-
-## How to contribute?
+# How to contribute?
 
 Any kind of contribution is welcome as a pull request. If you are unsure on how to fork a repository and then create a pull request from your fork, please read this [blog post](https://reflectoring.io/github-fork-and-pull/) for a quick guide.
 
