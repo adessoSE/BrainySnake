@@ -20,7 +20,7 @@ During a game, multiple autonomous snakes are loaded simultaneously and start ba
 1. Create a new Run Configuration of type _Application_
 1. Set `de.adesso.brainysnake.desktop.DesktopLauncher` as main class
 1. Set `[projectPath]\BrainySnake\core\assets` as working directory
-1. Set `brainysnake.desktop.main` as classpath of module
+1. Set `desktop` as classpath of module
 1. Run
 
 ## Build Project for Eclipse
